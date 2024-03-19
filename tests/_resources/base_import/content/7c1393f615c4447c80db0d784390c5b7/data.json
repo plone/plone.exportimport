@@ -1,0 +1,79 @@
+{
+  "@id": "/bar/an-important-news",
+  "@type": "News Item",
+  "UID": "7c1393f615c4447c80db0d784390c5b7",
+  "allow_discussion": false,
+  "blocks": {},
+  "blocks_layout": {
+    "items": []
+  },
+  "changeNote": "",
+  "contributors": [],
+  "created": "2024-02-13T21:14:23+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "effective": "2024-02-13T18:14:27",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "an-important-news",
+  "image": {
+    "blob_path": "7c1393f615c4447c80db0d784390c5b7/image/brazil-coins.png",
+    "content-type": "image/png",
+    "filename": "brazil-coins.png",
+    "height": 227,
+    "size": 66267,
+    "width": 787
+  },
+  "image_caption": null,
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "newsitem_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2024-02-13T21:14:27+00:00",
+  "parent": {
+    "@id": "/bar",
+    "@type": "Document",
+    "UID": "70844f7bec1843b8ab2796c972c9ebfe",
+    "description": "Is bar the new Foo?",
+    "image_field": null,
+    "image_scales": null,
+    "review_state": "private",
+    "title": "Bar",
+    "type_title": "Page"
+  },
+  "review_state": "published",
+  "rights": null,
+  "subjects": [],
+  "title": "An important news",
+  "type_title": "News Item",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2024-02-13T21:14:23+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2024-02-13T21:14:27+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

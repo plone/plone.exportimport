@@ -1,0 +1,49 @@
+{
+  "@id": "/plone.pdf",
+  "@type": "File",
+  "UID": "3e0dd7c4b2714eafa1d6fc6a1493f953",
+  "allow_discussion": false,
+  "contributors": [],
+  "created": "2024-03-19T19:02:18+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "A simple PDF file",
+  "effective": null,
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "file": {
+    "blob_path": "3e0dd7c4b2714eafa1d6fc6a1493f953/file/plone.pdf",
+    "content-type": "application/pdf",
+    "filename": "plone.pdf",
+    "size": 7903
+  },
+  "id": "plone.pdf",
+  "is_folderish": false,
+  "language": "##DEFAULT##",
+  "layout": "file_view",
+  "lock": {},
+  "modified": "2024-03-19T19:02:18+00:00",
+  "parent": {
+    "@id": "/",
+    "@type": "Plone Site",
+    "UID": "plone_site_root",
+    "description": "",
+    "title": "Site",
+    "type_title": "Plone Site"
+  },
+  "review_state": null,
+  "rights": null,
+  "subjects": [
+    "File"
+  ],
+  "title": "A File",
+  "type_title": "File",
+  "version": "current",
+  "workflow_history": {},
+  "working_copy": null,
+  "working_copy_of": null
+}

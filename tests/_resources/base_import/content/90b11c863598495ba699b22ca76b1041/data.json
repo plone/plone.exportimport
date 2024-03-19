@@ -1,0 +1,52 @@
+{
+  "@id": "/bar/2025.png",
+  "@type": "Image",
+  "UID": "90b11c863598495ba699b22ca76b1041",
+  "allow_discussion": false,
+  "contributors": [],
+  "created": "2024-02-13T21:13:59+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "effective": null,
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "2025.png",
+  "image": {
+    "blob_path": "90b11c863598495ba699b22ca76b1041/image/2025.png",
+    "content-type": "image/png",
+    "filename": "2025.png",
+    "height": 800,
+    "size": 40383,
+    "width": 800
+  },
+  "is_folderish": false,
+  "language": "##DEFAULT##",
+  "layout": "image_view",
+  "lock": {},
+  "modified": "2024-02-13T21:13:59+00:00",
+  "parent": {
+    "@id": "/bar",
+    "@type": "Document",
+    "UID": "70844f7bec1843b8ab2796c972c9ebfe",
+    "description": "Is bar the new Foo?",
+    "image_field": null,
+    "image_scales": null,
+    "review_state": "private",
+    "title": "Bar",
+    "type_title": "Page"
+  },
+  "review_state": null,
+  "rights": null,
+  "subjects": [],
+  "title": "2025 logo",
+  "type_title": "Image",
+  "version": "current",
+  "workflow_history": {},
+  "working_copy": null,
+  "working_copy_of": null
+}

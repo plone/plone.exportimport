@@ -1,0 +1,63 @@
+{
+  "@id": "/foo/another-page",
+  "@type": "Document",
+  "UID": "45b0b46f17104a7b8fa7bb94d3dd5bd9",
+  "allow_discussion": true,
+  "blocks": {},
+  "blocks_layout": {
+    "items": []
+  },
+  "contributors": [],
+  "created": "2024-02-13T20:51:06+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "Yet another page",
+  "effective": null,
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "another-page",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "document_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2024-02-13T20:51:06+00:00",
+  "parent": {
+    "@id": "/foo",
+    "@type": "Document",
+    "UID": "e7359727ace64e609b79c4091c38822a",
+    "description": "fdfdfd",
+    "image_field": null,
+    "image_scales": null,
+    "review_state": "private",
+    "title": "Foo",
+    "type_title": "Page"
+  },
+  "preview_caption": null,
+  "preview_image": null,
+  "review_state": "private",
+  "rights": null,
+  "subjects": [],
+  "title": "Another page",
+  "type_title": "Page",
+  "version": "current",
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2024-02-13T20:51:06+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

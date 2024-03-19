@@ -1,0 +1,70 @@
+{
+  "@id": "/bar/foo",
+  "@type": "Document",
+  "UID": "5d77cd5686184ec49ab077017b1fbc3a",
+  "allow_discussion": true,
+  "blocks": {},
+  "blocks_layout": {
+    "items": []
+  },
+  "contributors": [],
+  "created": "2024-02-13T18:16:32+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "Foo is a page, a new page",
+  "effective": "2024-02-13T17:23:20",
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "foo",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "document_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2024-02-13T20:23:20+00:00",
+  "parent": {
+    "@id": "/bar",
+    "@type": "Document",
+    "UID": "70844f7bec1843b8ab2796c972c9ebfe",
+    "description": "Is bar the new Foo?",
+    "image_field": null,
+    "image_scales": null,
+    "review_state": "private",
+    "title": "Bar",
+    "type_title": "Page"
+  },
+  "preview_caption": null,
+  "preview_image": null,
+  "review_state": "published",
+  "rights": null,
+  "subjects": [],
+  "title": "Foo",
+  "type_title": "Page",
+  "version": "current",
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2024-02-13T18:16:32+00:00"
+      },
+      {
+        "action": "publish",
+        "actor": "admin",
+        "comments": "",
+        "review_state": "published",
+        "time": "2024-02-13T20:23:20+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

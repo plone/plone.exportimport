@@ -1,0 +1,48 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+  <!-- Utility -->
+  <utility
+      factory=".ExporterUtility"
+      provides="plone.exportimport.interfaces.IExporterUtility"
+      name="plone.exporter"
+      />
+
+  <!-- Exporters -->
+  <adapter
+      factory=".content.ContentExporter"
+      provides="plone.exportimport.interfaces.INamedExporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.exporter.content"
+      />
+  <adapter
+      factory=".principals.PrincipalsExporter"
+      provides="plone.exportimport.interfaces.INamedExporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.exporter.principals"
+      />
+  <adapter
+      factory=".redirects.RedirectsExporter"
+      provides="plone.exportimport.interfaces.INamedExporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.exporter.redirects"
+      />
+  <adapter
+      factory=".relations.RelationsExporter"
+      provides="plone.exportimport.interfaces.INamedExporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.exporter.relations"
+      />
+  <adapter
+      factory=".translations.TranslationsExporter"
+      provides="plone.exportimport.interfaces.INamedExporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.exporter.translations"
+      />
+  <adapter
+      factory=".discussions.DiscussionsExporter"
+      provides="plone.exportimport.interfaces.INamedExporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.exporter.discussions"
+      />
+
+
+</configure>

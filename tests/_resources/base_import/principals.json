@@ -1,0 +1,89 @@
+{
+  "groups": [
+    {
+      "description": "Group of Plone Brasil Users",
+      "email": "gov@plone.org.br",
+      "groupid": "plone_brasil",
+      "groups": [],
+      "principals": [],
+      "roles": [
+        "Member"
+      ],
+      "title": "Plone Brasil"
+    },
+    {
+      "description": "Group of Plone Developers",
+      "email": "developers@plone.org",
+      "groupid": "developers",
+      "groups": [],
+      "principals": [],
+      "roles": [
+        "Member"
+      ],
+      "title": "Plone Developers"
+    },
+    {
+      "description": "",
+      "email": "",
+      "groupid": "Administrators",
+      "groups": [],
+      "principals": [],
+      "roles": [
+        "Manager"
+      ],
+      "title": "Administrators"
+    },
+    {
+      "description": "",
+      "email": "",
+      "groupid": "Reviewers",
+      "groups": [],
+      "principals": [],
+      "roles": [
+        "Reviewer"
+      ],
+      "title": "Reviewers"
+    },
+    {
+      "description": "",
+      "email": "",
+      "groupid": "Site Administrators",
+      "groups": [],
+      "principals": [],
+      "roles": [
+        "Site Administrator"
+      ],
+      "title": "Site Administrators"
+    }
+  ],
+  "members": [
+    {
+      "description": "",
+      "email": "",
+      "fullname": "",
+      "groups": [],
+      "home_page": "",
+      "location": "",
+      "password": "{SSHA}h0uWiIeI5N0XhQDxLgbybJk9VKTBMri5/7F/",
+      "roles": [
+        "Member"
+      ],
+      "username": "test_user_1_"
+    },
+    {
+      "description": "Plonista Brasileiro",
+      "email": "joao.silva@plone.org.br",
+      "fullname": "João da Silva",
+      "groups": [
+        "plone_brasil"
+      ],
+      "home_page": "https://plone.org.br",
+      "location": "Brasília, DF",
+      "password": "{SSHA}h0uWiIeI5N0XhQDxLgbybJk9VKTBMri5/7F/",
+      "roles": [
+        "Member"
+      ],
+      "username": "joao.silva"
+    }
+  ]
+}

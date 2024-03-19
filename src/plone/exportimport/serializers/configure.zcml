@@ -1,0 +1,7 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+  <adapter factory=".blob.ExportImportFileFieldSerializer" />
+  <adapter factory=".blob.ExportImportImageFieldSerializer" />
+  <adapter factory=".blob.ExportImportSimpleFileFieldSerializer" />
+  <adapter factory=".blob.ExportImportSimpleImageFieldSerializer" />
+
+</configure>

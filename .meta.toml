@@ -1,0 +1,34 @@
+# Generated from:
+# https://github.com/plone/meta/tree/main/config/default
+# See the inline comments on how to expand/tweak this configuration file
+[meta]
+template = "default"
+commit-id = "fafcd936"
+
+[pyproject]
+codespell_skip = "*.min.js"
+codespell_ignores = "vew"
+dependencies_ignores = "['plone.volto', 'zestreleaser.towncrier', 'zest.releaser', 'pytest', 'pytest-cov', 'pytest-plone', 'plone.testing', 'plone.app.testing']"
+dependencies_mappings = [
+    "Plone = ['Products.CMFPlone', 'Products.CMFCore', 'Products.GenericSetup']",
+    ]
+
+[tox]
+test_runner = "pytest"
+test_path = "/tests"
+use_mxdev = true
+test_deps_additional = ""
+
+[github]
+jobs = [
+    "qa",
+    "test",
+    "coverage",
+    "dependencies",
+    "release_ready",
+    ]
+
+[gitignore]
+extra_lines = """
+coverage.xml
+"""

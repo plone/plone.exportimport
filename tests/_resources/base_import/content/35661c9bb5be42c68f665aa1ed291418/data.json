@@ -1,0 +1,63 @@
+{
+  "@id": "/foo/bar",
+  "@type": "Document",
+  "UID": "35661c9bb5be42c68f665aa1ed291418",
+  "allow_discussion": true,
+  "blocks": {},
+  "blocks_layout": {
+    "items": []
+  },
+  "contributors": [],
+  "created": "2024-02-13T18:16:04+00:00",
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "effective": null,
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "bar",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "layout": "document_view",
+  "lock": {
+    "locked": false,
+    "stealable": true
+  },
+  "modified": "2024-02-13T18:16:04+00:00",
+  "parent": {
+    "@id": "/foo",
+    "@type": "Document",
+    "UID": "e7359727ace64e609b79c4091c38822a",
+    "description": "fdfdfd",
+    "image_field": null,
+    "image_scales": null,
+    "review_state": "private",
+    "title": "Foo",
+    "type_title": "Page"
+  },
+  "preview_caption": null,
+  "preview_image": null,
+  "review_state": "private",
+  "rights": null,
+  "subjects": [],
+  "title": "Bar",
+  "type_title": "Page",
+  "version": "current",
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "admin",
+        "comments": "",
+        "review_state": "private",
+        "time": "2024-02-13T18:16:04+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

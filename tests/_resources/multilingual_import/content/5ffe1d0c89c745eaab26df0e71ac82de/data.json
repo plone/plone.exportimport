@@ -1,0 +1,57 @@
+{
+  "@id": "/de/a-folderish/a-link",
+  "@type": "Link",
+  "UID": "5ffe1d0c89c745eaab26df0e71ac82de",
+  "allow_discussion": false,
+  "changeNote": "",
+  "contributors": [],
+  "created": "2024-03-18T15:02:30+00:00",
+  "creators": [
+    "test_user_1_"
+  ],
+  "description": "Visit Plone.org",
+  "effective": null,
+  "exclude_from_nav": false,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "a-link",
+  "is_folderish": false,
+  "language": "de",
+  "layout": "link_redirect_view",
+  "lock": {},
+  "modified": "2024-03-18T15:02:30+00:00",
+  "parent": {
+    "@id": "/de/a-folderish",
+    "@type": "Document",
+    "UID": "496cbe4f17904d6bb9321b23f91dc8cc",
+    "description": "A simple folder",
+    "image_field": null,
+    "image_scales": null,
+    "review_state": "private",
+    "title": "A Folderish document",
+    "type_title": "Page"
+  },
+  "remoteUrl": "https://plone.org/",
+  "review_state": "private",
+  "rights": "",
+  "subjects": [],
+  "title": "Link Content",
+  "type_title": "Link",
+  "version": "current",
+  "versioning_enabled": true,
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "test_user_1_",
+        "comments": "",
+        "review_state": "private",
+        "time": "2024-03-18T15:02:30+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

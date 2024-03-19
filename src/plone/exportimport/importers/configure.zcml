@@ -1,0 +1,48 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+  <!-- Utility -->
+  <utility
+      factory=".ImporterUtility"
+      provides="plone.exportimport.interfaces.IImporterUtility"
+      name="plone.importer"
+      />
+
+  <!-- Importers -->
+  <adapter
+      factory=".content.ContentImporter"
+      provides="plone.exportimport.interfaces.INamedImporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.importer.content"
+      />
+  <adapter
+      factory=".principals.PrincipalsImporter"
+      provides="plone.exportimport.interfaces.INamedImporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.importer.principals"
+      />
+  <adapter
+      factory=".redirects.RedirectsImporter"
+      provides="plone.exportimport.interfaces.INamedImporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.importer.redirects"
+      />
+  <adapter
+      factory=".relations.RelationsImporter"
+      provides="plone.exportimport.interfaces.INamedImporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.importer.relations"
+      />
+  <adapter
+      factory=".translations.TranslationsImporter"
+      provides="plone.exportimport.interfaces.INamedImporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.importer.translations"
+      />
+  <adapter
+      factory=".discussions.DiscussionsImporter"
+      provides="plone.exportimport.interfaces.INamedImporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.importer.discussions"
+      />
+
+
+</configure>

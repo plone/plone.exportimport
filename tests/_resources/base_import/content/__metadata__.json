@@ -1,0 +1,99 @@
+{
+  "__version__": "1.0.0",
+  "_blob_files_": [
+    "90b11c863598495ba699b22ca76b1041/image/2025.png",
+    "7c1393f615c4447c80db0d784390c5b7/image/brazil-coins.png",
+    "3e0dd7c4b2714eafa1d6fc6a1493f953/file/plone.pdf"
+  ],
+  "_data_files_": [
+    "plone_site_root/data.json",
+    "3e0dd7c4b2714eafa1d6fc6a1493f953/data.json",
+    "70844f7bec1843b8ab2796c972c9ebfe/data.json",
+    "90b11c863598495ba699b22ca76b1041/data.json",
+    "7c1393f615c4447c80db0d784390c5b7/data.json",
+    "5d77cd5686184ec49ab077017b1fbc3a/data.json",
+    "e7359727ace64e609b79c4091c38822a/data.json",
+    "45b0b46f17104a7b8fa7bb94d3dd5bd9/data.json",
+    "35661c9bb5be42c68f665aa1ed291418/data.json"
+  ],
+  "default_page": {
+    "e7359727ace64e609b79c4091c38822a": {
+      "default_page": "another-page",
+      "default_page_uuid": "45b0b46f17104a7b8fa7bb94d3dd5bd9"
+    }
+  },
+  "local_roles": {
+    "35661c9bb5be42c68f665aa1ed291418": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "45b0b46f17104a7b8fa7bb94d3dd5bd9": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "5d77cd5686184ec49ab077017b1fbc3a": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "70844f7bec1843b8ab2796c972c9ebfe": {
+      "block": 1,
+      "local_roles": {
+        "Site Administrators": [
+          "Reader",
+          "Contributor",
+          "Reviewer",
+          "Editor"
+        ],
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "7c1393f615c4447c80db0d784390c5b7": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "90b11c863598495ba699b22ca76b1041": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "e7359727ace64e609b79c4091c38822a": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    },
+    "plone_site_root": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    }
+  },
+  "ordering": {
+    "35661c9bb5be42c68f665aa1ed291418": 0,
+    "45b0b46f17104a7b8fa7bb94d3dd5bd9": 1,
+    "5d77cd5686184ec49ab077017b1fbc3a": 0,
+    "70844f7bec1843b8ab2796c972c9ebfe": 43,
+    "7c1393f615c4447c80db0d784390c5b7": 2,
+    "90b11c863598495ba699b22ca76b1041": 1,
+    "e7359727ace64e609b79c4091c38822a": 42
+  }
+}

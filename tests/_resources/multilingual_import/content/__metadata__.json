@@ -1,0 +1,182 @@
+{
+  "__version__": "1.0.0",
+  "_blob_files_": [],
+  "_data_files_": [
+    "plone_site_root/data.json",
+    "01fbca4cccd448d880959ba93aa8176e/data.json",
+    "496cbe4f17904d6bb9321b23f91dc8cc/data.json",
+    "5ffe1d0c89c745eaab26df0e71ac82de/data.json",
+    "2be023c76b3e4e0aa9908c70f19a14df/data.json",
+    "b69412b6d0b0438d85b340c13a39fc8c/data.json",
+    "6d8a2b38d445462aa19f604b0801a13c/data.json",
+    "3e3d4bf2cac4482f9c03e34b52092f02/data.json",
+    "f9767fbdadf041bd892010d21b290cb5/data.json",
+    "2d099ac593344be7aaf2e4aafbba9065/data.json",
+    "f40d3a236b464aa487b715adf3c0be92/data.json",
+    "fbcd98e2d1a741e2a90b8f0389203530/data.json",
+    "59e06b23024a4c4b9d93672fe440e019/data.json",
+    "f98b033fa8ce46f487ca8923ddae7480/data.json",
+    "1cbf4ae73c74459485d3fd6cb9714e43/data.json",
+    "ddb27456033d4b86a78f3ec783874b63/data.json",
+    "cecc6f7007344d3cbac68f1da4bd084a/data.json",
+    "85a60611c2744e7abe53e3f356df236a/data.json",
+    "20737423549c43a88488242ec629e087/data.json"
+  ],
+  "default_page": {},
+  "local_roles": {
+    "01fbca4cccd448d880959ba93aa8176e": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "1cbf4ae73c74459485d3fd6cb9714e43": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "20737423549c43a88488242ec629e087": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "2be023c76b3e4e0aa9908c70f19a14df": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "2d099ac593344be7aaf2e4aafbba9065": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "3e3d4bf2cac4482f9c03e34b52092f02": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "496cbe4f17904d6bb9321b23f91dc8cc": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "59e06b23024a4c4b9d93672fe440e019": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "5ffe1d0c89c745eaab26df0e71ac82de": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "6d8a2b38d445462aa19f604b0801a13c": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "85a60611c2744e7abe53e3f356df236a": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "b69412b6d0b0438d85b340c13a39fc8c": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "cecc6f7007344d3cbac68f1da4bd084a": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "ddb27456033d4b86a78f3ec783874b63": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "f40d3a236b464aa487b715adf3c0be92": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "f9767fbdadf041bd892010d21b290cb5": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "f98b033fa8ce46f487ca8923ddae7480": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "fbcd98e2d1a741e2a90b8f0389203530": {
+      "local_roles": {
+        "test_user_1_": [
+          "Owner"
+        ]
+      }
+    },
+    "plone_site_root": {
+      "local_roles": {
+        "admin": [
+          "Owner"
+        ]
+      }
+    }
+  },
+  "ordering": {
+    "01fbca4cccd448d880959ba93aa8176e": 43,
+    "1cbf4ae73c74459485d3fd6cb9714e43": 1,
+    "20737423549c43a88488242ec629e087": 0,
+    "2be023c76b3e4e0aa9908c70f19a14df": 1,
+    "2d099ac593344be7aaf2e4aafbba9065": 0,
+    "3e3d4bf2cac4482f9c03e34b52092f02": 42,
+    "496cbe4f17904d6bb9321b23f91dc8cc": 1,
+    "59e06b23024a4c4b9d93672fe440e019": 0,
+    "5ffe1d0c89c745eaab26df0e71ac82de": 0,
+    "6d8a2b38d445462aa19f604b0801a13c": 0,
+    "85a60611c2744e7abe53e3f356df236a": 2,
+    "b69412b6d0b0438d85b340c13a39fc8c": 2,
+    "cecc6f7007344d3cbac68f1da4bd084a": 1,
+    "ddb27456033d4b86a78f3ec783874b63": 0,
+    "f40d3a236b464aa487b715adf3c0be92": 1,
+    "f9767fbdadf041bd892010d21b290cb5": 1,
+    "f98b033fa8ce46f487ca8923ddae7480": 44,
+    "fbcd98e2d1a741e2a90b8f0389203530": 2
+  },
+  "relations": []
+}

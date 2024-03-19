@@ -1,0 +1,54 @@
+{
+  "@id": "/es/recursos",
+  "@type": "LIF",
+  "UID": "20737423549c43a88488242ec629e087",
+  "allow_discussion": false,
+  "contributors": [],
+  "created": "2024-03-18T15:02:30+00:00",
+  "creators": [
+    "test_user_1_"
+  ],
+  "description": "",
+  "effective": null,
+  "exclude_from_nav": true,
+  "expires": null,
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "recursos",
+  "is_folderish": true,
+  "language": "es",
+  "layout": "folder_listing",
+  "lock": {},
+  "modified": "2024-03-18T15:02:30+00:00",
+  "parent": {
+    "@id": "/es",
+    "@type": "LRF",
+    "UID": "f98b033fa8ce46f487ca8923ddae7480",
+    "description": "",
+    "image_field": null,
+    "image_scales": null,
+    "review_state": "private",
+    "title": "Espa\u00f1ol",
+    "type_title": "Language Root Folder"
+  },
+  "review_state": "private",
+  "rights": "",
+  "subjects": [],
+  "title": "Recursos",
+  "type_title": "Language Independent Folder",
+  "version": "current",
+  "workflow_history": {
+    "simple_publication_workflow": [
+      {
+        "action": null,
+        "actor": "test_user_1_",
+        "comments": "",
+        "review_state": "private",
+        "time": "2024-03-18T15:02:30+00:00"
+      }
+    ]
+  },
+  "working_copy": null,
+  "working_copy_of": null
+}

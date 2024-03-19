@@ -1,0 +1,158 @@
+{
+  "1cbf4ae73c74459485d3fd6cb9714e43": {
+    "items_total": 4,
+    "permissions": {
+      "view_comments": true,
+      "can_reply": false
+    },
+    "items": [
+      {
+        "@id": "/es/a-folderish/@comments/1707855876188968",
+        "@type": "Discussion Item",
+        "@parent": null,
+        "comment_id": "1707855876188968",
+        "in_reply_to": null,
+        "text": {
+          "data": "One Comment",
+          "mime-type": "text/plain"
+        },
+        "user_notification": false,
+        "author_username": "joao.silva",
+        "author_name": "João Silva",
+        "author_image": null,
+        "creation_date": "2024-02-13T20:24:36+00:00",
+        "modification_date": "2024-02-13T20:24:36+00:00",
+        "is_editable": false,
+        "is_deletable": true,
+        "can_reply": false
+      },
+      {
+        "@id": "/es/a-folderish/@comments/1707855880558256",
+        "@type": "Discussion Item",
+        "@parent": null,
+        "comment_id": "1707855880558256",
+        "in_reply_to": null,
+        "text": {
+          "data": "Another",
+          "mime-type": "text/plain"
+        },
+        "user_notification": false,
+        "author_username": "joao.silva",
+        "author_name": "João Silva",
+        "author_image": null,
+        "creation_date": "2024-02-13T20:24:40+00:00",
+        "modification_date": "2024-02-13T20:24:40+00:00",
+        "is_editable": false,
+        "is_deletable": true,
+        "can_reply": false
+      },
+      {
+        "@id": "/es/a-folderish/@comments/1707855883837698",
+        "@type": "Discussion Item",
+        "@parent": null,
+        "comment_id": "1707855883837698",
+        "in_reply_to": null,
+        "text": {
+          "data": "Foo Bar",
+          "mime-type": "text/plain"
+        },
+        "user_notification": false,
+        "author_username": "admin",
+        "author_name": "admin",
+        "author_image": null,
+        "creation_date": "2024-02-13T20:24:43+00:00",
+        "modification_date": "2024-02-13T20:24:43+00:00",
+        "is_editable": false,
+        "is_deletable": true,
+        "can_reply": false
+      },
+      {
+        "@id": "/es/a-folderish/@comments/1707855883837698",
+        "@type": "Discussion Item",
+        "comment_id": "1707855889398074",
+        "in_reply_to": "1707855883837698",
+        "text": {
+          "data": "Bar Foo",
+          "mime-type": "text/plain"
+        },
+        "user_notification": false,
+        "author_username": "admin",
+        "author_name": "admin",
+        "author_image": null,
+        "creation_date": "2024-02-13T20:24:49+00:00",
+        "modification_date": "2024-02-13T20:24:49+00:00",
+        "is_editable": false,
+        "is_deletable": true,
+        "can_reply": false
+      }
+    ]
+  },
+  "85a60611c2744e7abe53e3f356df236a": {
+    "items_total": 3,
+    "permissions": {
+      "view_comments": true,
+      "can_reply": false
+    },
+    "items": [
+      {
+        "@id": "/es/a-folderish/another-page/@comments/1710863956273545",
+        "@type": "Discussion Item",
+        "@parent": null,
+        "comment_id": "1710863956273545",
+        "in_reply_to": null,
+        "text": {
+          "data": "A comment",
+          "mime-type": "text/plain"
+        },
+        "user_notification": false,
+        "author_username": "joao.silva",
+        "author_name": "João Silva",
+        "author_image": null,
+        "creation_date": "2024-03-19T15:59:16+00:00",
+        "modification_date": "2024-03-19T15:59:16+00:00",
+        "is_editable": false,
+        "is_deletable": true,
+        "can_reply": false
+      },
+      {
+        "@id": "/es/a-folderish/another-page/@comments/1710863956273545",
+        "@type": "Discussion Item",
+        "comment_id": "1710863965947090",
+        "in_reply_to": "1710863956273545",
+        "text": {
+          "data": "A reply to a comment",
+          "mime-type": "text/plain"
+        },
+        "user_notification": false,
+        "author_username": "admin",
+        "author_name": "admin",
+        "author_image": null,
+        "creation_date": "2024-03-19T15:59:25+00:00",
+        "modification_date": "2024-03-19T15:59:25+00:00",
+        "is_editable": false,
+        "is_deletable": true,
+        "can_reply": false
+      },
+      {
+        "@id": "/es/a-folderish/another-page/@comments/1710863974398887",
+        "@type": "Discussion Item",
+        "@parent": null,
+        "comment_id": "1710863974398887",
+        "in_reply_to": null,
+        "text": {
+          "data": "Another comment",
+          "mime-type": "text/plain"
+        },
+        "user_notification": false,
+        "author_username": "joao.silva",
+        "author_name": "João Silva",
+        "author_image": null,
+        "creation_date": "2024-03-19T15:59:34+00:00",
+        "modification_date": "2024-03-19T15:59:34+00:00",
+        "is_editable": false,
+        "is_deletable": true,
+        "can_reply": false
+      }
+    ]
+  }
+}

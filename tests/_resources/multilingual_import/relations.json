@@ -1,0 +1,17 @@
+[
+  {
+    "from_attribute": "relatedItems",
+    "from_uuid": "fbcd98e2d1a741e2a90b8f0389203530",
+    "to_uuid": "f40d3a236b464aa487b715adf3c0be92"
+  },
+  {
+    "from_attribute": "relatedItems",
+    "from_uuid": "85a60611c2744e7abe53e3f356df236a",
+    "to_uuid": "cecc6f7007344d3cbac68f1da4bd084a"
+  },
+  {
+    "from_attribute": "relatedItems",
+    "from_uuid": "b69412b6d0b0438d85b340c13a39fc8c",
+    "to_uuid": "2be023c76b3e4e0aa9908c70f19a14df"
+  }
+]
