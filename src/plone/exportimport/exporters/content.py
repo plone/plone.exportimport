@@ -90,9 +90,9 @@ class ContentExporter(BaseExporter):
         # Enrich
         for enricher in content_utils.enrichers():
             logger.debug(f"{config.logger_prefix} Running {enricher.name}")
-            addittional = enricher.func(obj, config)
-            if addittional:
-                data.update(addittional)
+            additional = enricher.func(obj, config)
+            if additional:
+                data.update(additional)
 
         # Apply data hooks
         for func in self.data_hooks:

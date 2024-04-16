@@ -1,10 +1,7 @@
-from pathlib import Path
 from plone import api
-from plone.exportimport import interfaces
+from plone.exportimport.exporters import get_exporter
+from plone.exportimport.importers import get_importer
 from plone.exportimport.utils import cli as cli_helpers
-from Products.CMFPlone.Portal import PloneSite
-from zope.component import getUtility
-from zope.component.hooks import setSite
 
 import argparse
 import sys
@@ -38,13 +35,6 @@ def _parse_args(description: str, options: dict, args: list):
     return namespace
 
 
-def _export_site(site: PloneSite, export_path: Path):
-    setSite(site)
-    utility = getUtility(interfaces.IExporterUtility, "plone.exporter")
-    with api.env.adopt_roles(["Manager"]):
-        return utility.export_site(site, export_path)
-
-
 def exporter_cli(args=sys.argv):
     """Export a Plone site."""
     logger = cli_helpers.get_logger("Exporter")
@@ -56,17 +46,11 @@ def exporter_cli(args=sys.argv):
         logger.error(f"{namespace.path} does not exist, please create it first.")
         sys.exit(1)
     site = cli_helpers.get_site(app, namespace.site, logger)
-    results = _export_site(site, path)
+    with api.env.adopt_roles(["Manager"]):
+        results = get_exporter(site).export_site(path)
     logger.info(f" Using path {path} to export content from Plone site at /{site.id}")
     for item in results[1:]:
         logger.info(f" Wrote {item}")
-
-
-def _import_site(site: PloneSite, export_path: Path):
-    setSite(site)
-    utility = getUtility(interfaces.IImporterUtility, "plone.importer")
-    with api.env.adopt_roles(["Manager"]):
-        return utility.import_site(site, export_path)
 
 
 def importer_cli(args=sys.argv):
@@ -80,7 +64,8 @@ def importer_cli(args=sys.argv):
         logger.error(f"{namespace.path} does not exist, aborting import.")
         sys.exit(1)
     site = cli_helpers.get_site(app, namespace.site, logger)
-    results = _import_site(site, path)
+    with api.env.adopt_roles(["Manager"]):
+        results = get_importer(site).import_site(path)
     logger.info(f" Using path {path} to import content to Plone site at /{site.id}")
     for item in results:
         logger.info(f" - {item}")

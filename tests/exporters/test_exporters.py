@@ -1,22 +1,21 @@
 from pathlib import Path
-from plone.exportimport import interfaces
-from plone.exportimport.exporters import ExporterUtility
-from zope.component import getUtility
+from plone.exportimport.exporters import Exporter
+from plone.exportimport.exporters import get_exporter
 
 import pytest
 
 
-class TestExporterUtility:
+class TestExporter:
     @pytest.fixture(autouse=True)
     def _init(self, portal):
         self.src_portal = portal
-        self.utility = getUtility(interfaces.IExporterUtility, "plone.exporter")
+        self.exporter = get_exporter(self.src_portal)
 
-    def test_utility_is_correct_instance(self):
-        assert isinstance(self.utility, ExporterUtility)
+    def test_exporter_is_correct_instance(self):
+        assert isinstance(self.exporter, Exporter)
 
-    def test_utility_all_exporters(self):
-        exporters = self.utility.all_exporters(self.src_portal)
+    def test_all_exporters(self):
+        exporters = self.exporter.all_exporters()
         assert isinstance(exporters, dict)
         assert len(exporters) == 6
 
@@ -31,12 +30,12 @@ class TestExporterUtility:
             "plone.exporter.discussions",
         ],
     )
-    def test_utility_exporter_present(self, exporter_name: str):
-        exporters = self.utility.all_exporters(self.src_portal)
+    def test_exporter_present(self, exporter_name: str):
+        exporters = self.exporter.all_exporters()
         assert exporter_name in exporters
 
-    def test_utility_export_site(self, export_path):
-        results = self.utility.export_site(self.src_portal, export_path)
+    def test_export_site(self, export_path):
+        results = self.exporter.export_site(export_path)
         assert isinstance(results, list)
         # First item is always the export path
         path = results[0]
@@ -63,29 +62,27 @@ class TestExporterUtility:
             ["content/plone_site_root/data.json", False, True],
         ],
     )
-    def test_utility_export_site_has_file(
+    def test_export_site_has_file(
         self, export_path, paths_as_relative, path: str, is_dir: bool, is_file: bool
     ):
-        results = paths_as_relative(
-            export_path, self.utility.export_site(self.src_portal, export_path)
-        )
+        results = paths_as_relative(export_path, self.exporter.export_site(export_path))
         assert path in results
         filepath = (export_path / path).resolve()
         assert filepath.is_dir() is is_dir
         assert filepath.is_file() is is_file
 
 
-class TestExporterUtilityMultilingual:
+class TestExporterMultilingual:
 
     @pytest.fixture(autouse=True)
     def _init(self, portal):
         self.src_portal = portal
-        self.utility = getUtility(interfaces.IExporterUtility, "plone.exporter")
+        self.exporter = get_exporter(self.src_portal)
 
-    def test_utility_is_correct_instance(self):
-        assert isinstance(self.utility, ExporterUtility)
+    def test_exporter_is_correct_instance(self):
+        assert isinstance(self.exporter, Exporter)
 
-    def test_utility_all_exporters(self):
-        exporters = self.utility.all_exporters(self.src_portal)
+    def test_all_exporters(self):
+        exporters = self.exporter.all_exporters()
         assert isinstance(exporters, dict)
         assert len(exporters) == 6

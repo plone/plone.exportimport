@@ -1,9 +1,8 @@
 <configure xmlns="http://namespaces.zope.org/zope">
-  <!-- Utility -->
-  <utility
-      factory=".ExporterUtility"
-      provides="plone.exportimport.interfaces.IExporterUtility"
-      name="plone.exporter"
+  <!-- Main exporter -->
+  <adapter
+      factory=".Exporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
       />
 
   <!-- Exporters -->

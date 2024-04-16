@@ -7,11 +7,11 @@ class IExportImportBlobsMarker(Interface):
     """A marker interface to override default serializers."""
 
 
-class IExporterUtility(Interface):
+class IExporter(Interface):
     """Component to export content from a Plone Site."""
 
 
-class IImporterUtility(Interface):
+class IImporter(Interface):
     """Component to import content from a Plone Site."""
 
 
