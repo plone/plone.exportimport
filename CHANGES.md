@@ -8,3 +8,15 @@
 -->
 
 <!-- towncrier release notes start -->
+
+## 1.0.0a1 (2024-04-17)
+
+
+### New features:
+
+- Implement exporter and importer for content [@ericof] #1
+- Implement exporter and importer for members and groups [@ericof] #2
+- Implement exporter and importer for redirects [@ericof] #3
+- Implement exporter and importer for relations [@ericof] #4
+- Implement exporter and importer for translations [@ericof] #5
+- Implement exporter and importer for discussions [@ericof] #6
