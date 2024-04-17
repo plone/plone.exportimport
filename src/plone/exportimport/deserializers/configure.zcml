@@ -1,3 +1,4 @@
 <configure xmlns="http://namespaces.zope.org/zope">
   <adapter factory=".blob.ExportImportNamedFieldDeserializer" />
+  <adapter factory=".blocks.ExportImportBlocksDeserializer" />
 </configure>

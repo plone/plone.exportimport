@@ -4,7 +4,7 @@ from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
 from plone.exportimport import settings
 from plone.exportimport import types
-from plone.exportimport.interfaces import IExportImportBlobsMarker
+from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
 from typing import Callable
@@ -93,34 +93,33 @@ class ContentImporter(BaseImporter):
     def do_import(self) -> str:
         objs = []
         modified = set()
-        with request_provides(self.request, IExportImportBlobsMarker):
-            with transaction.manager as tm:
-                for index, item in enumerate(self.all_objects(), start=1):
-                    obj = self.construct(item)
-                    obj_path = "/".join(obj.getPhysicalPath())
-                    objs.append(obj_path)
+        with request_provides(self.request, IExportImportRequestMarker):
+            for index, item in enumerate(self.all_objects(), start=1):
+                obj = self.construct(item)
+                obj_path = "/".join(obj.getPhysicalPath())
+                objs.append(obj_path)
+                if not index % 100:
+                    transaction.savepoint()
+                    logger.info(f"Handled {index} items...")
+            for setter in content_utils.metadata_setters():
+                data = getattr(self.metadata, setter.name)
+                logger.info(f"Processing {setter.name}: {len(data)} entries")
+                for index, uid in enumerate(data, start=index):
+                    value = data[uid]
+                    if setter.func(uid, value):
+                        modified.add(uid)
                     if not index % 100:
-                        tm.savepoint()
+                        transaction.savepoint()
                         logger.info(f"Handled {index} items...")
-                for setter in content_utils.metadata_setters():
-                    data = getattr(self.metadata, setter.name)
-                    logger.info(f"Processing {setter.name}: {len(data)} entries")
-                    for index, uid in enumerate(data, start=index):
-                        value = data[uid]
-                        if setter.func(uid, value):
-                            modified.add(uid)
-                        if not index % 100:
-                            tm.savepoint()
-                            logger.info(f"Handled {index} items...")
-                # Reindex objects
-                idxs = [
-                    "allowedRolesAndUsers",
-                    "getObjPositionInParent",
-                    "is_default_page",
-                    "modified",
-                    "created",
-                ]
-                content_utils.recatalog_uids(modified, idxs=idxs)
+            # Reindex objects
+            idxs = [
+                "allowedRolesAndUsers",
+                "getObjPositionInParent",
+                "is_default_page",
+                "modified",
+                "created",
+            ]
+            content_utils.recatalog_uids(modified, idxs=idxs)
         return f"{self.__class__.__name__}: Imported {len(objs)} objects"
 
     def import_data(

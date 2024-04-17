@@ -3,5 +3,5 @@
   <adapter factory=".blob.ExportImportImageFieldSerializer" />
   <adapter factory=".blob.ExportImportSimpleFileFieldSerializer" />
   <adapter factory=".blob.ExportImportSimpleImageFieldSerializer" />
-
+  <adapter factory=".blocks.ExportImportBlocksSerializer" />
 </configure>

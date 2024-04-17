@@ -1,7 +1,7 @@
 from pathlib import Path
 from plone.dexterity.interfaces import IDexterityContent
 from plone.exportimport import settings
-from plone.exportimport.interfaces import IExportImportBlobsMarker
+from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import path as path_utils
 from plone.namedfile.interfaces import INamedField
 from plone.restapi.deserializer.dxfields import DefaultFieldDeserializer
@@ -24,7 +24,7 @@ def load_blob(path: str) -> bytes:
     return codecs.decode(data, "base64")
 
 
-@adapter(INamedField, IDexterityContent, IExportImportBlobsMarker)
+@adapter(INamedField, IDexterityContent, IExportImportRequestMarker)
 @implementer(IFieldDeserializer)
 class ExportImportNamedFieldDeserializer(DefaultFieldDeserializer):
     def __call__(self, value):

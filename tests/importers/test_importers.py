@@ -1,21 +1,20 @@
-from plone.exportimport import interfaces
-from plone.exportimport.importers import ImporterUtility
-from zope.component import getUtility
+from plone.exportimport.importers import get_importer
+from plone.exportimport.importers import Importer
 
 import pytest
 
 
-class TestImporterUtility:
+class TestImporter:
     @pytest.fixture(autouse=True)
     def _init(self, portal):
         self.src_portal = portal
-        self.utility = getUtility(interfaces.IImporterUtility, "plone.importer")
+        self.importer = get_importer(self.src_portal)
 
-    def test_utility_is_correct_instance(self):
-        assert isinstance(self.utility, ImporterUtility)
+    def test_importer_is_correct_class(self):
+        assert isinstance(self.importer, Importer)
 
-    def test_utility_all_importers(self):
-        importers = self.utility.all_importers(self.src_portal)
+    def test_all_importers(self):
+        importers = self.importer.all_importers()
         assert isinstance(importers, dict)
         assert len(importers) == 6
 
@@ -30,8 +29,8 @@ class TestImporterUtility:
             "plone.importer.discussions",
         ],
     )
-    def test_utility_importer_present(self, importer_name: str):
-        importers = self.utility.all_importers(self.src_portal)
+    def test_importer_present(self, importer_name: str):
+        importers = self.importer.all_importers()
         assert importer_name in importers
 
     @pytest.mark.parametrize(
@@ -42,8 +41,8 @@ class TestImporterUtility:
             "RedirectsImporter: Imported 0 redirects",
         ],
     )
-    def test_utility_import_site(self, base_import_path, msg: str):
-        results = self.utility.import_site(self.src_portal, base_import_path)
+    def test_import_site(self, base_import_path, msg: str):
+        results = self.importer.import_site(base_import_path)
         assert isinstance(results, list)
         # One entry per importer
         assert len(results) == 6

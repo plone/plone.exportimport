@@ -65,22 +65,6 @@ def load_json():
 
 
 @pytest.fixture
-def get_exporter():
-    from plone.exportimport import interfaces
-    from zope.component import getUtility
-
-    return getUtility(interfaces.IExporterUtility, "plone.importer")
-
-
-@pytest.fixture
-def get_importer():
-    from plone.exportimport import interfaces
-    from zope.component import getUtility
-
-    return getUtility(interfaces.IImporterUtility, "plone.importer")
-
-
-@pytest.fixture
 def create_example_content():
     def func(container, language="en"):
         contents = {}

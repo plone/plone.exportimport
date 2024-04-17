@@ -60,7 +60,7 @@ class BaseExporter:
         if not base_path.exists():
             base_path.mkdir(parents=True)
         self.base_path = base_path
-        self.data_hooks = data_hooks if data_hooks else []
-        self.obj_hooks = obj_hooks if obj_hooks else []
+        self.data_hooks = self.data_hooks or data_hooks or []
+        self.obj_hooks = self.obj_hooks or obj_hooks or []
         paths = self.dump()
         return paths

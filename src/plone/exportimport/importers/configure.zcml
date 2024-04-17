@@ -1,9 +1,8 @@
 <configure xmlns="http://namespaces.zope.org/zope">
-  <!-- Utility -->
-  <utility
-      factory=".ImporterUtility"
-      provides="plone.exportimport.interfaces.IImporterUtility"
-      name="plone.importer"
+  <!-- Main importer -->
+  <adapter
+      factory=".Importer"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
       />
 
   <!-- Importers -->
