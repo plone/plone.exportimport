@@ -1,5 +1,6 @@
 from .base import BaseExporter
 from pathlib import Path
+from plone import api
 from plone.exportimport import interfaces
 from plone.exportimport import logger
 from plone.exportimport import PACKAGE_NAME
@@ -71,4 +72,6 @@ class Exporter:
 
 def get_exporter(site: PloneSite = None) -> Exporter:
     """Get the exporter."""
+    if site is None:
+        site = api.portal.get()
     return getAdapter(site, interfaces.IExporter)

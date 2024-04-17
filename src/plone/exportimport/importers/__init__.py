@@ -1,5 +1,6 @@
 from .base import BaseImporter
 from pathlib import Path
+from plone import api
 from plone.exportimport import interfaces
 from plone.exportimport import logger
 from Products.CMFPlone.Portal import PloneSite
@@ -57,4 +58,6 @@ class Importer:
 
 def get_importer(site: PloneSite = None) -> Importer:
     """Get the importer."""
+    if site is None:
+        site = api.portal.get()
     return getAdapter(site, interfaces.IImporter)
