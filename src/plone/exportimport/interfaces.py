@@ -3,7 +3,7 @@
 from zope.interface import Interface
 
 
-class IExportImportBlobsMarker(Interface):
+class IExportImportRequestMarker(Interface):
     """A marker interface to override default serializers."""
 
 

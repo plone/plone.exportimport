@@ -4,7 +4,7 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.exportimport import logger
 from plone.exportimport import settings
 from plone.exportimport import types
-from plone.exportimport.interfaces import IExportImportBlobsMarker
+from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import path as path_utils
 from plone.namedfile.interfaces import INamedBlobFileField
@@ -19,7 +19,7 @@ from zope.globalrequest import getRequest
 from zope.interface import implementer
 
 
-@adapter(INamedBlobFileField, IDexterityContent, IExportImportBlobsMarker)
+@adapter(INamedBlobFileField, IDexterityContent, IExportImportRequestMarker)
 @implementer(IFieldSerializer)
 class ExportImportFileFieldSerializer(DefaultFieldSerializer):
     def __call__(self):
@@ -37,13 +37,13 @@ class ExportImportFileFieldSerializer(DefaultFieldSerializer):
             return json_compatible(result)
 
 
-@adapter(INamedFileField, IDexterityContent, IExportImportBlobsMarker)
+@adapter(INamedFileField, IDexterityContent, IExportImportRequestMarker)
 @implementer(IFieldSerializer)
 class ExportImportSimpleFileFieldSerializer(ExportImportFileFieldSerializer):
     """Same as above but less specific field interface"""
 
 
-@adapter(INamedBlobImageField, IDexterityContent, IExportImportBlobsMarker)
+@adapter(INamedBlobImageField, IDexterityContent, IExportImportRequestMarker)
 @implementer(IFieldSerializer)
 class ExportImportImageFieldSerializer(DefaultFieldSerializer):
     def __call__(self):
@@ -65,7 +65,7 @@ class ExportImportImageFieldSerializer(DefaultFieldSerializer):
         return json_compatible(result)
 
 
-@adapter(INamedImageField, IDexterityContent, IExportImportBlobsMarker)
+@adapter(INamedImageField, IDexterityContent, IExportImportRequestMarker)
 @implementer(IFieldSerializer)
 class ExportImportSimpleImageFieldSerializer(ExportImportImageFieldSerializer):
     """Same as above but less specific field interface"""

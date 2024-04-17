@@ -4,7 +4,7 @@ from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
 from plone.exportimport import settings
 from plone.exportimport import types
-from plone.exportimport.interfaces import IExportImportBlobsMarker
+from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
 from typing import Callable
@@ -93,7 +93,7 @@ class ContentImporter(BaseImporter):
     def do_import(self) -> str:
         objs = []
         modified = set()
-        with request_provides(self.request, IExportImportBlobsMarker):
+        with request_provides(self.request, IExportImportRequestMarker):
             for index, item in enumerate(self.all_objects(), start=1):
                 obj = self.construct(item)
                 obj_path = "/".join(obj.getPhysicalPath())

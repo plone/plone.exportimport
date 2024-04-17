@@ -7,7 +7,7 @@ from plone.exportimport import interfaces
 from plone.exportimport import logger
 from plone.exportimport import settings
 from plone.exportimport import types
-from plone.exportimport.interfaces import IExportImportBlobsMarker
+from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
 from typing import Callable
@@ -130,7 +130,7 @@ class ContentExporter(BaseExporter):
     def dump(self) -> List[Path]:
         """Serialize contents and dump them to disk."""
         paths = []
-        with request_provides(self.request, IExportImportBlobsMarker):
+        with request_provides(self.request, IExportImportRequestMarker):
             for obj in self.all_objects():
                 path = self.dump_one(obj)
                 if path:
