@@ -94,33 +94,32 @@ class ContentImporter(BaseImporter):
         objs = []
         modified = set()
         with request_provides(self.request, IExportImportBlobsMarker):
-            with transaction.manager as tm:
-                for index, item in enumerate(self.all_objects(), start=1):
-                    obj = self.construct(item)
-                    obj_path = "/".join(obj.getPhysicalPath())
-                    objs.append(obj_path)
+            for index, item in enumerate(self.all_objects(), start=1):
+                obj = self.construct(item)
+                obj_path = "/".join(obj.getPhysicalPath())
+                objs.append(obj_path)
+                if not index % 100:
+                    transaction.savepoint()
+                    logger.info(f"Handled {index} items...")
+            for setter in content_utils.metadata_setters():
+                data = getattr(self.metadata, setter.name)
+                logger.info(f"Processing {setter.name}: {len(data)} entries")
+                for index, uid in enumerate(data, start=index):
+                    value = data[uid]
+                    if setter.func(uid, value):
+                        modified.add(uid)
                     if not index % 100:
-                        tm.savepoint()
+                        transaction.savepoint()
                         logger.info(f"Handled {index} items...")
-                for setter in content_utils.metadata_setters():
-                    data = getattr(self.metadata, setter.name)
-                    logger.info(f"Processing {setter.name}: {len(data)} entries")
-                    for index, uid in enumerate(data, start=index):
-                        value = data[uid]
-                        if setter.func(uid, value):
-                            modified.add(uid)
-                        if not index % 100:
-                            tm.savepoint()
-                            logger.info(f"Handled {index} items...")
-                # Reindex objects
-                idxs = [
-                    "allowedRolesAndUsers",
-                    "getObjPositionInParent",
-                    "is_default_page",
-                    "modified",
-                    "created",
-                ]
-                content_utils.recatalog_uids(modified, idxs=idxs)
+            # Reindex objects
+            idxs = [
+                "allowedRolesAndUsers",
+                "getObjPositionInParent",
+                "is_default_page",
+                "modified",
+                "created",
+            ]
+            content_utils.recatalog_uids(modified, idxs=idxs)
         return f"{self.__class__.__name__}: Imported {len(objs)} objects"
 
     def import_data(
