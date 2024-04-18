@@ -54,6 +54,7 @@ setup(
         "plone.app.discussion",
         "plone.app.multilingual",
         "plone.app.redirector",
+        "plone.app.textfield",
         "plone.app.users",
         "plone.base",
         "plone.dexterity",

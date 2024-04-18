@@ -12,6 +12,16 @@ from zope.component import queryAdapter
 from zope.interface import implementer
 
 
+IMPORTER_NAMES = [
+    "plone.importer.content",
+    "plone.importer.principals",
+    "plone.importer.redirects",
+    "plone.importer.relations",
+    "plone.importer.translations",
+    "plone.importer.discussions",
+    "plone.importer.portlets",
+]
+
 ImporterMapping = Dict[str, BaseImporter]
 
 
@@ -19,14 +29,6 @@ ImporterMapping = Dict[str, BaseImporter]
 class Importer:
     """Import content into a Plone Site."""
 
-    importer_names = (
-        "plone.importer.content",
-        "plone.importer.principals",
-        "plone.importer.redirects",
-        "plone.importer.relations",
-        "plone.importer.translations",
-        "plone.importer.discussions",
-    )
     importers: ImporterMapping
 
     def __init__(self, site):
@@ -36,7 +38,7 @@ class Importer:
     def all_importers(self) -> List[BaseImporter]:
         """Return all importers."""
         importers = {}
-        for importer_name in self.importer_names:
+        for importer_name in IMPORTER_NAMES:
             importer = queryAdapter(
                 self.site, interfaces.INamedImporter, name=importer_name
             )
