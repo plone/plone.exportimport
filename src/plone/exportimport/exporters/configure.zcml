@@ -1,4 +1,7 @@
-<configure xmlns="http://namespaces.zope.org/zope">
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    >
   <!-- Main exporter -->
   <adapter
       factory=".Exporter"
@@ -43,5 +46,13 @@
       name="plone.exporter.discussions"
       />
 
+  <configure zcml:condition="installed plone.app.portlets">
+    <adapter
+        factory=".portlets.PortletsExporter"
+        provides="plone.exportimport.interfaces.INamedExporter"
+        for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+        name="plone.exporter.portlets"
+        />
+  </configure>
 
 </configure>

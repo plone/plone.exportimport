@@ -16,7 +16,7 @@ class TestImporter:
     def test_all_importers(self):
         importers = self.importer.all_importers()
         assert isinstance(importers, dict)
-        assert len(importers) == 6
+        assert len(importers) >= 6
 
     @pytest.mark.parametrize(
         "importer_name",
@@ -45,5 +45,5 @@ class TestImporter:
         results = self.importer.import_site(base_import_path)
         assert isinstance(results, list)
         # One entry per importer
-        assert len(results) == 6
+        assert len(results) >= 6
         assert msg in results

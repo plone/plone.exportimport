@@ -17,7 +17,7 @@ class TestExporter:
     def test_all_exporters(self):
         exporters = self.exporter.all_exporters()
         assert isinstance(exporters, dict)
-        assert len(exporters) == 6
+        assert len(exporters) >= 6
 
     @pytest.mark.parametrize(
         "exporter_name",
@@ -85,4 +85,4 @@ class TestExporterMultilingual:
     def test_all_exporters(self):
         exporters = self.exporter.all_exporters()
         assert isinstance(exporters, dict)
-        assert len(exporters) == 6
+        assert len(exporters) >= 6

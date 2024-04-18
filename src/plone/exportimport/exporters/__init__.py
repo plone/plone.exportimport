@@ -15,6 +15,17 @@ from zope.component import queryAdapter
 from zope.interface import implementer
 
 
+EXPORTER_NAMES = [
+    "plone.exporter.content",
+    "plone.exporter.principals",
+    "plone.exporter.redirects",
+    "plone.exporter.relations",
+    "plone.exporter.translations",
+    "plone.exporter.discussions",
+    "plone.exporter.portlets",
+]
+
+
 ExporterMapping = Dict[str, BaseExporter]
 
 
@@ -22,14 +33,6 @@ ExporterMapping = Dict[str, BaseExporter]
 class Exporter:
     """Export content from a Plone Site."""
 
-    exporter_names = (
-        "plone.exporter.content",
-        "plone.exporter.principals",
-        "plone.exporter.redirects",
-        "plone.exporter.relations",
-        "plone.exporter.translations",
-        "plone.exporter.discussions",
-    )
     exporters: ExporterMapping
 
     def __init__(self, site):
@@ -39,7 +42,7 @@ class Exporter:
     def all_exporters(self) -> ExporterMapping:
         """Return all exporters."""
         exporters = {}
-        for exporter_name in self.exporter_names:
+        for exporter_name in EXPORTER_NAMES:
             exporter = queryAdapter(
                 self.site, interfaces.INamedExporter, name=exporter_name
             )
