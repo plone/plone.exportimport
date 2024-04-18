@@ -9,6 +9,14 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a2 (2024-04-18)
+
+
+### New features:
+
+- Support export/import of portlets if plone.app.portlets is installed. @davisagli #8
+
+
 ## 1.0.0a1 (2024-04-17)
 
 
