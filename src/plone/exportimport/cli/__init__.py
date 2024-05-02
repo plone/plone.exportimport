@@ -5,6 +5,7 @@ from plone.exportimport.utils import cli as cli_helpers
 
 import argparse
 import sys
+import transaction
 
 
 CLI_SPEC = {
@@ -69,3 +70,4 @@ def importer_cli(args=sys.argv):
     logger.info(f" Using path {path} to import content to Plone site at /{site.id}")
     for item in results:
         logger.info(f" - {item}")
+    transaction.commit()
