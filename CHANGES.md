@@ -9,6 +9,17 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a3 (2024-05-02)
+
+
+### Bug fixes:
+
+- Fix importer by issuing a transaction commit
+  [sneridagh] #9
+- Account for use case language is empty string
+  [sneridagh] #10
+
+
 ## 1.0.0a2 (2024-04-18)
 
 
