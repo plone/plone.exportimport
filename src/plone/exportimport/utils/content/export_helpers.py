@@ -114,8 +114,11 @@ def fix_language(
     """Fix language information."""
     placeholder = settings.PLACEHOLDERS_LANGUAGE
     default_portal_language = config.site.language
-    token = item.get("language", {}).get("token", placeholder)
-    lang = placeholder if token == default_portal_language else token
+    if isinstance(item.get("language", {}), str):
+        lang = placeholder
+    else:
+        token = item.get("language", {}).get("token", placeholder)
+        lang = placeholder if token == default_portal_language else token
     item["language"] = lang
     return item
 
