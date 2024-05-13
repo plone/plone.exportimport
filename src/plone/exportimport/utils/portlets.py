@@ -1,6 +1,7 @@
 from plone import api
 from plone.app.portlets.interfaces import IPortletTypeInterface
 from plone.app.textfield.value import RichTextValue
+from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
 from plone.exportimport.settings import SITE_ROOT_UID
 from plone.portlets.constants import CONTENT_TYPE_CATEGORY
@@ -13,7 +14,9 @@ from plone.portlets.interfaces import IPortletAssignmentSettings
 from plone.portlets.interfaces import IPortletManager
 from plone.restapi.interfaces import IFieldDeserializer
 from plone.restapi.serializer.converters import json_compatible
-from plone.uuid.interfaces import IUUID
+from typing import List
+from typing import Optional
+from typing import Union
 from z3c.relationfield import RelationValue
 from zope.component import getUtilitiesFor
 from zope.component import getUtility
@@ -25,32 +28,45 @@ from zope.globalrequest import getRequest
 from zope.interface import providedBy
 
 
-def get_portlets():
+def portlets_in_context(
+    context: DexterityContent, uid: Optional[str] = None
+) -> Union[dict, None]:
+    """Collect portlet registrations in a context."""
+    result = {}
+    uid = uid if uid else api.content.get_uuid(context, None)
+    if not uid:
+        return
+
+    portlets = export_local_portlets(context)
+    if portlets:
+        result["portlets"] = portlets
+    blacklist = export_portlets_blacklist(context)
+    if blacklist:
+        result["blacklist_status"] = blacklist
+    if result:
+        result.update(
+            {
+                "@id": context.absolute_url(),
+                "UID": uid,
+            }
+        )
+    return result
+
+
+def get_portlets() -> List[dict]:
+    """Return a list of all portlet assignments on the site."""
     results = []
     portal = api.portal.get()
     portal_uid = portal.UID()
 
     def collect_portlets(obj, path):
-        uid = IUUID(obj, None)
+        uid = api.content.get_uuid(obj)
         if not uid:
             return
         if uid == portal_uid:
             uid = SITE_ROOT_UID
-
-        result = {}
-        portlets = export_local_portlets(obj)
-        if portlets:
-            result["portlets"] = portlets
-        blacklist = export_portlets_blacklist(obj)
-        if blacklist:
-            result["blacklist_status"] = blacklist
+        result = portlets_in_context(obj, uid)
         if result:
-            result.update(
-                {
-                    "@id": obj.absolute_url(),
-                    "UID": uid,
-                }
-            )
             results.append(result)
 
     portal.ZopeFindAndApply(portal, search_sub=True, apply_func=collect_portlets)
@@ -58,8 +74,9 @@ def get_portlets():
     return results
 
 
-def export_local_portlets(obj):
-    """Serialize portlets for one content object
+def export_local_portlets(obj: DexterityContent) -> dict:
+    """Serialize portlets for one content object.
+
     Code mostly taken from https://github.com/plone/plone.restapi/pull/669
     """
     portlets_schemata = {
@@ -107,7 +124,8 @@ def export_local_portlets(obj):
     return items
 
 
-def export_portlets_blacklist(obj):
+def export_portlets_blacklist(obj: DexterityContent) -> List[dict]:
+    """Export portlets blacklist for one content object."""
     results = []
     for manager_name, manager in getUtilitiesFor(IPortletManager):
         assignable = queryMultiAdapter((obj, manager), ILocalPortletAssignmentManager)
@@ -133,30 +151,57 @@ def export_portlets_blacklist(obj):
     return results
 
 
-def set_portlets(data):
+def _filter_portlets(current: dict, to_add: dict) -> dict:
+    """Given the current registered portlets, filter ."""
+    results = {}
+    current_portlets = current["portlets"]
+    new_portlets = to_add["portlets"]
+    for manager_id, assignments in new_portlets.items():
+        if manager_id not in current_portlets:
+            results[manager_id] = assignments
+            continue
+        manager = current_portlets[manager_id]
+        for assignment in assignments:
+            new_assignments = []
+            if assignment in manager:
+                continue
+            new_assignments.append(assignment)
+        if new_assignments:
+            results[manager_id] = new_assignments
+    return results
+
+
+def set_portlets(data: list) -> int:
+    """Set portlets for context."""
     results = 0
     for item in data:
-        obj = api.content.get(UID=item["UID"])
+        item_uid = item["UID"]
+        obj = api.content.get(UID=item_uid)
         if not obj:
-            if item["UID"] == SITE_ROOT_UID:
+            if item_uid == SITE_ROOT_UID:
                 obj = api.portal.get()
             else:
                 logger.info(
                     f"Could not find object to set portlet on UUID: {item['UID']}"
                 )
                 continue
-        registered_portlets = import_local_portlets(obj, item)
-        results += registered_portlets
+        existing_registrations = portlets_in_context(obj, item_uid)
+        new_registrations = _filter_portlets(existing_registrations, item)
+        if new_registrations:
+            registered_portlets = import_local_portlets(obj, item)
+            results += registered_portlets
     return results
 
 
-def import_local_portlets(obj, item):
-    """Register portlets from one object
+def import_local_portlets(obj: DexterityContent, item: dict) -> int:
+    """Register portlets from one object.
+
     Code adapted from plone.app.portlets.exportimport.portlets.PortletsXMLAdapter
     """
     site = api.portal.get()
     request = getRequest()
     results = 0
+
     for manager_name, portlets in item.get("portlets", {}).items():
         manager = queryUtility(IPortletManager, manager_name)
         if not manager:
@@ -164,7 +209,6 @@ def import_local_portlets(obj, item):
             continue
         mapping = queryMultiAdapter((obj, manager), IPortletAssignmentMapping)
         namechooser = INameChooser(mapping)
-
         for portlet_data in portlets:
             # 1. Create the assignment
             assignment_data = portlet_data["assignment"]
@@ -216,7 +260,7 @@ def import_local_portlets(obj, item):
             results += 1
 
     for blacklist_status in item.get("blacklist_status", []):
-        status = blacklist_status["status"]
+        status = blacklist_status["status"].lower()
         manager_name = blacklist_status["manager"]
         category = blacklist_status["category"]
         manager = queryUtility(IPortletManager, manager_name)
@@ -224,9 +268,6 @@ def import_local_portlets(obj, item):
             logger.info(f"No portlet manager {manager_name}")
             continue
         assignable = queryMultiAdapter((obj, manager), ILocalPortletAssignmentManager)
-        if status.lower() == "block":
-            assignable.setBlacklistStatus(category, True)
-        elif status.lower() == "show":
-            assignable.setBlacklistStatus(category, False)
+        assignable.setBlacklistStatus(category, (status == "block"))
 
     return results

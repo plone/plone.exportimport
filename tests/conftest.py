@@ -23,6 +23,12 @@ def base_import_path():
 
 
 @pytest.fixture()
+def portlets_import_path():
+    """Portlets import Path."""
+    return Path(__file__).parent / "_resources" / "portlets_import"
+
+
+@pytest.fixture()
 def multilingual_import_path():
     """Multilingual content import path."""
     return Path(__file__).parent / "_resources" / "multilingual_import"

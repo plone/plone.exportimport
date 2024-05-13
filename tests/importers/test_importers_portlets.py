@@ -25,11 +25,17 @@ class TestImporterPortlets:
         )
         assert isinstance(adapter, portlets.PortletsImporter)
 
-    def test_output_is_str(self, base_import_path):
+    def test_only_default_portlets_to_import(self, base_import_path):
         importer = self.importer
         result = importer.import_data(base_path=base_import_path)
         assert isinstance(result, str)
-        assert result == "PortletsImporter: Imported 5 portlets"
+        assert result == "PortletsImporter: Imported 0 portlets"
+
+    def test_additional_portlets(self, portlets_import_path):
+        importer = self.importer
+        result = importer.import_data(base_path=portlets_import_path)
+        assert isinstance(result, str)
+        assert result == "PortletsImporter: Imported 2 portlets"
 
     def test_empty_import_path(self, empty_import_path):
         importer = self.importer
