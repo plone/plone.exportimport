@@ -60,7 +60,10 @@ def get_portlets() -> List[dict]:
     portal_uid = portal.UID()
 
     def collect_portlets(obj, path):
-        uid = api.content.get_uuid(obj)
+        try:
+            uid = api.content.get_uuid(obj)
+        except TypeError:
+            uid = None
         if not uid:
             return
         if uid == portal_uid:
