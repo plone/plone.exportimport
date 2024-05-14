@@ -1,0 +1,40 @@
+[
+  {
+    "@id": "http://localhost:8080/Plone",
+    "portlets": {
+      "plone.leftcolumn": [
+        {
+          "assignment": {
+            "bottomLevel": 0,
+            "currentFolderOnly": false,
+            "includeTop": false,
+            "name": "My Navigation",
+            "no_icons": true,
+            "no_thumbs": false,
+            "root_uid": null,
+            "thumb_scale": null,
+            "topLevel": 1
+          },
+          "type": "portlets.Navigation",
+          "visible": true
+        },
+        {
+          "assignment": {
+            "bottomLevel": 0,
+            "currentFolderOnly": false,
+            "includeTop": false,
+            "name": "My Other Navigation",
+            "no_icons": true,
+            "no_thumbs": false,
+            "root_uid": null,
+            "thumb_scale": null,
+            "topLevel": 1
+          },
+          "type": "portlets.Navigation",
+          "visible": true
+        }
+      ]
+    },
+    "UID": "plone_site_root"
+  }
+]
