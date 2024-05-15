@@ -9,6 +9,26 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a4 (2024-05-15)
+
+
+### New features:
+
+- Add pre_deserialize_hooks to content import [@pbauer] #22
+
+
+### Bug fixes:
+
+- Reindex members of relations in case that they contain preview_image_links
+  [sneridagh] #13
+- Avoid duplicating portlets registration during import [@ericof] #16
+
+
+### Internal:
+
+- Update plone/meta [@ericof] #20
+
+
 ## 1.0.0a3 (2024-05-02)
 
 
