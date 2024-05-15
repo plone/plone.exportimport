@@ -3,12 +3,12 @@
 # See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "a58656d9"
+commit-id = "ae379f1f"
 
 [pyproject]
 codespell_skip = "*.min.js"
 codespell_ignores = "vew"
-dependencies_ignores = "['plone.volto', 'zestreleaser.towncrier', 'zest.releaser', 'pytest', 'pytest-cov', 'pytest-plone', 'plone.testing', 'plone.app.testing', 'plone.portlets', 'plone.app.portlets']"
+dependencies_ignores = "['plone.volto', 'plone.app.iterate', 'plone.app.upgrade', 'zestreleaser.towncrier', 'zest.releaser', 'pytest', 'pytest-cov', 'pytest-plone', 'plone.testing', 'plone.app.testing', 'plone.portlets', 'plone.app.portlets']"
 dependencies_mappings = [
     "Plone = ['Products.CMFPlone', 'Products.CMFCore', 'Products.GenericSetup']",
     ]
@@ -20,7 +20,7 @@ use_mxdev = true
 test_deps_additional = ""
 
 [github]
-py_versions = "[\"3.11\", \"3.10\"]"
+py_versions = "[\"3.12\", \"3.11\", \"3.10\"]"
 jobs = [
     "qa",
     "test",
