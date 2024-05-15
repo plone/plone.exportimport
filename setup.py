@@ -28,6 +28,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
     ],
     python_requires=">=3.8",
     keywords="Plone CMF Python Zope CMS",
@@ -74,12 +75,15 @@ setup(
         "test": [
             "zest.releaser[recommended]",
             "zestreleaser.towncrier",
+            "plone.app.iterate",
             "plone.app.testing",
+            "plone.app.upgrade",
             "plone.restapi[test]",
+            "plone.volto[test]",
             "plone.testing",
             "pytest",
             "pytest-cov",
-            "pytest-plone>=0.2.0",
+            "pytest-plone>=0.5.0",
         ]
     },
     entry_points={

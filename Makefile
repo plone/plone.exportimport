@@ -50,13 +50,15 @@ clean-instance: ## remove existing instance
 
 .PHONY: clean-venv
 clean-venv: ## remove virtual environment
-	rm -fr bin include lib lib64 env pyvenv.cfg .tox .pytest_cache requirements-mxdev.txt
+	rm -fr bin include lib lib64 env pyvenv.cfg .tox .pytest_cache constraints-mxdev.txt requirements-mxdev.txt sources/
 
 .PHONY: clean-build
 clean-build: ## remove build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr .eggs/
+	rm -fr parts/
+	rm -fr coverage.xml
 	find . -name '*.egg-info' -exec rm -fr {} +
 	find . -name '*.egg' -exec rm -rf {} +
 
