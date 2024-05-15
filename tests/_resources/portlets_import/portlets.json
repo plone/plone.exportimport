@@ -1,6 +1,13 @@
 [
   {
     "@id": "http://localhost:8080/Plone",
+    "blacklist_status": [
+      {
+        "category": "context",
+        "manager": "plone.rightcolumn",
+        "status": "block"
+      }
+    ],
     "portlets": {
       "plone.leftcolumn": [
         {
