@@ -4,4 +4,6 @@
   <adapter factory=".blob.ExportImportSimpleFileFieldSerializer" />
   <adapter factory=".blob.ExportImportSimpleImageFieldSerializer" />
   <adapter factory=".blocks.ExportImportBlocksSerializer" />
+  <adapter factory=".fields.CollectionFieldSerializer" />
+  <adapter factory=".fields.ChoiceFieldSerializer" />
 </configure>
