@@ -73,6 +73,13 @@ class ContentImporter(BaseImporter):
         # Get or Create object instance
         new = content_utils.get_obj_instance(item, config)
 
+        # Apply pre_deserialize hooks
+        for func in self.pre_deserialize_hooks:
+            logger.debug(
+                f"{config.logger_prefix} Running pre_deserialize hook {func.__name__} on payload"
+            )
+            item, new = func(item, new)
+
         # Deserialize
         new = self.deserialize(data=item, obj=new, config=config)
 
@@ -126,6 +133,7 @@ class ContentImporter(BaseImporter):
         self,
         base_path: Path,
         data_hooks: List[Callable] = None,
+        pre_deserialize_hooks: List[Callable] = None,
         obj_hooks: List[Callable] = None,
     ) -> str:
         """Import content into a site."""
@@ -137,4 +145,6 @@ class ContentImporter(BaseImporter):
             return f"{self.__class__.__name__}: No data to import"
         self.metadata = types.ExportImportMetadata(**self._read(metadata_path))
         self.languages = content_utils.get_portal_languages()
-        return super().import_data(base_path, data_hooks, obj_hooks)
+        return super().import_data(
+            base_path, data_hooks, pre_deserialize_hooks, obj_hooks
+        )
