@@ -157,13 +157,11 @@ def export_portlets_blacklist(obj: DexterityContent) -> List[dict]:
 def _filter_portlets(current: dict, to_add: dict) -> dict:
     """Given the current registered portlets, filter ."""
     results = {}
-    current_portlets = current["portlets"]
-    new_portlets = to_add["portlets"]
-    for manager_id, assignments in new_portlets.items():
-        if manager_id not in current_portlets:
+    for manager_id, assignments in to_add.items():
+        if manager_id not in current:
             results[manager_id] = assignments
             continue
-        manager = current_portlets[manager_id]
+        manager = current[manager_id]
         for assignment in assignments:
             new_assignments = []
             if assignment in manager:
