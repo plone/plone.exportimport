@@ -113,7 +113,10 @@ def get_obj_instance(item: dict, config: types.ImporterConfig) -> DexterityConte
         new = container[item["id"]]
         logger.debug(f"{config.logger_prefix} Will update {new}")
     else:
-        new = unrestricted_construct_instance(item["@type"], container, item["id"])
+        factory_kwargs = item.get("factory_kwargs", {})
+        new = unrestricted_construct_instance(
+            item["@type"], container, item["id"], **factory_kwargs
+        )
         logger.debug(f"{config.logger_prefix} Created {new}")
     return new
 
