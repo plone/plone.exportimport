@@ -10,7 +10,7 @@ long_description = f"""
 
 setup(
     name="plone.exportimport",
-    version="1.0.0a4",
+    version="1.0.0a5.dev0",
     description="Plone content export / import support",
     long_description=long_description,
     long_description_content_type="text/markdown",
