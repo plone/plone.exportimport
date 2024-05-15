@@ -74,7 +74,8 @@ class ContentImporter(BaseImporter):
         new = content_utils.get_obj_instance(item, config)
 
         # Apply pre_deserialize hooks
-        for func in self.pre_deserialize_hooks:
+        pre_deserialize_hooks = self.pre_deserialize_hooks or []
+        for func in pre_deserialize_hooks:
             logger.debug(
                 f"{config.logger_prefix} Running pre_deserialize hook {func.__name__} on payload"
             )
