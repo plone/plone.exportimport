@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a5 (2024-05-16)
+
+
+### Internal:
+
+- Fix list of test dependencies [@ericof] 
+
 ## 1.0.0a4 (2024-05-15)
 
 
