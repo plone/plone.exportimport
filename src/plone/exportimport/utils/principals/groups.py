@@ -39,6 +39,8 @@ def import_groups(data: List[dict]) -> List[GroupData]:
                 roles=item["roles"],
             )
             groups.append(group)
+        else:
+            group = api.group.get(groupname=groupid)
         # add all principals, even if they are not stored in plone (e.g. LDAP)
         for principal in principals:
             try:

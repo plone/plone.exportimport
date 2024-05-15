@@ -63,5 +63,21 @@
       ]
     },
     "UID": "plone_site_root"
+  },
+  {
+    "@id": "http://localhost:8080/plone.pdf",
+    "blacklist_status": [
+      {
+        "category": "group",
+        "manager": "plone.rightcolumn",
+        "status": "block"
+      },
+      {
+        "category": "content_type",
+        "manager": "plone.rightcolumn",
+        "status": "block"
+      }
+    ],
+    "UID": "3e0dd7c4b2714eafa1d6fc6a1493f953"
   }
 ]

@@ -19,6 +19,7 @@ class BaseImporter:
     errors: list = None
     request: types.HTTPRequest = None
     data_hooks: List[Callable] = None
+    pre_deserialize_hooks: List[Callable] = None
     obj_hooks: List[Callable] = None
 
     def __init__(
@@ -54,13 +55,17 @@ class BaseImporter:
         self,
         base_path: Path,
         data_hooks: List[Callable] = None,
+        pre_deserialize_hooks: List[Callable] = None,
         obj_hooks: List[Callable] = None,
     ) -> str:
         """Import data into a Plone site."""
         if not base_path.exists():
             return f"{self.__class__.__name__}: Import path does not exist"
         self.base_path = base_path
-        self.data_hooks = data_hooks if data_hooks else []
-        self.obj_hooks = obj_hooks if obj_hooks else []
+        self.data_hooks = self.data_hooks or data_hooks or []
+        pre_deserialize_hooks = (
+            self.pre_deserialize_hooks or pre_deserialize_hooks or []
+        )
+        self.obj_hooks = self.obj_hooks or obj_hooks or []
         report = self.do_import()
         return report

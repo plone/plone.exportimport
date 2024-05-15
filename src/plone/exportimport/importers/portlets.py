@@ -13,4 +13,4 @@ class PortletsImporter(BaseImporter):
             return f"{self.__class__.__name__}: No data to import"
         logger.debug(f"- Portlets: Read {len(data)} from {self.filepath}")
         count = utils.set_portlets(data)
-        return f"{self.__class__.__name__}: Imported {count} portlets"
+        return f"{self.__class__.__name__}: Imported {count} registrations"

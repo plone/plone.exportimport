@@ -1,3 +1,4 @@
+from collections import defaultdict
 from plone import api
 from plone.app.portlets.interfaces import IPortletTypeInterface
 from plone.app.textfield.value import RichTextValue
@@ -154,16 +155,17 @@ def export_portlets_blacklist(obj: DexterityContent) -> List[dict]:
     return results
 
 
-def _filter_portlets(current: dict, to_add: dict) -> dict:
-    """Given the current registered portlets, filter ."""
-    results = {}
-    current_portlets = current["portlets"]
-    new_portlets = to_add["portlets"]
-    for manager_id, assignments in new_portlets.items():
-        if manager_id not in current_portlets:
+def _filter_portlets_registrations(base: dict, registrations: dict) -> dict:
+    """Filter new registration with the current registered portlets."""
+    results = defaultdict(dict)
+    key = "portlets"
+    current = base.get(key, {})
+    to_register = registrations.get(key, {})
+    for manager_id, assignments in to_register.items():
+        if manager_id not in current:
             results[manager_id] = assignments
             continue
-        manager = current_portlets[manager_id]
+        manager = current[manager_id]
         for assignment in assignments:
             new_assignments = []
             if assignment in manager:
@@ -189,7 +191,7 @@ def set_portlets(data: list) -> int:
                 )
                 continue
         existing_registrations = portlets_in_context(obj, item_uid)
-        new_registrations = _filter_portlets(existing_registrations, item)
+        new_registrations = _filter_portlets_registrations(existing_registrations, item)
         if new_registrations:
             registered_portlets = import_local_portlets(obj, item)
             results += registered_portlets
@@ -263,7 +265,7 @@ def import_local_portlets(obj: DexterityContent, item: dict) -> int:
             results += 1
 
     for blacklist_status in item.get("blacklist_status", []):
-        status = blacklist_status["status"].lower()
+        status: bool = blacklist_status["status"].lower() == "block"
         manager_name = blacklist_status["manager"]
         category = blacklist_status["category"]
         manager = queryUtility(IPortletManager, manager_name)
@@ -271,6 +273,10 @@ def import_local_portlets(obj: DexterityContent, item: dict) -> int:
             logger.info(f"No portlet manager {manager_name}")
             continue
         assignable = queryMultiAdapter((obj, manager), ILocalPortletAssignmentManager)
-        assignable.setBlacklistStatus(category, (status == "block"))
+        assignable.setBlacklistStatus(category, status)
+        logger.info(
+            f"Added blacklist entry {category} ({status}) to {manager_name} of {obj.absolute_url()}"
+        )
+        results += 1
 
     return results
