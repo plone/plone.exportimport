@@ -145,6 +145,15 @@ class ContentImporter(BaseImporter):
             return f"{self.__class__.__name__}: No data to import"
         self.metadata = types.ExportImportMetadata(**self._read(metadata_path))
         self.languages = content_utils.get_portal_languages()
-        return super().import_data(
+        self.start()
+        result = super().import_data(
             base_path, data_hooks, pre_deserialize_hooks, obj_hooks
         )
+        self.finish()
+        return result
+
+    def start(self):
+        """Hook to do something before import starts."""
+
+    def finish(self):
+        """Hook to do something after import finishes."""
