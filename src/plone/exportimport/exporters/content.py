@@ -99,7 +99,7 @@ class ContentExporter(BaseExporter):
             logger.debug(
                 f"{config.logger_prefix} Running data hook {func.__name__} on payload"
             )
-            data = func(data, config)
+            data = func(data, obj, config)
 
         # Cleanup data
         for cleaner in content_utils.cleaners():
