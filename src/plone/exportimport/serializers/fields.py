@@ -1,14 +1,14 @@
+from plone.dexterity.interfaces import IDexterityContent
 from plone.exportimport.interfaces import IExportImportRequestMarker
+from plone.restapi.interfaces import IFieldSerializer
 from plone.restapi.serializer.converters import json_compatible
+from plone.restapi.serializer.dxfields import DefaultFieldSerializer
 from zope.component import adapter
 from zope.interface import implementer
-from plone.dexterity.interfaces import IDexterityContent
 from zope.schema.interfaces import IChoice
 from zope.schema.interfaces import ICollection
 from zope.schema.interfaces import IField
 from zope.schema.interfaces import IVocabularyTokenized
-from plone.restapi.interfaces import IFieldSerializer
-from plone.restapi.serializer.dxfields import DefaultFieldSerializer
 
 import logging
 
