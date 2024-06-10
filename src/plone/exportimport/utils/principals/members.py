@@ -1,11 +1,32 @@
+from contextlib import contextmanager
 from plone import api
 from plone.app.users.browser.userdatapanel import getUserDataSchema
 from plone.exportimport import logger
 from plone.exportimport.utils.principals import helpers
 from plone.restapi.serializer.converters import json_compatible
+from Products.CMFPlone.RegistrationTool import RegistrationTool
 from Products.PlonePAS.tools.memberdata import MemberData
 from typing import List
 from zope.schema import getFieldNames
+
+
+@contextmanager
+def _run_as_manager(context: RegistrationTool):
+    """Grant the current user the role of Manager on portal_registration.
+
+    We use this because api.env.adopt_roles does not work for
+    this specific use case.
+    """
+    current_user = api.user.get_current()
+    has_manager = "Manager" in api.user.get_roles(user=current_user, obj=context)
+    if not has_manager:
+        logger.debug(f"Grant the role Manager to user {current_user} on {context}")
+        api.user.grant_roles(user=current_user, roles=["Manager"], obj=context)
+    try:
+        yield
+    finally:
+        logger.debug(f"Remove the role Manager of user {current_user} on {context}")
+        api.user.revoke_roles(user=current_user, roles=["Manager"], obj=context)
 
 
 def _get_user_schema_fields() -> List[str]:
@@ -83,34 +104,34 @@ def export_members() -> List[dict]:
 
 def import_members(data: List[dict]) -> MemberData:
     """Import member information from the provided list of dictionaries."""
-    pr = api.portal.get_tool("portal_registration")
-
     members = []
-    for item in data:
-        username = item["username"]
-        email = item["email"]
-        if api.user.get(username=username) is not None:
-            logger.error(f"Skipping: User {username} already exists!")
-            continue
-        elif not email:
-            logger.info(f"Skipping user {username} without email: {item}")
-            continue
-        password = item.pop("password")
-        roles = item.pop("roles", [])
-        groups = item.pop("groups", [])
-        try:
-            pr.addMember(username, password, roles, [], item)
-        except ValueError:
-            logger.info(f"ValueError {username} : {item}")
-            continue
-        else:
-            user = api.user.get(username=username)
-        for groupname in groups:
+    pr = api.portal.get_tool("portal_registration")
+    with _run_as_manager(pr):
+        for item in data:
+            username = item["username"]
+            email = item["email"]
+            if api.user.get(username=username) is not None:
+                logger.error(f"Skipping: User {username} already exists!")
+                continue
+            elif not email:
+                logger.info(f"Skipping user {username} without email: {item}")
+                continue
+            password = item.pop("password")
+            roles = item.pop("roles", [])
+            groups = item.pop("groups", [])
             try:
-                api.group.add_user(groupname=groupname, user=user)
-            except (api.exc.GroupNotFoundError, KeyError):
-                pass
-        members.append(user)
+                pr.addMember(username, password, roles, [], item)
+            except ValueError:
+                logger.info(f"ValueError {username} : {item}")
+                continue
+            else:
+                user = api.user.get(username=username)
+            for groupname in groups:
+                try:
+                    api.group.add_user(groupname=groupname, user=user)
+                except (api.exc.GroupNotFoundError, KeyError):
+                    pass
+            members.append(user)
 
     return members
 

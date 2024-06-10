@@ -34,3 +34,9 @@ class TestImporterPrincipals:
         result = importer.import_data(base_path=invalid_import_path)
         assert isinstance(result, str)
         assert result == "PrincipalsImporter: Import path does not exist"
+
+    def test_pricinpals_import_path(self, principals_import_path):
+        importer = self.importer
+        result = importer.import_data(base_path=principals_import_path)
+        assert isinstance(result, str)
+        assert result == "PrincipalsImporter: Imported 2 groups and 1 members"
