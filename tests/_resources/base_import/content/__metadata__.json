@@ -22,6 +22,20 @@
       "default_page_uuid": "45b0b46f17104a7b8fa7bb94d3dd5bd9"
     }
   },
+  "local_permissions": {
+    "35661c9bb5be42c68f665aa1ed291418": {
+      "plone.app.contenttypes: Add Image": {
+        "roles": ["Manager"],
+        "acquire": false
+      }
+    },
+    "e7359727ace64e609b79c4091c38822a": {
+      "plone.app.contenttypes: Add Image": {
+        "roles": ["Member"],
+        "acquire": false
+      }
+    }
+  },
   "local_roles": {
     "35661c9bb5be42c68f665aa1ed291418": {
       "local_roles": {
