@@ -117,7 +117,9 @@ def fix_language(
     if isinstance(item.get("language", {}), str):
         item_language = item.get("language")
         lang = (
-            placeholder if item_language == default_portal_language else item_language
+            placeholder
+            if item_language == default_portal_language or item_language == ""
+            else item_language
         )
     else:
         token = item.get("language", {}).get("token", placeholder)

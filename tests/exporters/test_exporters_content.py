@@ -80,10 +80,8 @@ class TestExporterMultilingual:
 
     def test_content_is_exported(self, export_path, paths_as_relative, load_json):
         exporter = self.exporter
-        result = paths_as_relative(
-            export_path, exporter.export_data(base_path=export_path)
-        )
-        print(result)
+        paths_as_relative(export_path, exporter.export_data(base_path=export_path))
+
         metadata = load_json(
             export_path, "content/20737423549c43a88488242ec629e087/data.json"
         )
