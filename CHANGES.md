@@ -9,6 +9,14 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a6 (2024-06-10)
+
+
+### Bug fixes:
+
+- Allow granting roles other than Manager and Member to principals [@ericof] #25
+- Fix export of language for content [@sneridagh] #26
+
 ## 1.0.0a5 (2024-05-16)
 
 
