@@ -75,8 +75,8 @@ class TestExporter:
 class TestExporterMultilingual:
 
     @pytest.fixture(autouse=True)
-    def _init(self, portal):
-        self.src_portal = portal
+    def _init(self, portal_multilingual):
+        self.src_portal = portal_multilingual
         self.exporter = get_exporter(self.src_portal)
 
     def test_exporter_is_correct_instance(self):

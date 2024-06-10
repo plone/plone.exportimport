@@ -28,6 +28,9 @@ class TestUtilsContentExportHelpers:
         [
             [{}, PLACEHOLDERS_LANGUAGE],
             [{"language": ""}, PLACEHOLDERS_LANGUAGE],
+            [{"language": "en"}, PLACEHOLDERS_LANGUAGE],
+            [{"language": "es"}, "es"],
+            [{"language": "pt-br"}, "pt-br"],
             [{"language": {"token": "es"}}, "es"],
             [{"language": {"token": "pt-br"}}, "pt-br"],
         ],
