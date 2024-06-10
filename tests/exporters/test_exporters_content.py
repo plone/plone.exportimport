@@ -69,3 +69,23 @@ class TestExporterContentMetadata:
         metadata = load_json(self.base_path, "content/__metadata__.json")
         assert key in metadata
         assert isinstance(metadata[key], instance)
+
+
+class TestExporterMultilingual:
+
+    @pytest.fixture(autouse=True)
+    def _init(self, portal_multilingual, export_path):
+        self.src_portal = portal_multilingual
+        self.exporter = content.ContentExporter(portal_multilingual)
+
+    def test_content_is_exported(self, export_path, paths_as_relative, load_json):
+        exporter = self.exporter
+        result = paths_as_relative(
+            export_path, exporter.export_data(base_path=export_path)
+        )
+        print(result)
+        metadata = load_json(
+            export_path, "content/20737423549c43a88488242ec629e087/data.json"
+        )
+        assert "language" in metadata
+        assert metadata["language"] == "es"
