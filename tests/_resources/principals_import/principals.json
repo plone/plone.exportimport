@@ -58,31 +58,18 @@
   ],
   "members": [
     {
-      "description": "",
-      "email": "",
-      "fullname": "",
-      "groups": [],
-      "home_page": "",
-      "location": "",
-      "password": "{SSHA}h0uWiIeI5N0XhQDxLgbybJk9VKTBMri5/7F/",
-      "roles": [
-        "Member"
-      ],
-      "username": "test_user_1_"
-    },
-    {
       "description": "Plonista Brasileiro",
-      "email": "joao.silva@plone.org.br",
-      "fullname": "João da Silva",
+      "email": "maria.silva@plone.org.br",
+      "fullname": "Maria da Silva",
       "groups": [
-        "plone_brasil"
       ],
       "home_page": "https://plone.org.br",
-      "location": "Brasília, DF",
+      "location": "Salvador, BA",
       "password": "{SSHA}h0uWiIeI5N0XhQDxLgbybJk9VKTBMri5/7F/",
       "roles": [
         "Member",
-        "Manager"
+        "Editor",
+        "Reviewer"
       ],
       "username": "joao.silva"
     }

@@ -29,6 +29,12 @@ def portlets_import_path():
 
 
 @pytest.fixture()
+def principals_import_path():
+    """Principals content import path."""
+    return Path(__file__).parent / "_resources" / "principals_import"
+
+
+@pytest.fixture()
 def multilingual_import_path():
     """Multilingual content import path."""
     return Path(__file__).parent / "_resources" / "multilingual_import"
