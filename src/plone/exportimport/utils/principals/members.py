@@ -18,15 +18,20 @@ def _run_as_manager(context: RegistrationTool):
     this specific use case.
     """
     current_user = api.user.get_current()
-    has_manager = "Manager" in api.user.get_roles(user=current_user, obj=context)
+    local_roles = current_user.getRolesInContext(context)
+    has_manager = "Manager" in local_roles
     if not has_manager:
-        logger.debug(f"Grant the role Manager to user {current_user} on {context}")
-        api.user.grant_roles(user=current_user, roles=["Manager"], obj=context)
+        msg = f"the role Manager to user {current_user.getUser()} on {context}"
+        logger.debug(f"Grant {msg}")
+        context.manage_setLocalRoles(
+            current_user.getId(), list(local_roles) + ["Manager"]
+        )
     try:
         yield
     finally:
-        logger.debug(f"Remove the role Manager of user {current_user} on {context}")
-        api.user.revoke_roles(user=current_user, roles=["Manager"], obj=context)
+        if not has_manager:
+            logger.debug(f"Revoke {msg}")
+            context.manage_setLocalRoles(current_user.getId(), list(local_roles))
 
 
 def _get_user_schema_fields() -> List[str]:
