@@ -13,6 +13,9 @@ from plone.exportimport import logger
 from plone.exportimport import settings
 from plone.exportimport import types
 from plone.exportimport.utils.dates import parse_date
+from plone.exportimport.utils.permissions import (
+    set_local_permissions as _set_local_permissions,
+)
 from plone.restapi.interfaces import IDeserializeFromJson
 from typing import Callable
 from typing import List
@@ -280,12 +283,21 @@ def set_ordering(uid: str, value: int) -> bool:
     return status
 
 
+def set_local_permissions(uid: str, value: dict) -> bool:
+    obj = object_from_uid(uid)
+    if not obj:
+        logger.info(f"{uid}: Could not find object to set permissions")
+        return False
+    return _set_local_permissions(obj, value)
+
+
 def metadata_setters() -> List[types.ExportImportHelper]:
     helpers = []
     funcs = [
         (set_default_page, "default_page"),
         (set_ordering, "ordering"),
         (set_local_roles, "local_roles"),
+        (set_local_permissions, "local_permissions"),
     ]
     for func, attr in funcs:
         helpers.append(

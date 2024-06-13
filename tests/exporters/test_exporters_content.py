@@ -1,8 +1,38 @@
+from plone import api
 from plone.exportimport import interfaces
 from plone.exportimport.exporters import content
 from zope.component import getAdapter
+from zope.component.hooks import setSite
 
 import pytest
+
+
+@pytest.fixture
+def local_permissions() -> dict:
+    return {
+        "35661c9bb5be42c68f665aa1ed291418": {
+            "name": "plone.app.contenttypes: Add Image",
+            "roles": ["Manager"],
+            "acquire": False,
+        },
+        "e7359727ace64e609b79c4091c38822a": {
+            "name": "plone.app.contenttypes: Add Image",
+            "roles": ["Member"],
+            "acquire": False,
+        },
+    }
+
+
+@pytest.fixture()
+def portal_permissions(portal, local_permissions):
+    """Plone portal with permissions set on some content."""
+    setSite(portal)
+    for uid, permission in local_permissions.items():
+        obj = api.content.get(UID=uid)
+        obj.manage_permission(
+            permission["name"], roles=permission["roles"], acquire=permission["acquire"]
+        )
+    yield portal
 
 
 class TestExporterContent:
@@ -61,6 +91,7 @@ class TestExporterContentMetadata:
             ("_blob_files_", list),
             ("_data_files_", list),
             ("default_page", dict),
+            ("local_permissions", dict),
             ("local_roles", dict),
             ("ordering", dict),
         ],
@@ -69,6 +100,25 @@ class TestExporterContentMetadata:
         metadata = load_json(self.base_path, "content/__metadata__.json")
         assert key in metadata
         assert isinstance(metadata[key], instance)
+
+
+class TestExporterLocalPermissions:
+    @pytest.fixture(autouse=True)
+    def _init(self, portal_permissions, load_json, export_path):
+        exporter = content.ContentExporter(portal_permissions)
+        exporter.export_data(base_path=export_path)
+        self.base_path = export_path
+        self.permissions_metadata = load_json(
+            self.base_path, "content/__metadata__.json"
+        )["local_permissions"]
+
+    def test_local_permission_is_defined(self, local_permissions):
+        for uid, item in local_permissions.items():
+            assert uid in self.permissions_metadata
+            assert item["name"] in self.permissions_metadata[uid]
+            permission = self.permissions_metadata[uid][item["name"]]
+            assert permission["roles"] == item["roles"]
+            assert permission["acquire"] == item["acquire"]
 
 
 class TestExporterMultilingual:

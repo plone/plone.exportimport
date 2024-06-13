@@ -12,6 +12,7 @@ from plone.base.interfaces.constrains import ISelectableConstrainTypes
 from plone.dexterity.content import DexterityContent
 from plone.exportimport import settings
 from plone.exportimport import types
+from plone.exportimport.utils.permissions import get_local_permissions
 from plone.exportimport.utils.relations import relation_fields_for_content
 from plone.restapi.interfaces import ISerializeToJson
 from plone.restapi.serializer.converters import json_compatible
@@ -315,6 +316,7 @@ def metadata_helpers() -> List[types.ExportImportHelper]:
         (default_page_info, "default_page"),
         (get_position_in_parent, "ordering"),
         (get_local_roles, "local_roles"),
+        (get_local_permissions, "local_permissions"),
     ]
     for func, attr in funcs:
         helpers.append(

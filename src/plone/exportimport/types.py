@@ -23,6 +23,7 @@ class ExportImportMetadata:
     default_page: dict = field(default_factory=dict)
     ordering: dict = field(default_factory=dict)
     local_roles: dict = field(default_factory=dict)
+    local_permissions: dict = field(default_factory=dict)
     relations: list = field(default_factory=list)
     __version__: str = "1.0.0"
     _data_files_: List[str] = field(default_factory=list)

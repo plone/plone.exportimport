@@ -64,6 +64,7 @@ setup(
         "plone.uuid",
         "Products.CMFEditions",
         "Products.CMFPlone",
+        "Products.DCWorkflow",
         "Products.PlonePAS",
         "Products.PortalTransforms",
         "setuptools",
