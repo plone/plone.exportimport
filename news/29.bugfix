@@ -1,1 +1,0 @@
-Fix `plone.exportimport.utils.principals.members._run_as_manager` function [@ericof]

@@ -9,6 +9,18 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a7 (2024-06-13)
+
+
+### New features:
+
+- Export / Import local permissions for each content [@ericof] #15
+
+
+### Bug fixes:
+
+- Fix `plone.exportimport.utils.principals.members._run_as_manager` function [@ericof] #29
+
 ## 1.0.0a6 (2024-06-10)
 
 
