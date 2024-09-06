@@ -10,8 +10,6 @@
   <include package="Products.CMFPlone" />
   <include package="plone.namedfile" />
   <include package="plone.app.dexterity" />
-  <include package="plone.app.discussion" />
-  <include package="plone.app.multilingual" />
   <include package="plone.restapi" />
 
   <include package=".serializers" />
