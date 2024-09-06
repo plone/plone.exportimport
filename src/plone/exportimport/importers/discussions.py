@@ -14,7 +14,9 @@ class DiscussionsImporter(BaseImporter):
         try:
             from plone.exportimport.utils import discussions as utils
         except ImportError:
-            logger.warning("- Discussions: Skipping (plone.app.discussion not installed)")
+            logger.warning(
+                "- Discussions: Skipping (plone.app.discussion not installed)"
+            )
             return
 
         logger.debug(f"- Discussions: Read {len(data)} from {self.filepath}")

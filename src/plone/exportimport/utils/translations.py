@@ -7,11 +7,13 @@ from Products.CMFPlone.CatalogTool import CatalogTool
 from typing import List
 from typing import Tuple
 
+
 try:
     from plone.app.multilingual.interfaces import ITranslationManager
 except ImportError:
     HAS_MULTILINGUAL = False
-else: HAS_MULTILINGUAL = True
+else:
+    HAS_MULTILINGUAL = True
 
 TRANSLATION_INDEX = "TranslationGroup"
 

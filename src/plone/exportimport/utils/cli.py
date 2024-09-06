@@ -41,7 +41,9 @@ def get_app(zopeconf: Path):
     setRequest(app.REQUEST)
     ifaces = [IPloneRestapiLayer]
     try:
-        from plone.app.discussion.interfaces import IDiscussionLayer  # Needed by plone.restapi
+        from plone.app.discussion.interfaces import (
+            IDiscussionLayer,  # Needed by plone.restapi
+        )
     except ImportError:
         pass
     else:

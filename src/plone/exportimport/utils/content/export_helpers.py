@@ -22,6 +22,7 @@ from zope.component import getMultiAdapter
 
 import json
 
+
 try:
     from plone.app.discussion.interfaces import IConversation
 except ImportError:

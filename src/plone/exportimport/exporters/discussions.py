@@ -5,8 +5,9 @@ from plone.exportimport import logger
 from typing import List
 from zope.interface import implementer
 
+
 try:
-    import plone.app.discussion
+    import plone.app.discussion  # noqa
 except ImportError:
     HAS_DISCUSSION = False
 else:
