@@ -1,7 +1,6 @@
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.users import system as user
 from pathlib import Path
-from plone.app.discussion.interfaces import IDiscussionLayer  # Needed by plone.restapi
 from plone.restapi.interfaces import IPloneRestapiLayer
 from Products.CMFPlone.Portal import PloneSite
 from Testing.makerequest import makerequest
@@ -40,10 +39,16 @@ def get_app(zopeconf: Path):
     request = app.REQUEST
     app.REQUEST["PARENTS"] = [app]
     setRequest(app.REQUEST)
-    ifaces = [
-        IPloneRestapiLayer,
-        IDiscussionLayer,
-    ] + list(directlyProvidedBy(request))
+    ifaces = [IPloneRestapiLayer]
+    try:
+        from plone.app.discussion.interfaces import (
+            IDiscussionLayer,  # Needed by plone.restapi
+        )
+    except ImportError:
+        pass
+    else:
+        ifaces.append(IDiscussionLayer)
+    ifaces += list(directlyProvidedBy(request))
 
     directlyProvides(request, *ifaces)
     newSecurityManager(None, user)

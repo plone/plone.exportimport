@@ -52,8 +52,6 @@ setup(
         "plone.api",
         "plone.app.contenttypes",
         "plone.app.dexterity",
-        "plone.app.discussion",
-        "plone.app.multilingual",
         "plone.app.redirector",
         "plone.app.textfield",
         "plone.app.users",
@@ -76,7 +74,9 @@ setup(
         "test": [
             "zest.releaser[recommended]",
             "zestreleaser.towncrier",
+            "plone.app.discussion",
             "plone.app.iterate",
+            "plone.app.multilingual",
             "plone.app.testing",
             "plone.app.upgrade",
             "plone.restapi[test]",

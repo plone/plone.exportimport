@@ -1,0 +1,2 @@
+Use plone.app.discussion and plone.app.multilingual as optional dependencies.
+@davisagli

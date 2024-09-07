@@ -6,7 +6,6 @@ from .revisions import revision_history
 from Acquisition import aq_base
 from Acquisition import aq_parent
 from plone import api
-from plone.app.discussion.interfaces import IConversation
 from plone.base.interfaces.constrains import ENABLED
 from plone.base.interfaces.constrains import ISelectableConstrainTypes
 from plone.dexterity.content import DexterityContent
@@ -22,6 +21,12 @@ from typing import List
 from zope.component import getMultiAdapter
 
 import json
+
+
+try:
+    from plone.app.discussion.interfaces import IConversation
+except ImportError:
+    IConversation = None
 
 
 def get_serializer(obj, request) -> Callable:
@@ -281,8 +286,9 @@ def enrichers() -> List[types.ExportImportHelper]:
         add_constrains_info,
         add_workflow_history,
         add_revisions_history,
-        add_conversation,
     ]
+    if IConversation is not None:
+        funcs.append(add_conversation)
     for func in funcs:
         enrichers.append(
             types.ExportImportHelper(

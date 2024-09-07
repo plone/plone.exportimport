@@ -1,13 +1,19 @@
 from .content.core import get_obj_path
 from .content.core import get_portal_languages
 from plone import api
-from plone.app.multilingual.interfaces import ITranslationManager
 from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
 from Products.CMFPlone.CatalogTool import CatalogTool
 from typing import List
 from typing import Tuple
 
+
+try:
+    from plone.app.multilingual.interfaces import ITranslationManager
+except ImportError:
+    HAS_MULTILINGUAL = False
+else:
+    HAS_MULTILINGUAL = True
 
 TRANSLATION_INDEX = "TranslationGroup"
 
@@ -109,6 +115,9 @@ def link_translations(
 
 def set_translations(data: List[dict]) -> List[dict]:
     """Process a list of translations and add them to the Plone site."""
+    if not HAS_MULTILINGUAL:
+        logger.warning("- Translation: Skipping (plone.app.multilingual not installed)")
+        return
     results = []
     for item in data:
         translation_group = _parse_translation_group(item)
