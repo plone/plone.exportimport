@@ -100,21 +100,7 @@ class TestUtilsRelations:
 
     @pytest.mark.parametrize(
         "from_attribute",
-        [
-            "translationOf",  # old LinguaPlone
-            "isReferencing",  # linkintegrity
-            "internal_references",  # obsolete
-            "link",  # tab
-            "link1",  # extranetfrontpage
-            "link2",  # extranetfrontpage
-            "link3",  # extranetfrontpage
-            "link4",  # extranetfrontpage
-            "box3_link",  # shopfrontpage
-            "box1_link",  # shopfrontpage
-            "box2_link",  # shopfrontpage
-            "source",  # remotedisplay
-            "internally_links_to",  # DoormatReference
-        ],
+        relations_utils.RELATIONS_TO_IGNORE,
     )
     def test__prepare_relations_to_import_should_filter_attribute(
         self, from_attribute: str
