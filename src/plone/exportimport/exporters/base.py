@@ -44,6 +44,12 @@ class BaseExporter:
         path_utils.get_parent_folder(filepath)
         with open(filepath, "w") as fh:
             json.dump(data, fh, indent=2, sort_keys=True)
+            # json.dump does not add a newline at the end of the file, so we
+            # explicitly do it.  Otherwise when you manually edit a file and
+            # you use an editor that respects the standard `.editorconfig`
+            # that we have in most Plone packages, you always get a diff because
+            # your editor has automatically added a newline at the end.
+            fh.write("\n")
         return filepath
 
     def dump(self) -> List[Path]:
