@@ -115,10 +115,10 @@ def link_translations(
 
 def set_translations(data: List[dict]) -> List[dict]:
     """Process a list of translations and add them to the Plone site."""
+    results = []
     if not HAS_MULTILINGUAL:
         logger.warning("- Translation: Skipping (plone.app.multilingual not installed)")
-        return
-    results = []
+        return results
     for item in data:
         translation_group = _parse_translation_group(item)
         canonical = translation_group["canonical"]
