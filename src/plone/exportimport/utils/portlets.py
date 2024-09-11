@@ -1,4 +1,3 @@
-from collections import defaultdict
 from plone import api
 from plone.app.portlets.interfaces import IPortletTypeInterface
 from plone.app.textfield.value import RichTextValue
@@ -155,25 +154,47 @@ def export_portlets_blacklist(obj: DexterityContent) -> List[dict]:
     return results
 
 
-def _filter_portlets_registrations(base: dict, registrations: dict) -> dict:
-    """Filter new registration with the current registered portlets."""
-    results = defaultdict(dict)
+def _has_new_registrations(base: dict, registrations: dict) -> bool:
+    """Are the new registrations additions/changes to the current ones?
+
+    This is for both portlets and blacklists.
+    The import code does not handle removals, so we are not interested in those.
+    """
     key = "portlets"
     current = base.get(key, {})
     to_register = registrations.get(key, {})
     for manager_id, assignments in to_register.items():
         if manager_id not in current:
-            results[manager_id] = assignments
-            continue
+            return True
         manager = current[manager_id]
         for assignment in assignments:
-            new_assignments = []
-            if assignment in manager:
-                continue
-            new_assignments.append(assignment)
-        if new_assignments:
-            results[manager_id] = new_assignments
-    return results
+            if assignment not in manager:
+                return True
+
+    key = "blacklist_status"
+    current = base.get(key, [])
+    to_register = registrations.get(key, [])
+    for new_reg in to_register:
+        # Each new_reg is a dict with keys category, manager and status.
+        # Try to find the same registration in the current registrations.
+        found = False
+        for old_reg in current:
+            same = True
+            for key, value in new_reg.items():
+                if old_reg.get(key) != value:
+                    same = False
+                    break
+            if same:
+                # All keys/values are the same.
+                found = True
+                break
+        if not found:
+            # We did not find a duplicate in the current registrations,
+            # so there is a difference.
+            return True
+
+    # no changes
+    return False
 
 
 def set_portlets(data: list) -> int:
@@ -191,7 +212,7 @@ def set_portlets(data: list) -> int:
                 )
                 continue
         existing_registrations = portlets_in_context(obj, item_uid)
-        new_registrations = _filter_portlets_registrations(existing_registrations, item)
+        new_registrations = _has_new_registrations(existing_registrations, item)
         if new_registrations:
             registered_portlets = import_local_portlets(obj, item)
             results += registered_portlets
