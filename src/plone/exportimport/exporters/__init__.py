@@ -69,7 +69,10 @@ class Exporter:
         with hooks.site(self.site):
             for exporter_name, exporter in self.exporters.items():
                 logger.debug(f"Exporting {self.site} with {exporter_name} to {path}")
-                paths.extend(exporter.export_data(path))
+                new_paths = exporter.export_data(path)
+                # could be None
+                if new_paths:
+                    paths.extend(new_paths)
         return paths
 
 
