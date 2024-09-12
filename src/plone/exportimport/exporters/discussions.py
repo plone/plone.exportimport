@@ -22,7 +22,7 @@ class DiscussionsExporter(BaseExporter):
         """Serialize object and dump it to disk."""
         if not HAS_DISCUSSION:
             logger.debug("- Discussions: Skipping (plone.app.discussion not installed)")
-            return
+            return []
 
         from plone.exportimport.utils import discussions as utils
 

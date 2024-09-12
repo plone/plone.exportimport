@@ -70,9 +70,7 @@ class Exporter:
             for exporter_name, exporter in self.exporters.items():
                 logger.debug(f"Exporting {self.site} with {exporter_name} to {path}")
                 new_paths = exporter.export_data(path)
-                # could be None
-                if new_paths:
-                    paths.extend(new_paths)
+                paths.extend(new_paths)
         return paths
 
 
