@@ -50,11 +50,10 @@ class TestExporterPortlets:
         "key,value_type",
         [
             ["@id", str],
-            ["portlets", dict],
             ["UID", str],
         ],
     )
-    def test_portlets_content(self, export_path, load_json, key, value_type):
+    def test_portlets_content_general(self, export_path, load_json, key, value_type):
         exporter = self.exporter
         exporter.export_data(base_path=export_path)
         data = load_json(base_path=export_path, path="portlets.json")
@@ -62,3 +61,24 @@ class TestExporterPortlets:
         portlet = data[0]
         assert key in portlet
         assert isinstance(portlet[key], value_type)
+
+    @pytest.mark.parametrize(
+        "key,value_type",
+        [
+            ["portlets", dict],
+            ["blocked_status", list],
+        ],
+    )
+    def test_portlets_content_specific(self, export_path, load_json, key, value_type):
+        exporter = self.exporter
+        exporter.export_data(base_path=export_path)
+        data = load_json(base_path=export_path, path="portlets.json")
+        assert isinstance(data, list)
+        # We expect at least one to have a blocked_status, and another to have portlets.
+        # The order could possibly differ, so look for the first one that matches.
+        for portlet in data:
+            if key in portlet:
+                assert isinstance(portlet[key], value_type)
+                return
+        # If we end up here, the key was found nowhere.
+        assert False, f"{key} key not found in anywhere in {data}"
