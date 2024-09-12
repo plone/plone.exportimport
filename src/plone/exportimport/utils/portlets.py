@@ -27,6 +27,8 @@ from zope.container.interfaces import INameChooser
 from zope.globalrequest import getRequest
 from zope.interface import providedBy
 
+import warnings
+
 
 def portlets_in_context(
     context: DexterityContent, uid: Optional[str] = None
@@ -40,9 +42,9 @@ def portlets_in_context(
     portlets = export_local_portlets(context)
     if portlets:
         result["portlets"] = portlets
-    blacklist = export_portlets_blacklist(context)
-    if blacklist:
-        result["blacklist_status"] = blacklist
+    disallowlist = export_portlets_disallowlist(context)
+    if disallowlist:
+        result["disallowlist_status"] = disallowlist
     if result:
         result.update(
             {
@@ -127,8 +129,8 @@ def export_local_portlets(obj: DexterityContent) -> dict:
     return items
 
 
-def export_portlets_blacklist(obj: DexterityContent) -> List[dict]:
-    """Export portlets blacklist for one content object."""
+def export_portlets_disallowlist(obj: DexterityContent) -> List[dict]:
+    """Export portlets disallowlist for one content object."""
     results = []
     for manager_name, manager in getUtilitiesFor(IPortletManager):
         assignable = queryMultiAdapter((obj, manager), ILocalPortletAssignmentManager)
@@ -157,7 +159,7 @@ def export_portlets_blacklist(obj: DexterityContent) -> List[dict]:
 def _has_new_registrations(base: dict, registrations: dict) -> bool:
     """Are the new registrations additions/changes to the current ones?
 
-    This is for both portlets and blacklists.
+    This is for both portlets and disallowlists.
     The import code does not handle removals, so we are not interested in those.
     """
     key = "portlets"
@@ -171,7 +173,7 @@ def _has_new_registrations(base: dict, registrations: dict) -> bool:
             if assignment not in manager:
                 return True
 
-    key = "blacklist_status"
+    key = "disallowlist_status"
     current = base.get(key, [])
     to_register = registrations.get(key, [])
     for new_reg in to_register:
@@ -212,6 +214,13 @@ def set_portlets(data: list) -> int:
                 )
                 continue
         existing_registrations = portlets_in_context(obj, item_uid)
+        old_key = "blacklist_status"
+        new_key = "disallowlist_status"
+        if old_key in item and new_key not in item:
+            warnings.warn(
+                f"{old_key} is deprecated, please use {new_key}.", DeprecationWarning
+            )
+            item[new_key] = item.pop(old_key)
         new_registrations = _has_new_registrations(existing_registrations, item)
         if new_registrations:
             registered_portlets = import_local_portlets(obj, item)
@@ -285,10 +294,10 @@ def import_local_portlets(obj: DexterityContent, item: dict) -> int:
             )
             results += 1
 
-    for blacklist_status in item.get("blacklist_status", []):
-        status: bool = blacklist_status["status"].lower() == "block"
-        manager_name = blacklist_status["manager"]
-        category = blacklist_status["category"]
+    for disallowlist_status in item.get("disallowlist_status", []):
+        status: bool = disallowlist_status["status"].lower() == "block"
+        manager_name = disallowlist_status["manager"]
+        category = disallowlist_status["category"]
         manager = queryUtility(IPortletManager, manager_name)
         if not manager:
             logger.info(f"No portlet manager {manager_name}")
@@ -296,7 +305,7 @@ def import_local_portlets(obj: DexterityContent, item: dict) -> int:
         assignable = queryMultiAdapter((obj, manager), ILocalPortletAssignmentManager)
         assignable.setBlacklistStatus(category, status)
         logger.info(
-            f"Added blacklist entry {category} ({status}) to {manager_name} of {obj.absolute_url()}"
+            f"Added disallowlist entry {category} ({status}) to {manager_name} of {obj.absolute_url()}"
         )
         results += 1
 
