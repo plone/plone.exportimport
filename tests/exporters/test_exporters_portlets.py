@@ -66,7 +66,7 @@ class TestExporterPortlets:
         "key,value_type",
         [
             ["portlets", dict],
-            ["disallowlist_status", list],
+            ["blocked_status", list],
         ],
     )
     def test_portlets_content_specific(self, export_path, load_json, key, value_type):
@@ -74,7 +74,7 @@ class TestExporterPortlets:
         exporter.export_data(base_path=export_path)
         data = load_json(base_path=export_path, path="portlets.json")
         assert isinstance(data, list)
-        # We expect at least one to have a disallowlist, and another to have portlets.
+        # We expect at least one to have a blocked_status, and another to have portlets.
         # The order could possibly differ, so look for the first one that matches.
         for portlet in data:
             if key in portlet:

@@ -42,9 +42,9 @@ def portlets_in_context(
     portlets = export_local_portlets(context)
     if portlets:
         result["portlets"] = portlets
-    disallowlist = export_portlets_disallowlist(context)
-    if disallowlist:
-        result["disallowlist_status"] = disallowlist
+    blocked = export_blocked_portlets(context)
+    if blocked:
+        result["blocked_status"] = blocked
     if result:
         result.update(
             {
@@ -129,8 +129,8 @@ def export_local_portlets(obj: DexterityContent) -> dict:
     return items
 
 
-def export_portlets_disallowlist(obj: DexterityContent) -> List[dict]:
-    """Export portlets disallowlist for one content object."""
+def export_blocked_portlets(obj: DexterityContent) -> List[dict]:
+    """Export portlets blocked for one content object."""
     results = []
     for manager_name, manager in getUtilitiesFor(IPortletManager):
         assignable = queryMultiAdapter((obj, manager), ILocalPortletAssignmentManager)
@@ -159,7 +159,7 @@ def export_portlets_disallowlist(obj: DexterityContent) -> List[dict]:
 def _has_new_registrations(base: dict, registrations: dict) -> bool:
     """Are the new registrations additions/changes to the current ones?
 
-    This is for both portlets and disallowlists.
+    This is for both portlets and blocked portlets.
     The import code does not handle removals, so we are not interested in those.
     """
     key = "portlets"
@@ -173,7 +173,7 @@ def _has_new_registrations(base: dict, registrations: dict) -> bool:
             if assignment not in manager:
                 return True
 
-    key = "disallowlist_status"
+    key = "blocked_status"
     current = base.get(key, [])
     to_register = registrations.get(key, [])
     for new_reg in to_register:
@@ -215,7 +215,7 @@ def set_portlets(data: list) -> int:
                 continue
         existing_registrations = portlets_in_context(obj, item_uid)
         old_key = "blacklist_status"
-        new_key = "disallowlist_status"
+        new_key = "blocked_status"
         if old_key in item and new_key not in item:
             warnings.warn(
                 f"{old_key} is deprecated, please use {new_key}.", DeprecationWarning
@@ -294,10 +294,10 @@ def import_local_portlets(obj: DexterityContent, item: dict) -> int:
             )
             results += 1
 
-    for disallowlist_status in item.get("disallowlist_status", []):
-        status: bool = disallowlist_status["status"].lower() == "block"
-        manager_name = disallowlist_status["manager"]
-        category = disallowlist_status["category"]
+    for blocked_status in item.get("blocked_status", []):
+        status: bool = blocked_status["status"].lower() == "block"
+        manager_name = blocked_status["manager"]
+        category = blocked_status["category"]
         manager = queryUtility(IPortletManager, manager_name)
         if not manager:
             logger.info(f"No portlet manager {manager_name}")
@@ -305,7 +305,7 @@ def import_local_portlets(obj: DexterityContent, item: dict) -> int:
         assignable = queryMultiAdapter((obj, manager), ILocalPortletAssignmentManager)
         assignable.setBlacklistStatus(category, status)
         logger.info(
-            f"Added disallowlist entry {category} ({status}) to {manager_name} of {obj.absolute_url()}"
+            f"Added blocked entry {category} ({status}) to {manager_name} of {obj.absolute_url()}"
         )
         results += 1
 
