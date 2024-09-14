@@ -1,5 +1,4 @@
 from .base import BaseImporter
-from collections import OrderedDict
 from pathlib import Path
 from plone import api
 from plone.exportimport import interfaces
@@ -38,7 +37,7 @@ class Importer:
 
     def all_importers(self) -> List[BaseImporter]:
         """Return all importers."""
-        importers = OrderedDict()
+        importers = {}
         for importer_name in IMPORTER_NAMES:
             importer = queryAdapter(
                 self.site, interfaces.INamedImporter, name=importer_name
