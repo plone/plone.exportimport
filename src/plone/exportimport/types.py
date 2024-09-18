@@ -24,6 +24,7 @@ class ExportImportMetadata:
     ordering: dict = field(default_factory=dict)
     local_roles: dict = field(default_factory=dict)
     local_permissions: dict = field(default_factory=dict)
+    constrains: dict = field(default_factory=dict)
     relations: list = field(default_factory=list)
     __version__: str = "1.0.0"
     _data_files_: List[str] = field(default_factory=list)
@@ -32,6 +33,8 @@ class ExportImportMetadata:
 
     def export(self) -> dict:
         dump = asdict(self)
+        # Ignore constrains on export
+        dump.pop("constrains", None)
         files = dump.pop("_all_", {})
         dump["_data_files_"] = [v for _, v in sorted(files.items())]
         return dump

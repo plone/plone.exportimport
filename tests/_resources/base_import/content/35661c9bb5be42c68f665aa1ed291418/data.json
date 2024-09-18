@@ -16,7 +16,15 @@
   "effective": null,
   "exclude_from_nav": false,
   "expires": null,
-  "exportimport.constrains": {},
+  "exportimport.constrains": {
+    "immediately_addable_types": [
+      "Image"
+    ],
+    "locally_allowed_types": [
+      "Document",
+      "Image"
+    ]
+  },
   "exportimport.conversation": [],
   "exportimport.versions": {},
   "id": "bar",

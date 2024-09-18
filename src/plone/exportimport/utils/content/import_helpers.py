@@ -134,28 +134,6 @@ def update_uid(item: dict, obj: DexterityContent) -> DexterityContent:
     return obj
 
 
-def update_constrains(item: dict, obj: DexterityContent) -> DexterityContent:
-    """Update constrains in object."""
-    item_id = item["@id"]
-    item_constrains = item.get(settings.SERIALIZER_CONSTRAINS_KEY)
-    if not item_constrains:
-        return obj
-    constrains = ISelectableConstrainTypes(obj, None)
-    if constrains:
-        constrains.setConstrainTypesMode(ENABLED)
-        for key, func in (
-            ("locally_allowed_types", constrains.setLocallyAllowedTypes),
-            ("immediately_addable_types", constrains.setImmediatelyAddableTypes),
-        ):
-            value = item_constrains.get(key)
-            try:
-                func(value)
-            except ValueError:
-                logger.warning(f"Cannot set {key} on {item_id}", exc_info=True)
-
-    return obj
-
-
 def update_review_state(item: dict, obj: DexterityContent) -> DexterityContent:
     """Update review state on the object."""
     portal_workflow = api.portal.get_tool("portal_workflow")
@@ -207,7 +185,6 @@ def updaters() -> List[types.ExportImportHelper]:
     updaters = []
     funcs = [
         update_uid,
-        update_constrains,
         update_review_state,
         update_workflow_history,
         update_dates,
@@ -221,6 +198,40 @@ def updaters() -> List[types.ExportImportHelper]:
             )
         )
     return updaters
+
+
+def set_constrains(uid: str, value: dict) -> bool:
+    """Update constrains in object."""
+    status = False
+    obj = object_from_uid(uid)
+    if not value:
+        return status
+    constrains = ISelectableConstrainTypes(obj, None)
+    if constrains:
+        status = True
+        with api.env.adopt_roles(["Manager", "Site Administrator"]):
+            constrains.setConstrainTypesMode(ENABLED)
+            for key, func, check in (
+                (
+                    "locally_allowed_types",
+                    constrains.setLocallyAllowedTypes,
+                    constrains.getLocallyAllowedTypes,
+                ),
+                (
+                    "immediately_addable_types",
+                    constrains.setImmediatelyAddableTypes,
+                    constrains.getImmediatelyAddableTypes,
+                ),
+            ):
+                local_value = value.get(key)
+                try:
+                    func(local_value)
+                except ValueError:
+                    logger.warning(f"Cannot set {key} on {uid}", exc_info=True)
+                else:
+                    result = check()
+                    status = status and (result == local_value)
+    return status
 
 
 def set_default_page(uid: str, value: dict) -> bool:
@@ -298,6 +309,7 @@ def metadata_setters() -> List[types.ExportImportHelper]:
         (set_ordering, "ordering"),
         (set_local_roles, "local_roles"),
         (set_local_permissions, "local_permissions"),
+        (set_constrains, "constrains"),
     ]
     for func, attr in funcs:
         helpers.append(
