@@ -14,7 +14,6 @@ from zope.component import getUtility
 
 RELATIONS_TO_IGNORE = [
     "translationOf",  # old LinguaPlone
-    "isReferencing",  # linkintegrity
     "internal_references",  # obsolete
     "link",  # tab
     "link1",  # extranetfrontpage
