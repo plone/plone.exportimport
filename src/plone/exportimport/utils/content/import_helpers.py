@@ -200,27 +200,27 @@ def updaters() -> List[types.ExportImportHelper]:
     return updaters
 
 
-def set_constrains(uid: str, value: dict) -> bool:
-    """Update constrains in object."""
+def set_constraints(uid: str, value: dict) -> bool:
+    """Update constraints in object."""
     status = False
     obj = object_from_uid(uid)
     if not value:
         return status
-    constrains = ISelectableConstrainTypes(obj, None)
-    if constrains:
+    constraints = ISelectableConstrainTypes(obj, None)
+    if constraints:
         status = True
         with api.env.adopt_roles(["Manager", "Site Administrator"]):
-            constrains.setConstrainTypesMode(ENABLED)
+            constraints.setConstrainTypesMode(ENABLED)
             for key, func, check in (
                 (
                     "locally_allowed_types",
-                    constrains.setLocallyAllowedTypes,
-                    constrains.getLocallyAllowedTypes,
+                    constraints.setLocallyAllowedTypes,
+                    constraints.getLocallyAllowedTypes,
                 ),
                 (
                     "immediately_addable_types",
-                    constrains.setImmediatelyAddableTypes,
-                    constrains.getImmediatelyAddableTypes,
+                    constraints.setImmediatelyAddableTypes,
+                    constraints.getImmediatelyAddableTypes,
                 ),
             ):
                 local_value = value.get(key)
@@ -309,7 +309,7 @@ def metadata_setters() -> List[types.ExportImportHelper]:
         (set_ordering, "ordering"),
         (set_local_roles, "local_roles"),
         (set_local_permissions, "local_permissions"),
-        (set_constrains, "constrains"),
+        (set_constraints, "constraints"),
     ]
     for func, attr in funcs:
         helpers.append(

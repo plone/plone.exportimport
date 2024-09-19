@@ -84,11 +84,11 @@ class ContentImporter(BaseImporter):
         # Deserialize
         new = self.deserialize(data=item, obj=new, config=config)
 
-        # Handle constrains
-        constrains = item.pop(settings.SERIALIZER_CONSTRAINS_KEY, {})
-        if constrains:
+        # Handle constraints
+        constraints = item.pop(settings.SERIALIZER_CONSTRAINS_KEY, {})
+        if constraints:
             item_uid = item["UID"]
-            self.metadata.constrains[item_uid] = constrains
+            self.metadata.constraints[item_uid] = constraints
 
         # Updaters
         for updater in content_utils.updaters():
