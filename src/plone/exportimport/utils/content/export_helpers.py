@@ -170,8 +170,8 @@ def fix_allow_discussion(
     return item
 
 
-def add_constrains_info(obj: DexterityContent, config: types.ExporterConfig) -> dict:
-    """Return constrains info for an object."""
+def add_constraints_info(obj: DexterityContent, config: types.ExporterConfig) -> dict:
+    """Return constraints info for an object."""
     key = settings.SERIALIZER_CONSTRAINS_KEY
     results = {key: {}}
     constrains = ISelectableConstrainTypes(obj, None)
@@ -311,7 +311,7 @@ def fixers() -> List[types.ExportImportHelper]:
 def enrichers() -> List[types.ExportImportHelper]:
     enrichers = []
     funcs = [
-        add_constrains_info,
+        add_constraints_info,
         add_workflow_history,
         add_revisions_history,
     ]

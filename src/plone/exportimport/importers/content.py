@@ -84,6 +84,12 @@ class ContentImporter(BaseImporter):
         # Deserialize
         new = self.deserialize(data=item, obj=new, config=config)
 
+        # Handle constraints
+        constraints = item.pop(settings.SERIALIZER_CONSTRAINS_KEY, {})
+        if constraints:
+            item_uid = item["UID"]
+            self.metadata.constraints[item_uid] = constraints
+
         # Updaters
         for updater in content_utils.updaters():
             logger.debug(f"{config.logger_prefix} Running {updater.name} for {new}")
