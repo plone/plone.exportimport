@@ -143,6 +143,33 @@ def fix_root_uid(
     return json.loads(item_str)
 
 
+def fix_allow_discussion(
+    item: dict, obj: DexterityContent, config: types.ExporterConfig
+) -> dict:
+    """Fix allow_discussion key.
+
+    Currently, plone.restapi always adds the 'allow_discussion' key.
+    This contains either True or False, based on various facts:
+
+    * Is the plone.app.discussion package available?
+    * Is the plone.app.discussion add-on activated?
+    * Is discussion globally allowed?
+    * Is discussion allowed on this portal type?
+    * Is discussion explicitly allowed on this object?
+
+    For exporting we only want the last one.
+    Otherwise when one of the other facts is not true at the moment of export,
+    then all content would get allow_discussion=false.
+    Then when someone imports it, and afterwards wants to globally allow discussions,
+    they would need to go through all content and explicitly set allow_discussion
+    to true or to none.
+
+    So: here we set the value to neutral (None), unless it is explicitly set.
+    """
+    item["allow_discussion"] = getattr(aq_base(obj), "allow_discussion", None)
+    return item
+
+
 def add_constraints_info(obj: DexterityContent, config: types.ExporterConfig) -> dict:
     """Return constraints info for an object."""
     key = settings.SERIALIZER_CONSTRAINS_KEY
@@ -268,6 +295,7 @@ def fixers() -> List[types.ExportImportHelper]:
         fix_blocks,
         fix_language,
         fix_root_uid,
+        fix_allow_discussion,
     ]
     for func in funcs:
         fixers.append(

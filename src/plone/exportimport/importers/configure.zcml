@@ -33,19 +33,22 @@
       for="plone.base.interfaces.siteroot.IPloneSiteRoot"
       name="plone.importer.relations"
       />
-  <adapter
-      factory=".translations.TranslationsImporter"
-      provides="plone.exportimport.interfaces.INamedImporter"
-      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
-      name="plone.importer.translations"
-      />
-  <adapter
-      factory=".discussions.DiscussionsImporter"
-      provides="plone.exportimport.interfaces.INamedImporter"
-      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
-      name="plone.importer.discussions"
-      />
-
+  <configure zcml:condition="installed plone.app.multilingual">
+    <adapter
+        factory=".translations.TranslationsImporter"
+        provides="plone.exportimport.interfaces.INamedImporter"
+        for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+        name="plone.importer.translations"
+        />
+  </configure>
+  <configure zcml:condition="installed plone.app.discussion">
+    <adapter
+        factory=".discussions.DiscussionsImporter"
+        provides="plone.exportimport.interfaces.INamedImporter"
+        for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+        name="plone.importer.discussions"
+        />
+  </configure>
   <configure zcml:condition="installed plone.app.portlets">
     <adapter
         factory=".portlets.PortletsImporter"
