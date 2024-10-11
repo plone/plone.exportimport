@@ -9,6 +9,30 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0a8 (2024-10-11)
+
+
+### Bug fixes:
+
+- Use plone.app.discussion and plone.app.multilingual as optional dependencies.
+  @davisagli #18
+- Include 'isReferencing' relations in import. @ksuess #32
+- Set constraints after setting local permissions on content [@ericof] #33
+- Export adds a newline at the end of all files.
+  This matches the `.editorconfig` settings that we have in most Plone packages.
+  [maurits] #35
+- Do not export or import translations when `plone.app.multilingual` is not available.
+  [maurits] #35
+- Disallowlisted portlets were not imported when there was no accompanying change in the actual portlet list.
+  [maurits] #35
+- Add a fixer for the `allow_discussion` key: this should only contain True or False when this is explicitly set on the object.
+  [maurits] #35
+- Do not export or import discussions/comments when `plone.app.discussion` is not available.
+  [maurits] #35
+- Renamed `blacklisted_status` key to `blocked_status` to be sensitive.
+  We still read the old key for backwards compatibility.
+  [maurits] #35
+
 ## 1.0.0a7 (2024-06-13)
 
 
