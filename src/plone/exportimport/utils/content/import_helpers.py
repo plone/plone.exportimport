@@ -174,9 +174,13 @@ def update_dates(item: dict, obj: DexterityContent) -> DexterityContent:
         value = parse_date(value)
         if not value:
             continue
+        old_value = getattr(obj, attr, None)
+        if old_value == value:
+            continue
         setattr(obj, attr, value)
         idxs.append(idx)
-    obj.reindexObject(idxs=idxs)
+    if idxs:
+        obj.reindexObject(idxs=idxs)
     return obj
 
 
@@ -329,3 +333,22 @@ def recatalog_uids(uids: List[str], idxs: List[str]):
         if not obj:
             continue
         obj.reindexObject(idxs)
+
+
+def final_updaters() -> List[types.ExportImportHelper]:
+    updaters = []
+    funcs = [
+        # We call update_dates in the final updaters, because other importers
+        # or updaters may have changed the modification date, for example
+        # because a child object or relation was added.
+        update_dates,
+    ]
+    for func in funcs:
+        updaters.append(
+            types.ExportImportHelper(
+                func=func,
+                name=func.__name__,
+                description=func.__doc__,
+            )
+        )
+    return updaters

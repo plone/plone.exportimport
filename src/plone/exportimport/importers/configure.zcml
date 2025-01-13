@@ -16,6 +16,12 @@
       name="plone.importer.content"
       />
   <adapter
+      factory=".content.ContentFinalImporter"
+      provides="plone.exportimport.interfaces.INamedImporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      name="plone.importer.contentfinal"
+      />
+  <adapter
       factory=".principals.PrincipalsImporter"
       provides="plone.exportimport.interfaces.INamedImporter"
       for="plone.base.interfaces.siteroot.IPloneSiteRoot"

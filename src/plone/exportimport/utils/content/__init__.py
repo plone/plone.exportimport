@@ -10,6 +10,7 @@ from .export_helpers import enrichers  # noQA
 from .export_helpers import fixers  # noQA
 from .export_helpers import get_serializer  # noQA
 from .export_helpers import metadata_helpers  # noQA
+from .import_helpers import final_updaters  # noQA
 from .import_helpers import get_deserializer  # noQA
 from .import_helpers import get_obj_instance  # noQA
 from .import_helpers import metadata_setters  # noQA
