@@ -11,7 +11,7 @@ def get_roles_for_group(group: GroupData, filter: bool = True) -> list:
     roles = [r for r in api.group.get_roles(group=group)]
     if filter:
         roles = [r for r in roles if r not in AUTO_ROLES]
-    return roles
+    return sorted(roles)
 
 
 def get_roles_for_member(member, filter: bool = True) -> List[str]:
@@ -19,7 +19,7 @@ def get_roles_for_member(member, filter: bool = True) -> List[str]:
     roles = [r for r in member.getRoles()]
     if filter:
         roles = [r for r in roles if r not in AUTO_ROLES]
-    return roles
+    return sorted(roles)
 
 
 def get_all_groups(
