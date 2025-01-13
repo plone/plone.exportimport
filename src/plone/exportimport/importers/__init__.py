@@ -20,6 +20,7 @@ IMPORTER_NAMES = [
     "plone.importer.translations",
     "plone.importer.discussions",
     "plone.importer.portlets",
+    "plone.importer.contentfinal",
 ]
 
 ImporterMapping = Dict[str, BaseImporter]

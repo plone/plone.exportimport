@@ -164,3 +164,39 @@ class ContentImporter(BaseImporter):
 
     def finish(self):
         """Hook to do something after import finishes."""
+
+
+class ContentFinalImporter(ContentImporter):
+    name: str = "content"
+
+    def do_import(self) -> str:
+        objs = []
+        with request_provides(self.request, IExportImportRequestMarker):
+            for index, item in enumerate(self.all_objects(), start=1):
+                uid = item["UID"]
+                if not uid:
+                    continue
+                obj = content_utils.object_from_uid(uid)
+                if not obj:
+                    continue
+                item_path = item["@id"]
+                config = types.ImporterConfig(
+                    site=self.site,
+                    site_root_uid=self.site.UID(),
+                    languages=self.languages,
+                    request=self.request,
+                    logger_prefix=f"- {item_path}:",
+                )
+                for updater in content_utils.final_updaters():
+                    logger.debug(
+                        f"{config.logger_prefix} Running {updater.name} for {obj}"
+                    )
+                    updater.func(item, obj)
+                objs.append(uid)
+                if not index % 100:
+                    transaction.savepoint()
+                    logger.info(f"Handled {index} items...")
+
+        report = f"{self.__class__.__name__}: Updated {len(objs)} objects"
+        logger.info(report)
+        return report
