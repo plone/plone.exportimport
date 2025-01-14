@@ -63,6 +63,7 @@ def cleanup_export_data(item: dict, config: types.ExporterConfig) -> dict:
     item.pop("previous_item", None)
     item.pop("immediatelyAddableTypes", None)
     item.pop("locallyAllowedTypes", None)
+    item.pop("parent", None)
 
     # 2. Fix site root
     item = rewrite_site_root(item, config.site.absolute_url())

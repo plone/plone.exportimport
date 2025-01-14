@@ -4,6 +4,7 @@ from plone.exportimport.exporters import content
 from zope.component import getAdapter
 from zope.component.hooks import setSite
 
+import json
 import pytest
 
 
@@ -74,8 +75,29 @@ class TestExporterContent:
         )
         assert isinstance(result, list)
         assert path in result
-        assert (export_path / path).exists() is True
-        assert (export_path / path).is_file() is True
+        full_path = export_path / path
+        assert full_path.exists() is True
+        assert full_path.is_file() is True
+        contents = json.loads(full_path.read_bytes())
+        assert isinstance(contents, dict)
+
+        # Check that some keys are present.
+        keys = sorted(contents.keys())
+        if "__metadata__" in path:
+            assert "__version__" in keys
+            assert "_blob_files_" in keys
+            assert "local_roles" in keys
+            return
+
+        assert "@id" in keys
+        assert "@type" in keys
+        assert "UID" in keys
+        assert "language" in keys
+
+        # Some keys are not interesting, so are not exported.
+        assert "@components" not in keys
+        assert "batching" not in keys
+        assert "parent" not in keys
 
 
 class TestExporterContentMetadata:
