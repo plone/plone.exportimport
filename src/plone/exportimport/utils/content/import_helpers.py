@@ -3,6 +3,7 @@ from .core import get_parent_ordered
 from .core import object_from_uid
 from Acquisition import aq_base
 from Acquisition import aq_parent
+from pathlib import Path
 from Persistence import PersistentMapping
 from plone import api
 from plone.base.interfaces.constrains import ENABLED
@@ -28,20 +29,11 @@ def get_deserializer(data: dict, request) -> Callable:
 
 
 def get_parent_from_item(data: dict) -> DexterityContent:
-    portal = api.portal.get()
-    parent_info = data.get("parent", {})
-    parent_uid = parent_info.get("UID")
-    parent_path = parent_info.get("@id")
-    parent = None
     if data.get("@type") == "Plone Site":
         parent = aq_parent(api.portal.get())
-    elif parent_info.get("@type") == "Plone Site":
-        parent = portal
-    elif parent_uid:
-        parent = object_from_uid(parent_uid)
-        if not parent:
-            # Try to get from path
-            parent = api.content.get(path=parent_path)
+    else:
+        parent_path = str(Path(data["@id"]).parent)
+        parent = api.content.get(path=parent_path)
     if not parent:
         logger.warning(f"Container for {data['@id']} not found")
     elif not getattr(aq_base(parent), "isPrincipiaFolderish", False):
