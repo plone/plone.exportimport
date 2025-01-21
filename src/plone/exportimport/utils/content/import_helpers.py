@@ -117,9 +117,17 @@ def get_obj_instance(item: dict, config: types.ImporterConfig) -> DexterityConte
         logger.debug(f"{config.logger_prefix} Will update {new}")
     else:
         factory_kwargs = item.get("factory_kwargs", {})
-        new = unrestricted_construct_instance(
-            item["@type"], container, item["id"], **factory_kwargs
-        )
+        repo_tool = api.portal.get_tool("portal_repository")
+        # Temporarily disable versioning, otherwise the first version
+        # is basically nothing, it does not even have a title.
+        orig_versionable = repo_tool.getVersionableContentTypes()
+        repo_tool.setVersionableContentTypes([])
+        try:
+            new = unrestricted_construct_instance(
+                item["@type"], container, item["id"], **factory_kwargs
+            )
+        finally:
+            repo_tool.setVersionableContentTypes(orig_versionable)
         logger.debug(f"{config.logger_prefix} Created {new}")
     return new
 

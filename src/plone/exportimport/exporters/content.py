@@ -16,6 +16,8 @@ from typing import List
 from typing import Optional
 from zope.interface import implementer
 
+import argparse
+
 
 @implementer(interfaces.INamedExporter)
 class ContentExporter(BaseExporter):
@@ -87,8 +89,11 @@ class ContentExporter(BaseExporter):
                 f"{config.logger_prefix} Running {fixer.name} on serialized data"
             )
             data = fixer.func(data, obj, config)
+
         # Enrich
-        for enricher in content_utils.enrichers():
+        for enricher in content_utils.enrichers(
+            include_revisions=self.get_option("include_revisions")
+        ):
             logger.debug(f"{config.logger_prefix} Running {enricher.name}")
             additional = enricher.func(obj, config)
             if additional:
@@ -127,7 +132,7 @@ class ContentExporter(BaseExporter):
         filepath = self.base_path / "__metadata__.json"
         return self._dump(metadata, filepath)
 
-    def dump(self) -> List[Path]:
+    def dump(self, **kwargs) -> List[Path]:
         """Serialize contents and dump them to disk."""
         paths = []
         with request_provides(self.request, IExportImportRequestMarker):
@@ -145,6 +150,7 @@ class ContentExporter(BaseExporter):
         data_hooks: List[Callable] = None,
         obj_hooks: List[Callable] = None,
         query: Optional[dict] = None,
+        options: Optional[argparse.Namespace] = None,
     ) -> List[Path]:
         # Content in a subpath of base_path
         base_path = base_path / self.name
@@ -156,4 +162,4 @@ class ContentExporter(BaseExporter):
         self.request[settings.EXPORT_CONTENT_METADATA_KEY] = metadata
         self.request[settings.EXPORT_PATH_KEY] = base_path
         self.default_site_language = site.language
-        return super().export_data(base_path, data_hooks, obj_hooks)
+        return super().export_data(base_path, data_hooks, obj_hooks, options=options)

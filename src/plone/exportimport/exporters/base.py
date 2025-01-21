@@ -6,8 +6,10 @@ from Products.CMFPlone.Portal import PloneSite
 from typing import Any
 from typing import Callable
 from typing import List
+from typing import Optional
 from zope.globalrequest import getRequest
 
+import argparse
 import json
 
 
@@ -18,6 +20,7 @@ class BaseExporter:
     request: types.HTTPRequest = None
     data_hooks: List[Callable] = None
     obj_hooks: List[Callable] = None
+    options: Optional[argparse.Namespace] = None
 
     def __init__(
         self,
@@ -26,6 +29,9 @@ class BaseExporter:
         self.site = site
         self.errors = []
         self.request = getRequest()
+
+    def get_option(self, name, default=None):
+        return getattr(self.options, name, default)
 
     @property
     def filepath(self) -> Path:
@@ -61,6 +67,7 @@ class BaseExporter:
         base_path: Path,
         data_hooks: List[Callable] = None,
         obj_hooks: List[Callable] = None,
+        options: Optional[argparse.Namespace] = None,
     ) -> List[Path]:
         """Write data to filesystem."""
         if not base_path.exists():
@@ -68,5 +75,6 @@ class BaseExporter:
         self.base_path = base_path
         self.data_hooks = self.data_hooks or data_hooks or []
         self.obj_hooks = self.obj_hooks or obj_hooks or []
+        self.options = options
         paths = self.dump()
         return paths

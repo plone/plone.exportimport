@@ -308,13 +308,14 @@ def fixers() -> List[types.ExportImportHelper]:
     return fixers
 
 
-def enrichers() -> List[types.ExportImportHelper]:
+def enrichers(include_revisions: bool = False) -> List[types.ExportImportHelper]:
     enrichers = []
     funcs = [
         add_constraints_info,
         add_workflow_history,
-        add_revisions_history,
     ]
+    if include_revisions:
+        funcs.append(add_revisions_history)
     if IConversation is not None:
         funcs.append(add_conversation)
     for func in funcs:
