@@ -12,7 +12,7 @@ def export_groups() -> List[dict]:
     all_groups = get_all_groups()
     for group in all_groups:
         roles = get_roles_for_group(group)
-        groups = sorted([g.id for g in get_all_groups(group=group)])
+        groups = sorted(g.id for g in get_all_groups(group=group))
         item = {"groupid": group.id, "groups": groups, "roles": roles}
         for prop in group.getProperties():
             item[prop] = json_compatible(group.getProperty(prop))
