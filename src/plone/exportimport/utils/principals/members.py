@@ -78,8 +78,8 @@ def _get_base_user_data(member: MemberData):
     # username, groups, roles
     props = {
         "username": user_id,
-        "roles": json_compatible(sorted(roles)),
-        "groups": json_compatible(sorted(groups)),
+        "roles": json_compatible(roles),
+        "groups": json_compatible(groups),
     }
     return props
 

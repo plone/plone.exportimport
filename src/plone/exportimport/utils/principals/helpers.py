@@ -1,9 +1,13 @@
+from operator import attrgetter
 from plone import api
 from plone.exportimport.settings import AUTO_GROUPS
 from plone.exportimport.settings import AUTO_ROLES
 from Products.PlonePAS.tools.groupdata import GroupData
 from typing import List
 from typing import Optional
+
+
+_sort_key_id = attrgetter("id")
 
 
 def get_roles_for_group(group: GroupData, filter: bool = True) -> list:
@@ -34,4 +38,4 @@ def get_all_groups(
     groups = [g for g in api.group.get_groups(**payload)]
     if filter:
         groups = [g for g in groups if g.id not in AUTO_GROUPS]
-    return groups
+    return sorted(groups, key=_sort_key_id)
