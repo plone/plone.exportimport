@@ -7,6 +7,7 @@ from Persistence import PersistentMapping
 from plone import api
 from plone.base.interfaces.constrains import ENABLED
 from plone.base.interfaces.constrains import ISelectableConstrainTypes
+from plone.base.utils import base_hasattr
 from plone.base.utils import unrestricted_construct_instance
 from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
@@ -163,7 +164,13 @@ def update_workflow_history(item: dict, obj: DexterityContent) -> DexterityConte
 
 
 def update_dates(item: dict, obj: DexterityContent) -> DexterityContent:
-    """Update creation and modification dates on the object."""
+    """Update creation and modification dates on the object.
+
+    We call this last in our content updaters, because they have been changed.
+
+    The modification date may change again due to importers that run after us.
+    So we save it on a temporary property for handling in the final importer.
+    """
     created = item.get("created", item.get("creation_date", None))
     modified = item.get("modified", item.get("modification_date", None))
     idxs = []
@@ -174,9 +181,32 @@ def update_dates(item: dict, obj: DexterityContent) -> DexterityContent:
         value = parse_date(value)
         if not value:
             continue
+        if attr == "modification_date":
+            # Make sure we never change an acquired attribute.
+            aq_base(obj).modification_date_migrated = value
+        old_value = getattr(obj, attr, None)
+        if old_value == value:
+            continue
         setattr(obj, attr, value)
         idxs.append(idx)
-    obj.reindexObject(idxs=idxs)
+    if idxs:
+        obj.reindexObject(idxs=idxs)
+    return obj
+
+
+def reset_modification_date(obj: DexterityContent) -> DexterityContent:
+    """Update modification date if it was saved on the object.
+
+    The modification date of the object may have gotten changed in various
+    importers.  The content import has saved the original modification date
+    on the object.  Now restore it.
+    """
+    if base_hasattr(obj, "modification_date_migrated"):
+        modified = obj.modification_date_migrated
+        if modified and modified != obj.modification_date:
+            obj.modification_date = modified
+            del obj.modification_date_migrated
+            obj.reindexObject(idxs=["modified"])
     return obj
 
 
@@ -329,3 +359,19 @@ def recatalog_uids(uids: List[str], idxs: List[str]):
         if not obj:
             continue
         obj.reindexObject(idxs)
+
+
+def final_updaters() -> List[types.ExportImportHelper]:
+    updaters = []
+    funcs = [
+        reset_modification_date,
+    ]
+    for func in funcs:
+        updaters.append(
+            types.ExportImportHelper(
+                func=func,
+                name=func.__name__,
+                description=func.__doc__,
+            )
+        )
+    return updaters
