@@ -132,7 +132,7 @@ class ContentExporter(BaseExporter):
         filepath = self.base_path / "__metadata__.json"
         return self._dump(metadata, filepath)
 
-    def dump(self, **kwargs) -> List[Path]:
+    def dump(self) -> List[Path]:
         """Serialize contents and dump them to disk."""
         paths = []
         with request_provides(self.request, IExportImportRequestMarker):
