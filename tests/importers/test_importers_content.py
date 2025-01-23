@@ -94,3 +94,47 @@ class TestImporterConstrains:
             constrains = getattr(behavior, method)()
         for type_ in types:
             assert type_ in constrains
+
+
+class TestImporterParent:
+    @pytest.fixture(autouse=True)
+    def _init(self, portal, base_import_path, load_json):
+        self.portal = portal
+        importer = content.ContentImporter(portal)
+        importer.import_data(base_path=base_import_path)
+
+    @pytest.mark.parametrize(
+        "data,path",
+        [
+            [
+                {"@type": "Plone Site"},
+                "/",
+            ],
+            [
+                {"@id": "/bar"},
+                "/plone",
+            ],
+            [
+                {"@id": "/bar/2025.png"},
+                "/plone/bar",
+            ],
+            [
+                {"@id": "/bar/2025.png/parent-is-not-folderish"},
+                None,
+            ],
+            [
+                {"@id": "/foo/not-yet-created"},
+                "/plone/foo",
+            ],
+            [
+                {"@id": "/spaghetti/bolognese"},
+                None,
+            ],
+        ],
+    )
+    def test_get_parent_from_item(self, data, path):
+        from plone.exportimport.utils.content.import_helpers import get_parent_from_item
+
+        parent = get_parent_from_item(data)
+        found_path = parent.absolute_url_path() if parent is not None else None
+        assert found_path == path
