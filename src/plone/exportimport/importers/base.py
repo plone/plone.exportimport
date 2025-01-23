@@ -69,3 +69,25 @@ class BaseImporter:
         self.obj_hooks = self.obj_hooks or obj_hooks or []
         report = self.do_import()
         return report
+
+
+class BaseDatalessImporter(BaseImporter):
+    """Base for an import that does not read json data files.
+
+    Generally this would iterate over all existing content objects and do
+    some updates.
+    """
+
+    def import_data(
+        self,
+        base_path: Path,
+        data_hooks: List[Callable] = None,
+        pre_deserialize_hooks: List[Callable] = None,
+        obj_hooks: List[Callable] = None,
+    ) -> str:
+        """Import data into a Plone site.
+
+        Note that we ignore the json data related arguments.
+        """
+        self.obj_hooks = self.obj_hooks or obj_hooks or []
+        return self.do_import()
