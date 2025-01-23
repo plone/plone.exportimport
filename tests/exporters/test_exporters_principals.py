@@ -2,6 +2,7 @@ from plone.exportimport import interfaces
 from plone.exportimport.exporters import principals
 from zope.component import getAdapter
 
+import json
 import pytest
 
 
@@ -35,5 +36,20 @@ class TestExporterPrincipals:
         )
         assert isinstance(result, list)
         assert path in result
-        assert (export_path / path).exists() is True
-        assert (export_path / path).is_file() is True
+        full_path = export_path / path
+        assert full_path.exists() is True
+        assert full_path.is_file() is True
+        contents = json.loads(full_path.read_bytes())
+        assert isinstance(contents, dict)
+        assert sorted(contents.keys()) == ["groups", "members"]
+        group_ids = [group["groupid"] for group in contents["groups"]]
+        assert "Site Administrators" in group_ids
+        usernames = [member["username"] for member in contents["members"]]
+        assert "joao.silva" in usernames
+        for group in contents["groups"]:
+            assert group["groups"] == sorted(group["groups"])
+            assert group["principals"] == sorted(group["principals"])
+            assert group["roles"] == sorted(group["roles"])
+        for member in contents["members"]:
+            assert member["groups"] == sorted(member["groups"])
+            assert member["roles"] == sorted(member["roles"])
