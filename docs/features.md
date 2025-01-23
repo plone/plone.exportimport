@@ -77,13 +77,16 @@ Export content from a Plone site to a directory in the file system.
 
 Usage:
 
-  - `plone-exporter` <path-to-zopeconf> <site-id> <path-to-export-data>
+  - `plone-exporter` [--include-revisions] <path-to-zopeconf> <site-id> <path-to-export-data>
 
 Example:
 
 ```shell
 plone-exporter instance/etc/zope.conf Plone /tmp/plone_data/
 ```
+
+By default, the revisions history (older versions of each content item) are not exported.
+If you do want them, add `--include-revisions` on the command line.
 
 ## `plone-importer`
 

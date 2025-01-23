@@ -18,8 +18,12 @@ from plone.exportimport.utils.permissions import (
     set_local_permissions as _set_local_permissions,
 )
 from plone.restapi.interfaces import IDeserializeFromJson
+from Products.CMFEditions.CopyModifyMergeRepositoryTool import (
+    CopyModifyMergeRepositoryTool,
+)
 from typing import Callable
 from typing import List
+from unittest.mock import patch
 from urllib.parse import unquote
 from zope.component import getMultiAdapter
 
@@ -99,6 +103,10 @@ def processors() -> List[types.ExportImportHelper]:
     return processors
 
 
+def _mock_isVersionable(*args, **kwargs):
+    return False
+
+
 def get_obj_instance(item: dict, config: types.ImporterConfig) -> DexterityContent:
     # Get container
     container = get_parent_from_item(item)
@@ -109,9 +117,14 @@ def get_obj_instance(item: dict, config: types.ImporterConfig) -> DexterityConte
         logger.debug(f"{config.logger_prefix} Will update {new}")
     else:
         factory_kwargs = item.get("factory_kwargs", {})
-        new = unrestricted_construct_instance(
-            item["@type"], container, item["id"], **factory_kwargs
-        )
+        # Temporarily disable versioning, otherwise the first version
+        # is basically nothing, it does not even have a title.
+        with patch.object(
+            CopyModifyMergeRepositoryTool, "isVersionable", _mock_isVersionable
+        ):
+            new = unrestricted_construct_instance(
+                item["@type"], container, item["id"], **factory_kwargs
+            )
         logger.debug(f"{config.logger_prefix} Created {new}")
     return new
 
