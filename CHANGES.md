@@ -9,6 +9,23 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0b1 (2025-01-23)
+
+
+### New features:
+
+- Include revisions only when passing `--include-revisions`.  @mauritsvanrees #39
+
+
+### Bug fixes:
+
+- Export principals: sort groups, roles, and members.  @mauritsvanrees #39
+- Import: update modification dates again at the end. The original modification dates may have changed.  @mauritsvanrees #39
+- Do not export parent info.
+  This information is no longer needed: during import, parents are now always found by path and not by UID.
+  From now on, the import ignores any parent info that is set.
+  @mauritsvanrees #39
+
 ## 1.0.0a8 (2024-10-11)
 
 
