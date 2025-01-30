@@ -6,4 +6,5 @@
   <adapter factory=".blocks.ExportImportBlocksSerializer" />
   <adapter factory=".fields.CollectionFieldSerializer" />
   <adapter factory=".fields.ChoiceFieldSerializer" />
+  <adapter factory=".fields.ExportImportRichTextSerializer" />
 </configure>
