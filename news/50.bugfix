@@ -1,0 +1,2 @@
+Fix traceback when translation group does not have the default language.
+@mauritsvanrees
