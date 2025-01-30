@@ -12,7 +12,7 @@ Package supporting the export and import of content, principals, relations, tran
 
 This package is a slimmer version of the awesome [collective.exportimport](https://github.com/collective/collective.exportimport).
 
-While `collective.exportimport` supports older Plone versions and Python 2, and also takes care of data conversion from Archetypes to Dexterity, this package focus only on latest Plone and Python.
+While `collective.exportimport` supports older Plone versions and Python 2, and also takes care of data conversion from Archetypes to Dexterity, this package focuses only on latest Plone and Python.
 
 
 ## Documentation
@@ -28,9 +28,8 @@ While `collective.exportimport` supports older Plone versions and Python 2, and 
 
 > [!IMPORTANT]
 > This package is now included with Plone 6.1 and above by default.
-> The following installation instructions are relevant only for Plone 6.0 sites.
 
-Add `plone.exportimport` to the Plone installation using `pip`.
+If `plone.exportimport` is not yet available in your Plone installation, add it using `pip`.
 
 ```shell
 pip install plone.exportimport
