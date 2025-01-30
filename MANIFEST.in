@@ -11,5 +11,3 @@ exclude requirements-mxdev.txt
 exclude pyvenv.cfg
 recursive-exclude frontend *
 recursive-exclude .vscode *
-recursive-exclude docs/_build *
-graft docs
