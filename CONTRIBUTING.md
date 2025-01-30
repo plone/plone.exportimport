@@ -1,1 +1,1 @@
-Please see [Developer Guidelines](https://docs.plone.org/develop/coredev/docs/guidelines.html)
+Please see [Contributing](https://github.com/plone/plone.exportimport/?tab=readme-ov-file#Contributing).
