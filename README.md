@@ -36,25 +36,6 @@ pip install plone.exportimport
 ```
 
 
-### Load the package
-
-To make this package available to a Plone installation, you need to load its ZCML configuration.
-
-If your project has a Python package with custom code, add the following line to your package's `dependencies.zcml` or `configure.zcml`:
-
-```xml
-<include package="plone.exportimport" />
-```
-
-Alternatively, you can use the `instance.yaml` configuration file provided by [`cookiecutter-zope-instance`](https://github.com/plone/cookiecutter-zope-instance).
-
-Look for the `zcml_package_includes` configuration, and add this package to the list of packages already listed there.
-
-```yaml
-zcml_package_includes: ['my.package', 'plone.exportimport']
-```
-
-
 ## Contributing
 
 See [Contributing to Plone](https://6.docs.plone.org/contributing/index.html) and [Contribute to Plone 6 core](Contribute to Plone 6 core) for general contributing policies and guidance.
