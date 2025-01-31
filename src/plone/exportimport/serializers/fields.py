@@ -1,3 +1,5 @@
+from plone.app.textfield.interfaces import IRichText
+from plone.app.textfield.interfaces import IRichTextValue
 from plone.dexterity.interfaces import IDexterityContent
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.restapi.interfaces import IFieldSerializer
@@ -76,3 +78,16 @@ class ChoiceFieldSerializer(DefaultFieldSerializer):
                         self.context,
                     )
         return json_compatible(value)
+
+
+@adapter(IRichText, IDexterityContent, IExportImportRequestMarker)
+class ExportImportRichTextSerializer(DefaultFieldSerializer):
+    def __call__(self):
+        value = self.get_value()
+        if value is None or not IRichTextValue.providedBy(value):
+            return json_compatible(value, self.context)
+        return {
+            "data": json_compatible(value.raw),
+            "content-type": json_compatible(value.mimeType),
+            "encoding": json_compatible(value.encoding),
+        }
