@@ -9,6 +9,22 @@
 
 <!-- towncrier release notes start -->
 
+## 1.0.0 (2025-01-31)
+
+
+### Bug fixes:
+
+- Export the raw value of rich text fields, instead of the transformed output.
+  This fixes internal links in Classic UI based distributions.
+  @mauritsvanrees #48
+- Fix traceback when translation group does not have the default language.
+  @mauritsvanrees #50
+
+
+### Documentation:
+
+- Migrate documentation to README.md and https://6.docs.plone.org/admin-guide/export-import.html. @stevepiercy #46
+
 ## 1.0.0b1 (2025-01-23)
 
 

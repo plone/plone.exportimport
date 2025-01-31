@@ -1,3 +1,0 @@
-Export the raw value of rich text fields, instead of the transformed output.
-This fixes internal links in Classic UI based distributions.
-@mauritsvanrees
