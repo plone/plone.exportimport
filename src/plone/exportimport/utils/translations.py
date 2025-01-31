@@ -37,7 +37,7 @@ def _get_all_translation_groups(portal_catalog: CatalogTool) -> Tuple[str]:
 
 
 def _prepare_translation_group(default_language: str, translations: dict) -> dict:
-    canonical = translations.pop(default_language)
+    canonical = translations.pop(default_language, None)
     if not canonical:
         first_key = [key for key in translations][0]
         canonical = translations.pop(first_key)
