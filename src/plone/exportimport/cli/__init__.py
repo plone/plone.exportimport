@@ -15,6 +15,7 @@ CLI_SPEC = {
             "zopeconf": "Path to zope.conf",
             "site": "Plone site ID to export the content from",
             "path": "Path to export the content",
+            "--sitecontent": "content to export",
             "--include-revisions": "Include revision history",
         },
     },
@@ -32,7 +33,7 @@ CLI_SPEC = {
 def _parse_args(description: str, options: dict, args: list):
     parser = argparse.ArgumentParser(description=description)
     for key, help in options.items():
-        if key.startswith("-"):
+        if key.startswith("--include"):
             parser.add_argument(key, action="store_true", help=help)
         else:
             parser.add_argument(key, help=help)

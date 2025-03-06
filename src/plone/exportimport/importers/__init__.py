@@ -11,6 +11,7 @@ from zope.component import hooks
 from zope.component import queryAdapter
 from zope.interface import implementer
 
+import transaction
 
 IMPORTER_NAMES = [
     "plone.importer.content",
@@ -56,6 +57,7 @@ class Importer:
                     f"Importing from {path} to {self.site} with {importer_name}"
                 )
                 report.append(importer.import_data(path))
+                transaction.commit()
         return report
 
 

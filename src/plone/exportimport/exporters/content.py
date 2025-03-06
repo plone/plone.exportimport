@@ -155,6 +155,8 @@ class ContentExporter(BaseExporter):
         # Content in a subpath of base_path
         base_path = base_path / self.name
         query = query if query else {}
+        if options.sitecontent:
+            query["path"] = f"/{options.site}/{options.sitecontent}"
         site = self.site
         self.query = query if query else {"path": content_utils.get_obj_path(site)}
         metadata = types.ExportImportMetadata()
