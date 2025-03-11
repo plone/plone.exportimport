@@ -172,7 +172,7 @@ class ContentImporter(BaseImporter):
         # Report items that were dropped during the import
         dropped = sorted(self.dropped)
         if dropped:
-            logger.info("List of items dropped during import")
+            logger.warning("List of items dropped during import")
             for item_path in dropped:
                 logger.warning({item_path})
         return result
