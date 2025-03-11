@@ -1,0 +1,1 @@
+Report object creation during import using the plone-importer cli. Use --quiet to disable it. @ericof

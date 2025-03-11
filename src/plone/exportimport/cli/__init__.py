@@ -1,4 +1,5 @@
 from plone import api
+from plone.exportimport import logger as package_logger
 from plone.exportimport.exporters import get_exporter
 from plone.exportimport.importers import get_importer
 from plone.exportimport.utils import cli as cli_helpers
@@ -25,6 +26,7 @@ CLI_SPEC = {
             "zopeconf": "Path to zope.conf",
             "site": "Plone site ID to import the content to",
             "path": "Path to import the content from",
+            "--quiet": "Do not report items being imported",
         },
     },
 }
@@ -70,6 +72,9 @@ def importer_cli(args=sys.argv):
     if not path:
         logger.error(f"{namespace.path} does not exist, aborting import.")
         sys.exit(1)
+    # Unless explicitly set, we report object creation
+    if not namespace.quiet:
+        cli_helpers.setup_logger_console(package_logger)
     site = cli_helpers.get_site(app, namespace.site, logger)
     with hooks.site(site), api.env.adopt_roles(["Manager"]):
         logger.info(f" Using path {path} to import content to Plone site at /{site.id}")
