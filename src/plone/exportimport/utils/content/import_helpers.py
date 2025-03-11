@@ -24,8 +24,10 @@ from Products.CMFEditions.CopyModifyMergeRepositoryTool import (
 )
 from typing import Callable
 from typing import List
+from typing import Optional
 from unittest.mock import patch
 from urllib.parse import unquote
+from zExceptions import NotFound
 from zope.component import getMultiAdapter
 
 
@@ -33,16 +35,19 @@ def get_deserializer(data: dict, request) -> Callable:
     return getMultiAdapter((data, request), IDeserializeFromJson)
 
 
-def get_parent_from_item(data: dict) -> DexterityContent:
+def get_parent_from_item(data: dict) -> Optional[DexterityContent]:
+    parent_path = str(Path(data["@id"]).parent)
     if data.get("@type") == "Plone Site":
         parent = aq_parent(api.portal.get())
     else:
-        parent_path = str(Path(data["@id"]).parent)
-        parent = api.content.get(path=parent_path)
+        try:
+            parent = api.content.get(path=parent_path)
+        except NotFound:
+            parent = None
     if not parent:
-        logger.warning(f"Container for {data['@id']} not found")
+        logger.warning(f"Container {parent_path} for {data['@id']} not found")
     elif not getattr(aq_base(parent), "isPrincipiaFolderish", False):
-        logger.warning(f"Container for {data['@id']} is not folderish")
+        logger.warning(f"Container {parent_path} for {data['@id']} is not folderish")
         parent = None
     return parent
 
@@ -108,9 +113,13 @@ def _mock_isVersionable(*args, **kwargs):
     return False
 
 
-def get_obj_instance(item: dict, config: types.ImporterConfig) -> DexterityContent:
+def get_obj_instance(
+    item: dict, config: types.ImporterConfig
+) -> Optional[DexterityContent]:
     # Get container
     container = get_parent_from_item(item)
+    if not container:
+        return None
     # Check if we will update an item
     update_existing = item["id"] in container
     if update_existing:

@@ -7,9 +7,11 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
+from Products.CMFPlone.Portal import PloneSite
 from typing import Callable
 from typing import Generator
 from typing import List
+from typing import Optional
 
 import json
 import transaction
@@ -19,6 +21,14 @@ class ContentImporter(BaseImporter):
     name: str = "content"
     metadata: types.ExportImportMetadata = None
     languages: types.PortalLanguages = None
+    dropped: set | None = None
+
+    def __init__(
+        self,
+        site: PloneSite,
+    ):
+        super().__init__(site)
+        self.dropped = set()
 
     def all_objects(self) -> Generator:
         """Return all objects to be serialized."""
@@ -48,7 +58,7 @@ class ContentImporter(BaseImporter):
             )
         return obj
 
-    def construct(self, item: dict) -> DexterityContent:
+    def construct(self, item: dict) -> Optional[DexterityContent]:
         """Serialize object."""
         item_path = item["@id"]
         config = types.ImporterConfig(
@@ -72,6 +82,9 @@ class ContentImporter(BaseImporter):
 
         # Get or Create object instance
         new = content_utils.get_obj_instance(item, config)
+        if not new:
+            logger.warning(f"Skipping {item_path} creation")
+            return None
 
         # Apply pre_deserialize hooks
         pre_deserialize_hooks = self.pre_deserialize_hooks or []
@@ -109,10 +122,16 @@ class ContentImporter(BaseImporter):
         modified = set()
         with request_provides(self.request, IExportImportRequestMarker):
             for index, item in enumerate(self.all_objects(), start=1):
-                logger.info(f'{index:07d} - {item["@id"]}')
+                item_path = item["@id"]
+                item_type = item["@type"]
+                item_uid = item.get("UID", "")
+                logger.info(f"{index:07d} - {item_path} - ({item_type}) - ({item_uid})")
                 obj = self.construct(item)
-                obj_path = "/".join(obj.getPhysicalPath())
-                objs.append(obj_path)
+                if obj:
+                    obj_path = "/".join(obj.getPhysicalPath())
+                    objs.append(obj_path)
+                else:
+                    self.dropped.add(item_path)
                 if not index % 100:
                     transaction.savepoint()
                     logger.info(f"Handled {index} items...")
@@ -158,6 +177,12 @@ class ContentImporter(BaseImporter):
             base_path, data_hooks, pre_deserialize_hooks, obj_hooks
         )
         self.finish()
+        # Report items that were dropped during the import
+        dropped = sorted(self.dropped)
+        if dropped:
+            logger.warning("List of items dropped during import")
+            for item_path in dropped:
+                logger.warning({item_path})
         return result
 
     def start(self):
