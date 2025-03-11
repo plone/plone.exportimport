@@ -2,6 +2,7 @@ from plone import api
 from plone.exportimport.exporters import get_exporter
 from plone.exportimport.importers import get_importer
 from plone.exportimport.utils import cli as cli_helpers
+from zope.component import hooks
 
 import argparse
 import sys
@@ -70,9 +71,9 @@ def importer_cli(args=sys.argv):
         logger.error(f"{namespace.path} does not exist, aborting import.")
         sys.exit(1)
     site = cli_helpers.get_site(app, namespace.site, logger)
-    with api.env.adopt_roles(["Manager"]):
+    with hooks.site(site), api.env.adopt_roles(["Manager"]):
+        logger.info(f" Using path {path} to import content to Plone site at /{site.id}")
         results = get_importer(site).import_site(path)
-    logger.info(f" Using path {path} to import content to Plone site at /{site.id}")
-    for item in results:
-        logger.info(f" - {item}")
-    transaction.commit()
+        for item in results:
+            logger.info(f" - {item}")
+        transaction.commit()
