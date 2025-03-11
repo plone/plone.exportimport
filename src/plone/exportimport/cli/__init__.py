@@ -26,7 +26,7 @@ CLI_SPEC = {
             "zopeconf": "Path to zope.conf",
             "site": "Plone site ID to import the content to",
             "path": "Path to import the content from",
-            "--report": "Report items being imported",
+            "--quiet": "Do not report items being imported",
         },
     },
 }
@@ -72,7 +72,8 @@ def importer_cli(args=sys.argv):
     if not path:
         logger.error(f"{namespace.path} does not exist, aborting import.")
         sys.exit(1)
-    if namespace.report:
+    # Unless explicitly set, we report object creation
+    if not namespace.quiet:
         cli_helpers.setup_logger_console(package_logger)
     site = cli_helpers.get_site(app, namespace.site, logger)
     with hooks.site(site), api.env.adopt_roles(["Manager"]):
