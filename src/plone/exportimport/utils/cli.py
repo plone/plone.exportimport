@@ -21,11 +21,16 @@ def _process_path(path: str) -> Optional[Path]:
     return path if path.exists() else None
 
 
-def get_logger(name: str) -> logging.Logger:
+def setup_logger_console(logger: logging.Logger) -> None:
     """Return a logger."""
     logging.basicConfig(format="%(message)s")
-    logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
+
+
+def get_logger(name: str) -> logging.Logger:
+    """Return a logger."""
+    logger = logging.getLogger(name)
+    setup_logger_console(logger)
     return logger
 
 

@@ -109,6 +109,7 @@ class ContentImporter(BaseImporter):
         modified = set()
         with request_provides(self.request, IExportImportRequestMarker):
             for index, item in enumerate(self.all_objects(), start=1):
+                logger.info(f'{index:07d} - {item["@id"]}')
                 obj = self.construct(item)
                 obj_path = "/".join(obj.getPhysicalPath())
                 objs.append(obj_path)
