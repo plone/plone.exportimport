@@ -9,6 +9,20 @@
 
 <!-- towncrier release notes start -->
 
+## 1.1.0 (2025-03-11)
+
+
+### New features:
+
+- Report object creation during import using the plone-importer cli. Use --quiet to disable it. @ericof #54
+- Do not stop the import if an object parent is missing @ericof #56
+
+
+### Bug fixes:
+
+- Set site during plone-importer transaction commit. @ericof #52
+- Sort `relations.json` and `translations.json` so their contents are stable.  @mauritsvanrees #57
+
 ## 1.0.0 (2025-01-31)
 
 
