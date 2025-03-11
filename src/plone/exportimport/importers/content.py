@@ -7,6 +7,7 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
+from Products.CMFPlone.Portal import PloneSite
 from typing import Callable
 from typing import Generator
 from typing import List
@@ -20,7 +21,14 @@ class ContentImporter(BaseImporter):
     name: str = "content"
     metadata: types.ExportImportMetadata = None
     languages: types.PortalLanguages = None
-    dropped: set = set()
+    dropped: set | None = None
+
+    def __init__(
+        self,
+        site: PloneSite,
+    ):
+        super().__init__(site)
+        self.dropped = set()
 
     def all_objects(self) -> Generator:
         """Return all objects to be serialized."""
