@@ -58,6 +58,10 @@ def _should_export_relation(rel: dict, include_linkintegrity: bool) -> bool:
     return status and (not is_linkintegrity or include_linkintegrity)
 
 
+def _relation_sort_key(rel: dict) -> tuple:
+    return rel.get("from_uuid"), rel.get("from_attribute"), rel.get("to_uuid")
+
+
 def get_relations(
     debug: bool = False, include_linkintegrity: bool = True
 ) -> List[dict]:
@@ -69,7 +73,7 @@ def get_relations(
         if debug:
             rel = _relation_with_debug_information(rel)
         results.append(rel)
-    return results
+    return sorted(results, key=_relation_sort_key)
 
 
 def _prepare_relations_to_import(data: List[dict]) -> List[dict]:

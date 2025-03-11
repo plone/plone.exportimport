@@ -7,6 +7,8 @@ from Products.CMFPlone.CatalogTool import CatalogTool
 from typing import List
 from typing import Tuple
 
+import operator
+
 
 try:
     from plone.app.multilingual.interfaces import ITranslationManager
@@ -77,7 +79,7 @@ def get_translations(paths_to_drop: List[str] = None) -> List[dict]:
 
         if len(translations) > 1:
             results.append(_prepare_translation_group(default_language, translations))
-    return results
+    return sorted(results, key=operator.itemgetter("canonical"))
 
 
 def _parse_translation_group(translation_group: dict) -> dict:
