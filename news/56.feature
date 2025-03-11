@@ -1,0 +1,1 @@
+Do not stop the import if an object parent is missing @ericof

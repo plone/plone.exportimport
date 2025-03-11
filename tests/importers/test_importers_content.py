@@ -107,7 +107,7 @@ class TestImporterParent:
         "data,path",
         [
             [
-                {"@type": "Plone Site"},
+                {"@id": "/", "@type": "Plone Site"},
                 "/",
             ],
             [
