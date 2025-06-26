@@ -3,7 +3,7 @@ from .core import get_parent_ordered
 from .core import object_from_uid
 from Acquisition import aq_base
 from Acquisition import aq_parent
-from pathlib import Path
+from pathlib import PurePosixPath
 from Persistence import PersistentMapping
 from plone import api
 from plone.base.interfaces.constrains import ENABLED
@@ -36,7 +36,7 @@ def get_deserializer(data: dict, request) -> Callable:
 
 
 def get_parent_from_item(data: dict) -> Optional[DexterityContent]:
-    parent_path = str(Path(data["@id"]).parent)
+    parent_path = str(PurePosixPath(data["@id"]).parent)
     if data.get("@type") == "Plone Site":
         parent = aq_parent(api.portal.get())
     else:
