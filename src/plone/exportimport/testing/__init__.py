@@ -17,6 +17,10 @@ class ExportImportLayer(PloneSandboxLayer):
         st = portal.portal_setup
         st.runAllImportStepsFromProfile("plone.volto:default")
 
+        # Enable plone.constraintypes behavior,
+        # which is not enabled by default in plone.volto
+        portal.portal_types.Document.behaviors += ("plone.constraintypes",)
+
 
 FIXTURE = ExportImportLayer()
 
