@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 1.1.1 (2025-06-26)
+
+
+### Bug fixes:
+
+- Fix error getting parent object on Windows. @ewohnlich #64
+
 ## 1.1.0 (2025-03-11)
 
 
