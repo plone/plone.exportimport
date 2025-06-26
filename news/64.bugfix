@@ -1,1 +1,1 @@
-Use OS-agnostic path parser to get parent object on content import
+Fix error getting parent object on Windows. @ewohnlich
