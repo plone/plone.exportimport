@@ -15,7 +15,7 @@ CLI_SPEC = {
         "description": "Export Plone Site content",
         "options": {
             "zopeconf": "Path to zope.conf",
-            "site": "Plone site ID to export the content from",
+            "site": "Plone site ID or path to site to export the content from",
             "path": "Path to export the content",
             "--include-revisions": "Include revision history",
         },
@@ -24,7 +24,7 @@ CLI_SPEC = {
         "description": "Import content into a Plone Site",
         "options": {
             "zopeconf": "Path to zope.conf",
-            "site": "Plone site ID to import the content to",
+            "site": "Plone site ID or path to site to import the content to",
             "path": "Path to import the content from",
             "--quiet": "Do not report items being imported",
         },
