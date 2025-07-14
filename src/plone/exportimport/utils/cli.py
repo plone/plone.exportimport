@@ -64,6 +64,6 @@ def get_site(app, site_id: str, logger: logging.Logger) -> Optional[PloneSite]:
     """Get Plone Site"""
     site = app.unrestrictedTraverse(site_id, None)
     if not site:
-        logger.error(f"Plone site with id '{site_id}' does not exist, aborting export.")
+        logger.error(f"Plone site at path '{site_id}' does not exist, aborting export.")
         sys.exit(1)
     return site
