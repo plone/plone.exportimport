@@ -62,7 +62,8 @@ def get_app(zopeconf: Path):
 
 def get_site(app, site_id: str, logger: logging.Logger) -> Optional[PloneSite]:
     """Get Plone Site"""
-    if site_id not in app.objectIds():
-        logger.error(f"Plone site with id '{site_id}' does not exist, aborting export.")
+    site = app.unrestrictedTraverse(site_id, None)
+    if not site:
+        logger.error(f"Plone site at path '{site_id}' does not exist, aborting export.")
         sys.exit(1)
-    return app[site_id]
+    return site
