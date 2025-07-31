@@ -32,7 +32,7 @@ class ExportImportFileFieldSerializer(DefaultFieldSerializer):
                 "filename": namedfile.filename,
                 "content-type": namedfile.contentType,
                 "size": namedfile.getSize(),
-                "blob_path": str(blob_path),
+                "blob_path": str(blob_path.as_posix()),
             }
             return json_compatible(result)
 
@@ -60,7 +60,7 @@ class ExportImportImageFieldSerializer(DefaultFieldSerializer):
             "size": namedfile.getSize(),
             "width": width,
             "height": height,
-            "blob_path": str(blob_path),
+            "blob_path": str(blob_path.as_posix()),
         }
         return json_compatible(result)
 
@@ -96,5 +96,5 @@ def export_blob(
         f.write(data)
     logger.debug(f"{uid}: Field {fieldname} blob written to {target_file}")
     relative_path = target_file.relative_to(content_export_path)
-    metadata._blob_files_.append(str(relative_path))
+    metadata._blob_files_.append(str(relative_path.as_posix()))
     return relative_path

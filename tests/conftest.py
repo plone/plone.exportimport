@@ -61,7 +61,7 @@ def export_path(tmp_path) -> Path:
 @pytest.fixture
 def paths_as_relative():
     def func(base_path: Path, paths: List[Path]) -> List[str]:
-        return [str(path.relative_to(base_path)) for path in paths]
+        return [str(path.relative_to(base_path).as_posix()) for path in paths]
 
     return func
 
