@@ -124,7 +124,7 @@ class ContentExporter(BaseExporter):
         filepath = self._dump(data, filepath)
         logger.debug(f"- {obj_path}: Wrote serialized data to {filepath}")
         # Add to list of files
-        self.metadata._all_[obj_path] = str(filepath.relative_to(base_path))
+        self.metadata._all_[obj_path] = str(filepath.relative_to(base_path).as_posix())
         return filepath
 
     def dump_metadata(self) -> Path:
