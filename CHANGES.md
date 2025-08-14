@@ -9,6 +9,18 @@
 
 <!-- towncrier release notes start -->
 
+## 1.2.0 (2025-08-14)
+
+
+### New features:
+
+- Support non-root PloneSite import/export [ewohnlich] #67
+
+
+### Bug fixes:
+
+- Export all paths in Posix format to support export-import across platforms [ewohnlich] #66
+
 ## 1.1.1 (2025-06-26)
 
 
