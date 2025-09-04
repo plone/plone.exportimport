@@ -42,6 +42,9 @@ def rewrite_site_root(item: dict, portal_url: str) -> dict:
         (f'"@parent": "{portal_url}/', '"@parent": "/'),
         (f'"@parent": "{portal_url}"', '"@parent": "/"'),
         (f'"url": "{portal_url}/', '"url": "/'),
+        (f'"url": "{portal_url}', '"url": "/'),
+        (f'"remoteUrl": "{portal_url}/', '"remoteUrl": "/'),
+        (f'"remoteUrl": "{portal_url}', '"remoteUrl": "/'),
     ]
     for pattern, replace in replacements:
         item_str = item_str.replace(pattern, replace)
