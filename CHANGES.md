@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 1.2.1 (2025-09-05)
+
+
+### Bug fixes:
+
+- Fix export of remoteUrl to an internal page keeping the site url in the exported data. @ericof #73
+
 ## 1.2.0 (2025-08-14)
 
 
