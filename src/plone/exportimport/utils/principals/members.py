@@ -101,6 +101,7 @@ def export_members() -> List[dict]:
         user_data = _get_base_user_data(member)
         # Password
         user_data["password"] = _get_user_password(member)
+        user_data["login_name"] = member.getUserName()
         # Properties
         user_data.update(_get_user_properties(member, fields))
         data.append(user_data)
@@ -111,6 +112,7 @@ def import_members(data: List[dict]) -> MemberData:
     """Import member information from the provided list of dictionaries."""
     members = []
     pr = api.portal.get_tool("portal_registration")
+    pas = api.portal.get_tool("acl_users")
     with _run_as_manager(pr):
         for item in data:
             username = item["username"]
@@ -124,6 +126,7 @@ def import_members(data: List[dict]) -> MemberData:
             password = item.pop("password")
             roles = item.pop("roles", [])
             groups = item.pop("groups", [])
+            login_name = item.pop("login_name", None)
             try:
                 pr.addMember(username, password, roles, [], item)
             except ValueError:
@@ -131,6 +134,8 @@ def import_members(data: List[dict]) -> MemberData:
                 continue
             else:
                 user = api.user.get(username=username)
+            if login_name:
+                pas.updateLoginName(username, login_name)
             for groupname in groups:
                 try:
                     api.group.add_user(groupname=groupname, user=user)
