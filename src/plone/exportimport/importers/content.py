@@ -30,6 +30,21 @@ class ContentImporter(BaseImporter):
         super().__init__(site)
         self.dropped = set()
 
+    def _cleanse_ordering(self, raw_data: dict[str, int]) -> dict[str, int]:
+        """Prepare ordering data before deserialization.
+
+        Given a dict in the format::
+            {
+                "35661c9bb5be42c68f665aa1ed291418": 0,
+                "45b0b46f17104a7b8fa7bb94d3dd5bd9": 1
+            }
+
+        return a dict sorted by position in parent.
+        """
+        # We need to sort the ordering data by position in parent
+        data = dict(sorted(raw_data.items(), key=lambda x: x[1]))
+        return data
+
     def all_objects(self) -> Generator:
         """Return all objects to be serialized."""
         all_files = self.metadata._data_files_
@@ -137,6 +152,10 @@ class ContentImporter(BaseImporter):
                     logger.info(f"Handled {index} items...")
             for setter in content_utils.metadata_setters():
                 data = getattr(self.metadata, setter.name)
+                cleanse_func = getattr(self, f"_cleanse_{setter.name}", None)
+                if cleanse_func:
+                    # Cleanse data before processing
+                    data = cleanse_func(data)
                 logger.info(f"Processing {setter.name}: {len(data)} entries")
                 for index, uid in enumerate(data, start=index):
                     value = data[uid]
