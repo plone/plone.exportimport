@@ -57,7 +57,7 @@ def get_discussions() -> Dict[str, Any]:
 
 
 def _extract_text(
-    text: Union[dict | str], target_mime_type: str, transforms: TransformTool
+    text: Union[dict, str], target_mime_type: str, transforms: TransformTool
 ) -> str:
     """Transform text data."""
     result = text
