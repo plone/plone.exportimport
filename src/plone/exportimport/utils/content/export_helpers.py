@@ -18,6 +18,7 @@ from plone.restapi.serializer.converters import json_compatible
 from Products.CMFEditions.ZVCStorageTool import ShadowHistory
 from typing import Callable
 from typing import List
+from typing import Optional
 from zope.component import getMultiAdapter
 
 import json
@@ -237,7 +238,7 @@ def add_revisions_history(obj: DexterityContent, config: types.ExporterConfig) -
 
 def default_page_info(
     obj: DexterityContent, config: types.ExporterConfig
-) -> dict | None:
+) -> Optional[dict]:
     """Default page for a given obj.
 
     We use a simplified method to only get index_html
@@ -268,12 +269,14 @@ def default_page_info(
 
 def get_position_in_parent(
     obj: DexterityContent, config: types.ExporterConfig
-) -> int | None:
+) -> Optional[int]:
     ordered = get_parent_ordered(obj)
     return ordered.getObjectPosition(obj.getId()) if ordered else None
 
 
-def get_local_roles(obj: DexterityContent, config: types.ExporterConfig) -> dict | None:
+def get_local_roles(
+    obj: DexterityContent, config: types.ExporterConfig
+) -> Optional[dict]:
     item = {}
     local_roles = None
     block = None

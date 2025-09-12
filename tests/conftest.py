@@ -5,6 +5,7 @@ from plone.exportimport.testing import INTEGRATION_TESTING
 from pytest_plone import fixtures_factory
 from typing import Callable
 from typing import List
+from typing import Union
 
 import json
 import pytest
@@ -68,7 +69,7 @@ def paths_as_relative():
 
 @pytest.fixture
 def load_json():
-    def func(base_path: Path, path: Path) -> dict | list:
+    def func(base_path: Path, path: Path) -> Union[dict, list]:
         with open(base_path / path) as fh:
             data = json.load(fh)
         return data

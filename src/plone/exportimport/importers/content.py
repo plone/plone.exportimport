@@ -21,7 +21,7 @@ class ContentImporter(BaseImporter):
     name: str = "content"
     metadata: types.ExportImportMetadata = None
     languages: types.PortalLanguages = None
-    dropped: set | None = None
+    dropped: Optional[set] = None
 
     def __init__(
         self,

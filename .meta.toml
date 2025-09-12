@@ -1,9 +1,9 @@
 # Generated from:
-# https://github.com/plone/meta/tree/main/config/default
+# https://github.com/plone/meta/tree/main/src/plone/meta/default
 # See the inline comments on how to expand/tweak this configuration file
 [meta]
 template = "default"
-commit-id = "ae379f1f"
+commit-id = "2.1.0"
 
 [pyproject]
 codespell_skip = "*.min.js"
@@ -20,7 +20,6 @@ use_mxdev = true
 test_deps_additional = ""
 
 [github]
-py_versions = "[\"3.12\", \"3.11\", \"3.10\"]"
 jobs = [
     "qa",
     "test",
