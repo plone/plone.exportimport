@@ -269,12 +269,14 @@ def default_page_info(
 
 def get_position_in_parent(
     obj: DexterityContent, config: types.ExporterConfig
-) -> int | None:
+) -> Optional[int]:
     ordered = get_parent_ordered(obj)
     return ordered.getObjectPosition(obj.getId()) if ordered else None
 
 
-def get_local_roles(obj: DexterityContent, config: types.ExporterConfig) -> dict | None:
+def get_local_roles(
+    obj: DexterityContent, config: types.ExporterConfig
+) -> Optional[dict]:
     item = {}
     local_roles = None
     block = None
