@@ -9,6 +9,23 @@
 
 <!-- towncrier release notes start -->
 
+## 1.3.0 (2025-09-24)
+
+
+### New features:
+
+- Support export/import of user `login_name` @ewohnlich #69
+
+
+### Bug fixes:
+
+- Fix import of ordering inside folderish components. @ericof #60
+
+
+### Internal:
+
+- Update package metadata @ericof #78
+
 ## 1.2.1 (2025-09-05)
 
 
