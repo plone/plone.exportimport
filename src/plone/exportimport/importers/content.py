@@ -19,8 +19,8 @@ import transaction
 
 class ContentImporter(BaseImporter):
     name: str = "content"
-    metadata: types.ExportImportMetadata = None
-    languages: types.PortalLanguages = None
+    metadata: Optional[types.ExportImportMetadata] = None
+    languages: Optional[types.PortalLanguages] = None
     dropped: Optional[set] = None
 
     def __init__(
@@ -47,7 +47,7 @@ class ContentImporter(BaseImporter):
 
     def all_objects(self) -> Generator:
         """Return all objects to be serialized."""
-        all_files = self.metadata._data_files_
+        all_files = self.metadata._data_files_ if self.metadata else []
         logger.info(f"Importing {len(all_files)} content items")
         for filepath in all_files:
             path = self.base_path / filepath
@@ -174,14 +174,14 @@ class ContentImporter(BaseImporter):
                 "created",
             ]
             content_utils.recatalog_uids(modified, idxs=idxs)
-        return f"{self.__class__.__name__}: Imported {len(objs)} objects"
+        return f"{name}: Imported {len(objs)} objects"
 
     def import_data(
         self,
         base_path: Path,
-        data_hooks: List[Callable] = None,
-        pre_deserialize_hooks: List[Callable] = None,
-        obj_hooks: List[Callable] = None,
+        data_hooks: Optional[List[Callable]] = None,
+        pre_deserialize_hooks: Optional[List[Callable]] = None,
+        obj_hooks: Optional[List[Callable]] = None,
     ) -> str:
         """Import content into a site."""
         base_path = base_path / self.name

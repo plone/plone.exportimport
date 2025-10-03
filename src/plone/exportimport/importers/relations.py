@@ -7,7 +7,7 @@ from plone.exportimport.utils import relations as utils
 class RelationsImporter(BaseImporter):
     name: str = "relations"
 
-    def do_import(self) -> dict:
+    def do_import(self) -> str:
         """Import relations into a Plone Site."""
         data = self._read()
         if data is None:

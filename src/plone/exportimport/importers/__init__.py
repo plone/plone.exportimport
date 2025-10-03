@@ -6,6 +6,7 @@ from plone.exportimport import logger
 from Products.CMFPlone.Portal import PloneSite
 from typing import Dict
 from typing import List
+from typing import Optional
 from zope.component import getAdapter
 from zope.component import hooks
 from zope.component import queryAdapter
@@ -36,7 +37,7 @@ class Importer:
         self.site = site
         self.importers = self.all_importers()
 
-    def all_importers(self) -> List[BaseImporter]:
+    def all_importers(self) -> ImporterMapping:
         """Return all importers."""
         importers = {}
         for importer_name in IMPORTER_NAMES:
@@ -59,7 +60,7 @@ class Importer:
         return report
 
 
-def get_importer(site: PloneSite = None) -> Importer:
+def get_importer(site: Optional[PloneSite] = None) -> Importer:
     """Get the importer."""
     if site is None:
         site = api.portal.get()

@@ -16,11 +16,11 @@ class BaseImporter:
     name: str
     base_path: Path
     site: PloneSite
-    errors: list = None
-    request: types.HTTPRequest = None
-    data_hooks: List[Callable] = None
-    pre_deserialize_hooks: List[Callable] = None
-    obj_hooks: List[Callable] = None
+    errors: Optional[list] = None
+    request: Optional[types.HTTPRequest] = None
+    data_hooks: Optional[List[Callable]] = None
+    pre_deserialize_hooks: Optional[List[Callable]] = None
+    obj_hooks: Optional[List[Callable]] = None
 
     def __init__(
         self,
@@ -54,9 +54,9 @@ class BaseImporter:
     def import_data(
         self,
         base_path: Path,
-        data_hooks: List[Callable] = None,
-        pre_deserialize_hooks: List[Callable] = None,
-        obj_hooks: List[Callable] = None,
+        data_hooks: Optional[List[Callable]] = None,
+        pre_deserialize_hooks: Optional[List[Callable]] = None,
+        obj_hooks: Optional[List[Callable]] = None,
     ) -> str:
         """Import data into a Plone site."""
         if not base_path.exists():
@@ -81,9 +81,9 @@ class BaseDatalessImporter(BaseImporter):
     def import_data(
         self,
         base_path: Path,
-        data_hooks: List[Callable] = None,
-        pre_deserialize_hooks: List[Callable] = None,
-        obj_hooks: List[Callable] = None,
+        data_hooks: Optional[List[Callable]] = None,
+        pre_deserialize_hooks: Optional[List[Callable]] = None,
+        obj_hooks: Optional[List[Callable]] = None,
     ) -> str:
         """Import data into a Plone site.
 
