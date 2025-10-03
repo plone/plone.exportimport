@@ -14,8 +14,8 @@ from zope.interface import implementer
 
 
 IMPORTER_NAMES = [
-    "plone.importer.content",
     "plone.importer.principals",
+    "plone.importer.content",
     "plone.importer.redirects",
     "plone.importer.relations",
     "plone.importer.translations",
