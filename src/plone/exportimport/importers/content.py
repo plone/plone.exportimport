@@ -135,6 +135,7 @@ class ContentImporter(BaseImporter):
     def do_import(self) -> str:
         objs = []
         modified = set()
+        name = self.__class__.__name__
         with request_provides(self.request, IExportImportRequestMarker):
             for index, item in enumerate(self.all_objects(), start=1):
                 item_path = item["@id"]
@@ -149,7 +150,7 @@ class ContentImporter(BaseImporter):
                     self.dropped.add(item_path)
                 if not index % 100:
                     transaction.savepoint()
-                    logger.info(f"Handled {index} items...")
+                    logger.info(f"{name}: Handled {index} items...")
             for setter in content_utils.metadata_setters():
                 data = getattr(self.metadata, setter.name)
                 cleanse_func = getattr(self, f"_cleanse_{setter.name}", None)
@@ -163,7 +164,7 @@ class ContentImporter(BaseImporter):
                         modified.add(uid)
                     if not index % 100:
                         transaction.savepoint()
-                        logger.info(f"Handled {index} items...")
+                        logger.info(f"{setter.name}: Handled {index} items...")
             # Reindex objects
             idxs = [
                 "allowedRolesAndUsers",

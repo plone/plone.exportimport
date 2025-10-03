@@ -14,7 +14,7 @@ class FinalImporter(BaseDatalessImporter):
 
     def do_import(self) -> str:
         count = 0
-
+        name = self.__class__.__name__
         with request_provides(self.request, IExportImportRequestMarker):
             catalog = api.portal.get_tool("portal_catalog")
             # getAllBrains does not yet process the indexing queue before it starts.
@@ -37,8 +37,8 @@ class FinalImporter(BaseDatalessImporter):
                 count += 1
                 if not count % 100:
                     transaction.savepoint()
-                    logger.info(f"Handled {count} items...")
+                    logger.info(f"{name}: Handled {count} items...")
 
-        report = f"{self.__class__.__name__}: Updated {count} objects"
+        report = f"{name}: Updated {count} objects"
         logger.info(report)
         return report
