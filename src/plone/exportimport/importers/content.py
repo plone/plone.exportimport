@@ -13,7 +13,6 @@ from typing import List
 from typing import Optional
 
 import json
-import transaction
 
 
 class ContentImporter(BaseImporter):
@@ -132,6 +131,7 @@ class ContentImporter(BaseImporter):
         if not request:
             logger.warning(f"{name}: No request found, skipping final import step")
             return f"{name}: No request found, skipping import step"
+
         with request_provides(request, IExportImportRequestMarker):
             for index, item in enumerate(self.all_objects(), start=1):
                 item_path = item["@id"]
@@ -144,8 +144,11 @@ class ContentImporter(BaseImporter):
                     objs[item_uid] = obj_path
                 else:
                     self.dropped.add(item_path)
-                if not index % 100:
-                    transaction.savepoint()
+                if self.intermediate_commits and not index % self.commit_after:
+                    self._commit(f"Created {self.commit_after} objects")
+                    logger.info(f"{name}: Handled {index} items... (Commit)")
+                elif not index % self.savepoint_after:
+                    self._savepoint()
                     logger.info(f"{name}: Handled {index} items...")
             for setter in content_utils.metadata_setters():
                 data = getattr(self.metadata, setter.name)
@@ -160,8 +163,8 @@ class ContentImporter(BaseImporter):
                     value = data[uid]
                     if setter.func(uid, value, path):
                         modified.add(uid)
-                    if not index % settings.IMPORTER_SAVEPOINT:
-                        transaction.savepoint()
+                    if not index % self.savepoint_after:
+                        self._savepoint()
                     if not index % settings.IMPORTER_REPORT:
                         logger.info(f"{setter.name}: Handled {index} items...")
             # Reindex objects
@@ -175,11 +178,10 @@ class ContentImporter(BaseImporter):
             content_utils.recatalog_uids(list(modified), idxs=idxs)
         total_objects = len(objs)
         msg = f"Imported {total_objects} objects"
-        # Commit changes after importing all the content
-        tx = transaction.get()
-        tx.note(msg)
-        tx.commit()
-        logger.info(f"{name}: Committed changes")
+        if self.intermediate_commits:
+            # Commit changes after importing all the content
+            self._commit(msg)
+            logger.info(f"{name}: Committed changes")
         return f"{name}: {msg}"
 
     def import_data(

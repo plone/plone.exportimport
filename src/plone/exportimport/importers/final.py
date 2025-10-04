@@ -7,16 +7,12 @@ from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
 from Products.CMFCore.indexing import processQueue
 
-import transaction
-
 
 class FinalImporter(BaseDatalessImporter):
     # name: str = ""
 
     def do_import(self) -> str:
         count = 0
-        savepoint = settings.IMPORTER_SAVEPOINT
-        commit = settings.IMPORTER_COMMIT
         name = self.__class__.__name__
         request = self.request
         if not request:
@@ -47,20 +43,16 @@ class FinalImporter(BaseDatalessImporter):
                         obj = func(obj)
 
                 count += 1
-                if not count % commit:
-                    tx = transaction.get()
-                    tx.note(f"Reindexed {commit} objects")
-                    tx.commit()
+                if not count % self.commit_after:
+                    self._commit(f"Reindexed {self.commit_after} objects")
                     logger.info(f"{name}: Handled {count} items... (Commit)")
-                elif not count % savepoint:
-                    transaction.savepoint()
-                if not count % settings.IMPORTER_REPORT and count % commit:
+                elif not count % self.savepoint_after:
+                    self._savepoint()
+                if not count % settings.IMPORTER_REPORT:
                     logger.info(f"{name}: Handled {count} items...")
 
-        if last_batch := count % commit:
-            tx = transaction.get()
-            tx.note(f"Reindexed {last_batch} objects")
-            tx.commit()
+        if self.intermediate_commits and (last_batch := count % self.commit_after):
+            self._commit(f"Reindexed {last_batch} objects")
             logger.info(f"{name}: Handled {count} items... (Commit)")
 
         report = f"{name}: Updated {count} objects"

@@ -1,4 +1,5 @@
 from pathlib import Path
+from plone.exportimport import settings
 from plone.exportimport import types
 from plone.exportimport.utils import content as utils
 from Products.CMFPlone.Portal import PloneSite
@@ -10,6 +11,7 @@ from typing import Union
 from zope.globalrequest import getRequest
 
 import json
+import transaction
 
 
 class BaseImporter:
@@ -21,6 +23,9 @@ class BaseImporter:
     data_hooks: Optional[List[Callable]] = None
     pre_deserialize_hooks: Optional[List[Callable]] = None
     obj_hooks: Optional[List[Callable]] = None
+    intermediate_commits: bool = not settings.IMPORTER_COMMIT_DISABLE
+    savepoint_after: int = settings.IMPORTER_SAVEPOINT_AFTER
+    commit_after: int = settings.IMPORTER_COMMIT_AFTER
 
     def __init__(
         self,
@@ -46,6 +51,19 @@ class BaseImporter:
             with open(filepath) as fh:
                 data = json.load(fh)
             return data
+
+    def _commit(self, note: str = "") -> None:
+        """Commit the current transaction with an optional note."""
+        if not self.intermediate_commits:
+            return
+        tx = transaction.get()
+        if note:
+            tx.note(note)
+        tx.commit()
+
+    def _savepoint(self) -> None:
+        """Add a savepoint to the current transaction."""
+        transaction.savepoint()
 
     def do_import(self) -> str:
         """Deserialize objects."""
