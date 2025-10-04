@@ -21,7 +21,7 @@ AUTO_GROUPS: Tuple[str] = ("AuthenticatedUsers",)
 AUTO_ROLES: Tuple[str] = ("Authenticated",)
 
 # Savepoint and commit changes
-IMPORTER_COMMIT_DISABLE: bool = bool(os.environ.get("IMPORTER_COMMIT_DISABLE", 1))
+IMPORTER_COMMIT_DISABLE: bool = bool(os.environ.get("IMPORTER_COMMIT_DISABLE", 0))
 IMPORTER_COMMIT_AFTER = int(os.environ.get("IMPORTER_COMMIT_AFTER", 1000))
 IMPORTER_SAVEPOINT_AFTER = int(os.environ.get("IMPORTER_SAVEPOINT_AFTER", 100))
 IMPORTER_REPORT = int(os.environ.get("IMPORTER_REPORT", 100))
