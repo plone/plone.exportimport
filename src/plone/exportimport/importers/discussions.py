@@ -5,7 +5,7 @@ from plone.exportimport import logger
 class DiscussionsImporter(BaseImporter):
     name: str = "discussions"
 
-    def do_import(self) -> dict:
+    def do_import(self) -> str:
         """Import discussions into a Plone Site."""
         data = self._read()
         if data is None:
@@ -17,7 +17,7 @@ class DiscussionsImporter(BaseImporter):
             logger.warning(
                 "- Discussions: Skipping (plone.app.discussion not installed)"
             )
-            return
+            return ""
 
         logger.debug(f"- Discussions: Read {len(data)} from {self.filepath}")
         results = utils.set_discussions(data)

@@ -5,6 +5,7 @@ from Products.CMFPlone.Portal import PloneSite
 from typing import Callable
 from typing import Dict
 from typing import List
+from typing import Protocol
 from ZPublisher.HTTPRequest import HTTPRequest
 
 
@@ -38,6 +39,25 @@ class ExportImportMetadata:
         files = dump.pop("_all_", {})
         dump["_data_files_"] = [v for _, v in sorted(files.items())]
         return dump
+
+
+class ImporterSetterFunction(Protocol):
+    """Protocol for helper functions."""
+
+    __doc__: str
+
+    def __call__(self, uid: str, value: dict, path: str = "") -> bool:
+        """Signature for helper functions."""
+        ...
+
+
+@dataclass
+class ImporterSetter:
+    """Helper function to set metadata on imported content."""
+
+    func: ImporterSetterFunction
+    name: str
+    description: str
 
 
 @dataclass

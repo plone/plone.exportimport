@@ -7,11 +7,14 @@ from Products.CMFCore.indexing import processQueue
 import pytest
 
 
-class TestImporter:
+class TestBase:
     @pytest.fixture(autouse=True)
     def _init(self, portal):
         self.src_portal = portal
         self.importer = get_importer(self.src_portal)
+
+
+class TestImporter(TestBase):
 
     def test_importer_is_correct_class(self):
         assert isinstance(self.importer, Importer)
@@ -24,8 +27,8 @@ class TestImporter:
     @pytest.mark.parametrize(
         "importer_name",
         [
-            "plone.importer.content",
             "plone.importer.principals",
+            "plone.importer.content",
             "plone.importer.redirects",
             "plone.importer.relations",
             "plone.importer.translations",
@@ -37,11 +40,14 @@ class TestImporter:
         importers = self.importer.all_importers()
         assert importer_name in importers
 
+
+class TestImporterImportSite(TestBase):
+
     @pytest.mark.parametrize(
         "msg",
         [
-            "ContentImporter: Imported 9 objects",
             "PrincipalsImporter: Imported 2 groups and 1 members",
+            "ContentImporter: Imported 9 objects",
             "RedirectsImporter: Imported 0 redirects",
             "FinalImporter: Updated 9 objects",
         ],
@@ -53,6 +59,8 @@ class TestImporter:
         assert len(results) >= 6
         assert msg in results
 
+
+class TestImporterImportDateisSet(TestBase):
     @pytest.mark.parametrize(
         "uid,method_name,value",
         [
@@ -85,6 +93,9 @@ class TestImporter:
         self.importer.import_site(base_import_path)
         content = object_from_uid(uid)
         assert getattr(content, method_name)() == DateTime(value)
+
+
+class TestImporterImportFinalImport(TestBase):
 
     def test_final_contents(self, base_import_path):
         self.importer.import_site(base_import_path)
