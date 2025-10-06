@@ -6,7 +6,7 @@ from plone.exportimport.utils import redirects as utils
 class RedirectsImporter(BaseImporter):
     name: str = "redirects"
 
-    def do_import(self) -> dict:
+    def do_import(self) -> str:
         """Import redirects into a Plone Site."""
         data = self._read()
         if data is None:

@@ -6,7 +6,7 @@ from ZPublisher.HTTPRequest import HTTPRequest
 
 
 @contextmanager
-def request_provides(request: HTTPRequest, interface: InterfaceClass):
+def request_provides(request: HTTPRequest, interface: type[InterfaceClass]):
     """Temporarily add the given interface to the request."""
     alsoProvides(request, interface)
     yield request

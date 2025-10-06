@@ -6,7 +6,7 @@ from plone.exportimport.utils import portlets as utils
 class PortletsImporter(BaseImporter):
     name: str = "portlets"
 
-    def do_import(self) -> dict:
+    def do_import(self) -> str:
         """Import portlets into a Plone Site."""
         data = self._read()
         if data is None:

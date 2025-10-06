@@ -9,6 +9,7 @@ from plone.dexterity.utils import iterSchemata
 from plone.exportimport import settings
 from plone.exportimport import types
 from plone.uuid.interfaces import IUUID
+from Products.CMFPlone.Portal import PloneSite
 from typing import List
 from typing import Optional
 from zope.interface.interface import InterfaceClass
@@ -52,6 +53,20 @@ def object_from_uid(uid: str) -> Optional[DexterityContent]:
     return brains[0].getObject() if brains else None
 
 
+def object_from_uid_or_path(uid: str, path: str = "") -> Optional[DexterityContent]:
+    """Return an object for a given uid or given path."""
+    obj = None
+    if path:
+        # Try first to get the object by its path
+        portal: PloneSite = api.portal.get()
+        obj = portal.unrestrictedTraverse(path, default=None)
+        # Check if the found object has the expected uid
+        obj = obj if api.content.get_uuid(obj) == uid else None
+    if not obj:
+        obj = object_from_uid(uid)
+    return obj
+
+
 def get_portal_languages() -> types.PortalLanguages:
     """Return configured languages in a Plone Site."""
     default = api.portal.get_registry_record("plone.default_language", default="en")
@@ -67,7 +82,9 @@ def get_parent_ordered(obj: DexterityContent) -> Optional[OrderSupport]:
     return IOrderedContainer(parent, None) if is_folderish(parent) else None
 
 
-def get_all_fields(obj: DexterityContent, filter: List[InterfaceClass] = None) -> dict:
+def get_all_fields(
+    obj: DexterityContent, filter: Optional[List[type[InterfaceClass]]] = None
+) -> dict:
     """Return a dictionary with all fields defined for the given object."""
     fields = {}
     filter = filter if filter else []

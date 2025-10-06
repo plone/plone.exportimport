@@ -47,7 +47,7 @@ class ContentExporter(BaseExporter):
                 yield obj
 
             if not index % 100:
-                logger.info(f"Handled {index} items...")
+                logger.info(f"Content Exporter: Handled {index} items...")
 
     def serialize(self, obj: DexterityContent) -> dict:
         """Serialize object."""

@@ -7,28 +7,19 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
-from Products.CMFPlone.Portal import PloneSite
 from typing import Callable
 from typing import Generator
 from typing import List
 from typing import Optional
 
 import json
-import transaction
 
 
 class ContentImporter(BaseImporter):
     name: str = "content"
-    metadata: types.ExportImportMetadata = None
-    languages: types.PortalLanguages = None
-    dropped: Optional[set] = None
-
-    def __init__(
-        self,
-        site: PloneSite,
-    ):
-        super().__init__(site)
-        self.dropped = set()
+    metadata: Optional[types.ExportImportMetadata] = None
+    languages: Optional[types.PortalLanguages] = None
+    dropped: set[str] = set()
 
     def _cleanse_ordering(self, raw_data: dict[str, int]) -> dict[str, int]:
         """Prepare ordering data before deserialization.
@@ -47,7 +38,7 @@ class ContentImporter(BaseImporter):
 
     def all_objects(self) -> Generator:
         """Return all objects to be serialized."""
-        all_files = self.metadata._data_files_
+        all_files = self.metadata._data_files_ if self.metadata else []
         logger.info(f"Importing {len(all_files)} content items")
         for filepath in all_files:
             path = self.base_path / filepath
@@ -133,9 +124,15 @@ class ContentImporter(BaseImporter):
         return new
 
     def do_import(self) -> str:
-        objs = []
-        modified = set()
-        with request_provides(self.request, IExportImportRequestMarker):
+        objs: dict[str, str] = {}
+        modified: set[str] = set()
+        name = self.__class__.__name__
+        request = self.request
+        if not request:
+            logger.warning(f"{name}: No request found, skipping final import step")
+            return f"{name}: No request found, skipping import step"
+
+        with request_provides(request, IExportImportRequestMarker):
             for index, item in enumerate(self.all_objects(), start=1):
                 item_path = item["@id"]
                 item_type = item["@type"]
@@ -144,12 +141,15 @@ class ContentImporter(BaseImporter):
                 obj = self.construct(item)
                 if obj:
                     obj_path = "/".join(obj.getPhysicalPath())
-                    objs.append(obj_path)
+                    objs[item_uid] = obj_path
                 else:
                     self.dropped.add(item_path)
-                if not index % 100:
-                    transaction.savepoint()
-                    logger.info(f"Handled {index} items...")
+                if self.intermediate_commits and not index % self.commit_after:
+                    self._commit(f"Created {self.commit_after} objects")
+                    logger.info(f"{name}: Handled {index} items... (Commit)")
+                elif not index % self.savepoint_after:
+                    self._savepoint()
+                    logger.info(f"{name}: Handled {index} items...")
             for setter in content_utils.metadata_setters():
                 data = getattr(self.metadata, setter.name)
                 cleanse_func = getattr(self, f"_cleanse_{setter.name}", None)
@@ -158,12 +158,15 @@ class ContentImporter(BaseImporter):
                     data = cleanse_func(data)
                 logger.info(f"Processing {setter.name}: {len(data)} entries")
                 for index, uid in enumerate(data, start=index):
+                    # Pass the path as a fallback in case the object was not found by UID
+                    path = objs.get(uid) or ""
                     value = data[uid]
-                    if setter.func(uid, value):
+                    if setter.func(uid, value, path):
                         modified.add(uid)
-                    if not index % 100:
-                        transaction.savepoint()
-                        logger.info(f"Handled {index} items...")
+                    if not index % self.savepoint_after:
+                        self._savepoint()
+                    if not index % settings.IMPORTER_REPORT:
+                        logger.info(f"{setter.name}: Handled {index} items...")
             # Reindex objects
             idxs = [
                 "allowedRolesAndUsers",
@@ -172,15 +175,21 @@ class ContentImporter(BaseImporter):
                 "modified",
                 "created",
             ]
-            content_utils.recatalog_uids(modified, idxs=idxs)
-        return f"{self.__class__.__name__}: Imported {len(objs)} objects"
+            content_utils.recatalog_uids(list(modified), idxs=idxs)
+        total_objects = len(objs)
+        msg = f"Imported {total_objects} objects"
+        if self.intermediate_commits:
+            # Commit changes after importing all the content
+            self._commit(msg)
+            logger.info(f"{name}: Committed changes")
+        return f"{name}: {msg}"
 
     def import_data(
         self,
         base_path: Path,
-        data_hooks: List[Callable] = None,
-        pre_deserialize_hooks: List[Callable] = None,
-        obj_hooks: List[Callable] = None,
+        data_hooks: Optional[List[Callable]] = None,
+        pre_deserialize_hooks: Optional[List[Callable]] = None,
+        obj_hooks: Optional[List[Callable]] = None,
     ) -> str:
         """Import content into a site."""
         base_path = base_path / self.name
@@ -201,7 +210,7 @@ class ContentImporter(BaseImporter):
         if dropped:
             logger.warning("List of items dropped during import")
             for item_path in dropped:
-                logger.warning({item_path})
+                logger.warning(f" - {item_path}")
         return result
 
     def start(self):

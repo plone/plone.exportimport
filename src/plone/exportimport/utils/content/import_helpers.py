@@ -1,6 +1,6 @@
 from .core import get_obj_path
 from .core import get_parent_ordered
-from .core import object_from_uid
+from .core import object_from_uid_or_path
 from Acquisition import aq_base
 from Acquisition import aq_parent
 from pathlib import PurePosixPath
@@ -25,6 +25,7 @@ from Products.CMFEditions.CopyModifyMergeRepositoryTool import (
 from typing import Callable
 from typing import List
 from typing import Optional
+from typing import Tuple
 from unittest.mock import patch
 from urllib.parse import unquote
 from zExceptions import NotFound
@@ -185,8 +186,8 @@ def update_dates(item: dict, obj: DexterityContent) -> DexterityContent:
     The modification date may change again due to importers that run after us.
     So we save it on a temporary property for handling in the final importer.
     """
-    created = item.get("created", item.get("creation_date", None))
-    modified = item.get("modified", item.get("modification_date", None))
+    created: str = item.get("created", item.get("creation_date", ""))
+    modified: str = item.get("modified", item.get("modification_date", ""))
     idxs = []
     for attr, idx, value in (
         ("creation_date", "created", created),
@@ -234,22 +235,23 @@ def updaters() -> List[types.ExportImportHelper]:
         update_dates,
     ]
     for func in funcs:
+        description = func.__doc__ if func.__doc__ else ""
         updaters.append(
             types.ExportImportHelper(
                 func=func,
                 name=func.__name__,
-                description=func.__doc__,
+                description=description,
             )
         )
     return updaters
 
 
-def set_constraints(uid: str, value: dict) -> bool:
+def set_constraints(uid: str, value: dict, path: str = "") -> bool:
     """Update constraints in object."""
     status = False
-    obj = object_from_uid(uid)
     if not value:
         return status
+    obj = object_from_uid_or_path(uid, path)
     constraints = ISelectableConstrainTypes(obj, None)
     if constraints:
         status = True
@@ -278,15 +280,17 @@ def set_constraints(uid: str, value: dict) -> bool:
     return status
 
 
-def set_default_page(uid: str, value: dict) -> bool:
+def set_default_page(uid: str, value: dict, path: str = "") -> bool:
     """Set default page on object with the given uid."""
-    obj = object_from_uid(uid)
+    obj = object_from_uid_or_path(uid, path)
     if not obj:
         logger.info(f"{uid}: Could not find object to set default page")
         return False
     obj_path = get_obj_path(obj)
     default_page_uuid = value.get("default_page_uuid", None)
-    default_page_obj = object_from_uid(default_page_uuid) if default_page_uuid else None
+    default_page_obj = (
+        object_from_uid_or_path(default_page_uuid) if default_page_uuid else None
+    )
     default_page = (
         default_page_obj.getId()
         if default_page_obj
@@ -306,9 +310,9 @@ def set_default_page(uid: str, value: dict) -> bool:
     return status
 
 
-def set_local_roles(uid: str, value: dict) -> bool:
+def set_local_roles(uid: str, value: dict, path: str = "") -> bool:
     """Set local roles from metadata."""
-    obj = object_from_uid(uid)
+    obj = object_from_uid_or_path(uid, path)
     if not obj:
         logger.info(f"{uid}: Could not find object to set local roles")
         return False
@@ -325,8 +329,8 @@ def set_local_roles(uid: str, value: dict) -> bool:
     return True
 
 
-def set_ordering(uid: str, value: int) -> bool:
-    obj = object_from_uid(uid)
+def set_ordering(uid: str, value: dict, path: str = "") -> bool:
+    obj = object_from_uid_or_path(uid, path)
     if not obj:
         logger.info(f"{uid}: Could not find object to set ordering")
         return False
@@ -338,17 +342,17 @@ def set_ordering(uid: str, value: int) -> bool:
     return status
 
 
-def set_local_permissions(uid: str, value: dict) -> bool:
-    obj = object_from_uid(uid)
+def set_local_permissions(uid: str, value: dict, path: str = "") -> bool:
+    obj = object_from_uid_or_path(uid, path)
     if not obj:
         logger.info(f"{uid}: Could not find object to set permissions")
         return False
     return _set_local_permissions(obj, value)
 
 
-def metadata_setters() -> List[types.ExportImportHelper]:
+def metadata_setters() -> List[types.ImporterSetter]:
     helpers = []
-    funcs = [
+    funcs: List[Tuple[types.ImporterSetterFunction, str]] = [
         (set_default_page, "default_page"),
         (set_ordering, "ordering"),
         (set_local_roles, "local_roles"),
@@ -356,11 +360,12 @@ def metadata_setters() -> List[types.ExportImportHelper]:
         (set_constraints, "constraints"),
     ]
     for func, attr in funcs:
+        description = func.__doc__ if func.__doc__ else ""
         helpers.append(
             types.ExportImportHelper(
                 func=func,
                 name=attr,
-                description=func.__doc__,
+                description=description,
             )
         )
     return helpers
@@ -369,7 +374,7 @@ def metadata_setters() -> List[types.ExportImportHelper]:
 def recatalog_uids(uids: List[str], idxs: List[str]):
     logger.info(f"Reindexing catalog indexes {', '.join(idxs)} for {len(uids)} objects")
     for uid in uids:
-        obj = object_from_uid(uid)
+        obj = object_from_uid_or_path(uid, "")
         if not obj:
             continue
         obj.reindexObject(idxs)
@@ -381,11 +386,12 @@ def final_updaters() -> List[types.ExportImportHelper]:
         reset_modification_date,
     ]
     for func in funcs:
+        description = func.__doc__ if func.__doc__ else ""
         updaters.append(
             types.ExportImportHelper(
                 func=func,
                 name=func.__name__,
-                description=func.__doc__,
+                description=description,
             )
         )
     return updaters
