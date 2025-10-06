@@ -9,6 +9,20 @@
 
 <!-- towncrier release notes start -->
 
+## 1.3.1 (2025-10-06)
+
+
+### New features:
+
+- Implement regular commits to reduce memory usage in larger import processes. @ericof #55
+
+
+### Internal:
+
+- Add a prefix to progress loggers. @ericof 
+- Fix type annotations. @ericof 
+- Import: Move plone.importer.principals to the top of the importers to be processed. @ericof 
+
 ## 1.3.0 (2025-09-24)
 
 
