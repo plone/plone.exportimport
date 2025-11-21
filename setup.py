@@ -1,5 +1,4 @@
 from pathlib import Path
-from setuptools import find_packages
 from setuptools import setup
 
 
@@ -18,22 +17,18 @@ setup(
         "Development Status :: 5 - Production/Stable",
         "Environment :: Web Environment",
         "Framework :: Plone",
-        "Framework :: Plone :: 6.0",
-        "Framework :: Plone :: 6.1",
         "Framework :: Plone :: 6.2",
         "Framework :: Plone :: Core",
         "Framework :: Zope :: 5",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3.13",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.10",
     keywords="Plone CMF Python Zope CMS",
     author="Plone Foundation",
     author_email="releasemanager@plone.org",
@@ -45,9 +40,6 @@ setup(
         "Source": "https://github.com/plone/plone.exportimport",
         "Issues": "https://github.com/plone/plone.exportimport/issues",
     },
-    packages=find_packages("src"),
-    namespace_packages=["plone"],
-    package_dir={"": "src"},
     include_package_data=True,
     zip_safe=False,
     install_requires=[
@@ -68,7 +60,6 @@ setup(
         "Products.DCWorkflow",
         "Products.PlonePAS",
         "Products.PortalTransforms",
-        "setuptools",
         "z3c.relationfield",
         "zc.relation",
         "Zope",
