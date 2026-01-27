@@ -1,6 +1,7 @@
 from pathlib import Path
 from plone import api
 from plone.app.multilingual.browser.setup import SetupMultilingualSite
+from plone.exportimport.testing import FUNCTIONAL_TESTING
 from plone.exportimport.testing import INTEGRATION_TESTING
 from pytest_plone import fixtures_factory
 from typing import Callable
@@ -14,7 +15,11 @@ import pytest
 pytest_plugins = ["pytest_plone"]
 
 
-globals().update(fixtures_factory(((INTEGRATION_TESTING, "integration"),)))
+globals().update(
+    fixtures_factory(
+        ((INTEGRATION_TESTING, "integration"), (FUNCTIONAL_TESTING, "functional"))
+    )
+)
 
 
 @pytest.fixture()

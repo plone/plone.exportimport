@@ -12,10 +12,12 @@
   <include package="plone.app.dexterity" />
   <include package="plone.restapi" />
 
+  <include file="permissions.zcml" />
+
   <include package=".serializers" />
   <include package=".deserializers" />
   <include package=".exporters" />
   <include package=".importers" />
-
+  <include package=".services" />
 
 </configure>
