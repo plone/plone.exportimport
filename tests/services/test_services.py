@@ -22,7 +22,7 @@ class TestExportImportServices:
     def test_import_requires_permission(self, api_session_anonymous):
         """Test that the import endpoint requires the import permission."""
         response = api_session_anonymous.post(
-            "/@export",
+            "/@import",
         )
         assert response.status_code == 401
 
