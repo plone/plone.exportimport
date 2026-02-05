@@ -20,4 +20,4 @@ class INamedExporter(Interface):
 
 
 class INamedImporter(Interface):
-    """Component to export content from a Plone Site."""
+    """Component to import content from a Plone Site."""
