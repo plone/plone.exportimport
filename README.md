@@ -37,7 +37,7 @@ Export site data as a ZIP file.
 ```bash
 curl -X POST \
   -H "Authorization: Bearer <token>" \
-  https://plone.example.com/plone/@export \
+  https://plone.example.com/plone/++api++/@export \
   -o export.zip
 ```
 
@@ -56,10 +56,10 @@ Import site data from a ZIP file.
 **Example:**
 
 ```bash
-curl -X POST \
+curl \
   -H "Authorization: Bearer <token>" \
   -F "file=@export.zip" \
-  https://plone.example.com/plone/@import
+  https://plone.example.com/plone/++api++/@import
 ```
 
 **Response Example:**
