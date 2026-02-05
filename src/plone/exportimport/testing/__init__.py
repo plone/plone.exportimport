@@ -1,6 +1,8 @@
 from plone.app.contenttypes.testing import PLONE_APP_CONTENTTYPES_FIXTURE
+from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PloneSandboxLayer
+from plone.testing.zope import WSGI_SERVER_FIXTURE
 
 
 class ExportImportLayer(PloneSandboxLayer):
@@ -28,4 +30,9 @@ FIXTURE = ExportImportLayer()
 INTEGRATION_TESTING = IntegrationTesting(
     bases=(FIXTURE,),
     name="ExportImportLayer:IntegrationTesting",
+)
+
+FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(FIXTURE, WSGI_SERVER_FIXTURE),
+    name="ExportImportLayer:FunctionalTesting",
 )

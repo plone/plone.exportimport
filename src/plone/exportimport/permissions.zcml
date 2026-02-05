@@ -1,0 +1,20 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:permission="http://namespaces.zope.org/security"
+    i18n_domain="plone"
+    >
+
+  <!-- Permissions for export/import operations -->
+  <permission
+      id="plone.exportimport.export"
+      title="plone.exportimport: Export"
+      description="Allows users to export site data"
+      />
+
+  <permission
+      id="plone.exportimport.import"
+      title="plone.exportimport: Import"
+      description="Allows users to import site data"
+      />
+
+</configure>

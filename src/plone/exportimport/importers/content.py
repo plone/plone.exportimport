@@ -74,6 +74,7 @@ class ContentImporter(BaseImporter):
             request=self.request,
             logger_prefix=f"- {item_path}:",
         )
+
         # Pre-process payload
         for processor in content_utils.processors():
             logger.debug(f"{config.logger_prefix} Running {processor.name} on payload")

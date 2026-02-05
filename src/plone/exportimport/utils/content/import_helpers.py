@@ -2,6 +2,7 @@ from .core import get_obj_path
 from .core import get_parent_ordered
 from .core import object_from_uid_or_path
 from Acquisition import aq_base
+from Acquisition import aq_inner
 from Acquisition import aq_parent
 from pathlib import PurePosixPath
 from Persistence import PersistentMapping
@@ -39,7 +40,8 @@ def get_deserializer(data: dict, request) -> Callable:
 def get_parent_from_item(data: dict) -> Optional[DexterityContent]:
     parent_path = str(PurePosixPath(data["@id"]).parent)
     if data.get("@type") == "Plone Site":
-        parent = aq_parent(api.portal.get())
+        portal = aq_inner(api.portal.get())
+        parent = aq_parent(portal)
     else:
         try:
             parent = api.content.get(path=parent_path)
@@ -58,6 +60,7 @@ def process_id(item: dict, config: types.ImporterConfig) -> dict:
     item_path = item["@id"]
     if item["@type"] == "Plone Site":
         item["id"] = portal_id
+        item["@id"] = f"/{portal_id}"
     else:
         new_id = unquote(item_path).split("/")[-1]
         if new_id != item["id"]:
