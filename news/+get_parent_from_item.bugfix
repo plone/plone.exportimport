@@ -1,1 +1,0 @@
-Fix an issue with `plone.exportimport.utils.content.import_helpers.get_parent_from_item` that would not return the parent of a Plone Site during functional tests. @ericof

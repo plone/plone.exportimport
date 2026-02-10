@@ -9,6 +9,18 @@
 
 <!-- towncrier release notes start -->
 
+## 2.0.0a2 (2026-02-09)
+
+
+### New features:
+
+- Add `@export` and `@import` REST API services. @davisagli #87
+
+
+### Bug fixes:
+
+- Fix an issue with `plone.exportimport.utils.content.import_helpers.get_parent_from_item` that would not return the parent of a Plone Site during functional tests. @ericof 
+
 ## 2.0.0a1 (2025-11-26)
 
 
