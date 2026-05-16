@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 2.0.0 (2026-05-16)
+
+
+### Internal:
+
+- Make final release, no further changes. 
+
 ## 2.0.0a2 (2026-02-09)
 
 
