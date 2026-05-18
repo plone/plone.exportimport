@@ -3,7 +3,6 @@ from pathlib import Path
 from plone.exportimport import interfaces
 from plone.exportimport import logger
 from plone.exportimport.utils import principals as principals_utils
-from typing import List
 from zope.interface import implementer
 
 
@@ -11,7 +10,7 @@ from zope.interface import implementer
 class PrincipalsExporter(BaseExporter):
     name: str = "principals"
 
-    def dump(self) -> List[Path]:
+    def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
         data = {
             "groups": principals_utils.export_groups(),

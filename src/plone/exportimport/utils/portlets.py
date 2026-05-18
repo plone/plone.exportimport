@@ -14,9 +14,6 @@ from plone.portlets.interfaces import IPortletAssignmentSettings
 from plone.portlets.interfaces import IPortletManager
 from plone.restapi.interfaces import IFieldDeserializer
 from plone.restapi.serializer.converters import json_compatible
-from typing import List
-from typing import Optional
-from typing import Union
 from z3c.relationfield import RelationValue
 from zope.component import getUtilitiesFor
 from zope.component import getUtility
@@ -31,8 +28,8 @@ import warnings
 
 
 def portlets_in_context(
-    context: DexterityContent, uid: Optional[str] = None
-) -> Union[dict, None]:
+    context: DexterityContent, uid: str | None = None
+) -> dict | None:
     """Collect portlet registrations in a context."""
     result = {}
     uid = uid if uid else api.content.get_uuid(context, None)
@@ -55,7 +52,7 @@ def portlets_in_context(
     return result
 
 
-def get_portlets() -> List[dict]:
+def get_portlets() -> list[dict]:
     """Return a list of all portlet assignments on the site."""
     results = []
     portal = api.portal.get()
@@ -129,7 +126,7 @@ def export_local_portlets(obj: DexterityContent) -> dict:
     return items
 
 
-def export_blocked_portlets(obj: DexterityContent) -> List[dict]:
+def export_blocked_portlets(obj: DexterityContent) -> list[dict]:
     """Export portlets blocked for one content object."""
     results = []
     for manager_name, manager in getUtilitiesFor(IPortletManager):

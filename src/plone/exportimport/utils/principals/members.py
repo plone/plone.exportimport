@@ -6,7 +6,6 @@ from plone.exportimport.utils.principals import helpers
 from plone.restapi.serializer.converters import json_compatible
 from Products.CMFPlone.RegistrationTool import RegistrationTool
 from Products.PlonePAS.tools.memberdata import MemberData
-from typing import List
 from zope.schema import getFieldNames
 
 
@@ -34,7 +33,7 @@ def _run_as_manager(context: RegistrationTool):
             context.manage_setLocalRoles(current_user.getId(), list(local_roles))
 
 
-def _get_user_schema_fields() -> List[str]:
+def _get_user_schema_fields() -> list[str]:
     """List of fields/properties used in User Schema."""
     schema = getUserDataSchema()
     fields = [name for name in getFieldNames(schema)]
@@ -50,7 +49,7 @@ def _get_user_password(member: MemberData):
     return password.decode("utf-8") if isinstance(password, bytes) else password
 
 
-def _get_user_properties(member: MemberData, fields: List[str]) -> dict:
+def _get_user_properties(member: MemberData, fields: list[str]) -> dict:
     props = {}
     for prop in fields:
         if prop in ("portrait", "pdelete"):
@@ -84,7 +83,7 @@ def _get_base_user_data(member: MemberData):
     return props
 
 
-def export_members() -> List[dict]:
+def export_members() -> list[dict]:
     """Serialize all members as a list of dictionaries."""
     acl_users = api.portal.get_tool("acl_users")
     fields = _get_user_schema_fields()
@@ -108,7 +107,7 @@ def export_members() -> List[dict]:
     return data
 
 
-def import_members(data: List[dict]) -> MemberData:
+def import_members(data: list[dict]) -> MemberData:
     """Import member information from the provided list of dictionaries."""
     members = []
     pr = api.portal.get_tool("portal_registration")

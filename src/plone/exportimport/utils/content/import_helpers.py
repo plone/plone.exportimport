@@ -4,6 +4,7 @@ from .core import object_from_uid_or_path
 from Acquisition import aq_base
 from Acquisition import aq_inner
 from Acquisition import aq_parent
+from collections.abc import Callable
 from pathlib import PurePosixPath
 from Persistence import PersistentMapping
 from plone import api
@@ -23,10 +24,6 @@ from plone.restapi.interfaces import IDeserializeFromJson
 from Products.CMFEditions.CopyModifyMergeRepositoryTool import (
     CopyModifyMergeRepositoryTool,
 )
-from typing import Callable
-from typing import List
-from typing import Optional
-from typing import Tuple
 from unittest.mock import patch
 from urllib.parse import unquote
 from zExceptions import NotFound
@@ -37,7 +34,7 @@ def get_deserializer(data: dict, request) -> Callable:
     return getMultiAdapter((data, request), IDeserializeFromJson)
 
 
-def get_parent_from_item(data: dict) -> Optional[DexterityContent]:
+def get_parent_from_item(data: dict) -> DexterityContent | None:
     parent_path = str(PurePosixPath(data["@id"]).parent)
     if data.get("@type") == "Plone Site":
         portal = aq_inner(api.portal.get())
@@ -94,7 +91,7 @@ def process_root_uid(item: dict, config: types.ImporterConfig) -> dict:
     return item
 
 
-def processors() -> List[types.ExportImportHelper]:
+def processors() -> list[types.ExportImportHelper]:
     """Return processors to be used by the importer."""
     processors = []
     funcs = [
@@ -119,7 +116,7 @@ def _mock_isVersionable(*args, **kwargs):
 
 def get_obj_instance(
     item: dict, config: types.ImporterConfig
-) -> Optional[DexterityContent]:
+) -> DexterityContent | None:
     # Get container
     container = get_parent_from_item(item)
     if not container:
@@ -228,7 +225,7 @@ def reset_modification_date(obj: DexterityContent) -> DexterityContent:
     return obj
 
 
-def updaters() -> List[types.ExportImportHelper]:
+def updaters() -> list[types.ExportImportHelper]:
     """Return updaters to be used by the importer."""
     updaters = []
     funcs = [
@@ -353,9 +350,9 @@ def set_local_permissions(uid: str, value: dict, path: str = "") -> bool:
     return _set_local_permissions(obj, value)
 
 
-def metadata_setters() -> List[types.ImporterSetter]:
+def metadata_setters() -> list[types.ImporterSetter]:
     helpers = []
-    funcs: List[Tuple[types.ImporterSetterFunction, str]] = [
+    funcs: list[tuple[types.ImporterSetterFunction, str]] = [
         (set_default_page, "default_page"),
         (set_ordering, "ordering"),
         (set_local_roles, "local_roles"),
@@ -374,7 +371,7 @@ def metadata_setters() -> List[types.ImporterSetter]:
     return helpers
 
 
-def recatalog_uids(uids: List[str], idxs: List[str]):
+def recatalog_uids(uids: list[str], idxs: list[str]):
     logger.info(f"Reindexing catalog indexes {', '.join(idxs)} for {len(uids)} objects")
     for uid in uids:
         obj = object_from_uid_or_path(uid, "")
@@ -383,7 +380,7 @@ def recatalog_uids(uids: List[str], idxs: List[str]):
         obj.reindexObject(idxs)
 
 
-def final_updaters() -> List[types.ExportImportHelper]:
+def final_updaters() -> list[types.ExportImportHelper]:
     updaters = []
     funcs = [
         reset_modification_date,

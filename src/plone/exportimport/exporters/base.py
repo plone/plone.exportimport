@@ -1,12 +1,10 @@
+from collections.abc import Callable
 from pathlib import Path
 from plone.exportimport import types
 from plone.exportimport.utils import content as utils
 from plone.exportimport.utils import path as path_utils
 from Products.CMFPlone.Portal import PloneSite
 from typing import Any
-from typing import Callable
-from typing import List
-from typing import Optional
 from zope.globalrequest import getRequest
 
 import argparse
@@ -18,9 +16,9 @@ class BaseExporter:
     base_path: Path
     errors: list = None
     request: types.HTTPRequest = None
-    data_hooks: List[Callable] = None
-    obj_hooks: List[Callable] = None
-    options: Optional[argparse.Namespace] = None
+    data_hooks: list[Callable] = None
+    obj_hooks: list[Callable] = None
+    options: argparse.Namespace | None = None
 
     def __init__(
         self,
@@ -58,17 +56,17 @@ class BaseExporter:
             fh.write("\n")
         return filepath
 
-    def dump(self) -> List[Path]:
+    def dump(self) -> list[Path]:
         """Serialize objects."""
         return []
 
     def export_data(
         self,
         base_path: Path,
-        data_hooks: List[Callable] = None,
-        obj_hooks: List[Callable] = None,
-        options: Optional[argparse.Namespace] = None,
-    ) -> List[Path]:
+        data_hooks: list[Callable] = None,
+        obj_hooks: list[Callable] = None,
+        options: argparse.Namespace | None = None,
+    ) -> list[Path]:
         """Write data to filesystem."""
         if not base_path.exists():
             base_path.mkdir(parents=True)

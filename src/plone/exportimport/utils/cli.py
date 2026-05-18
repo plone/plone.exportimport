@@ -4,7 +4,6 @@ from pathlib import Path
 from plone.restapi.interfaces import IPloneRestapiLayer
 from Products.CMFPlone.Portal import PloneSite
 from Testing.makerequest import makerequest
-from typing import Optional
 from Zope2.Startup.run import make_wsgi_app
 from zope.globalrequest import setRequest
 from zope.interface import directlyProvidedBy
@@ -15,7 +14,7 @@ import sys
 import Zope2
 
 
-def _process_path(path: str) -> Optional[Path]:
+def _process_path(path: str) -> Path | None:
     """Process path."""
     path = Path(path).resolve()
     return path if path.exists() else None
@@ -60,7 +59,7 @@ def get_app(zopeconf: Path):
     return app
 
 
-def get_site(app, site_id: str, logger: logging.Logger) -> Optional[PloneSite]:
+def get_site(app, site_id: str, logger: logging.Logger) -> PloneSite | None:
     """Get Plone Site"""
     site = app.unrestrictedTraverse(site_id, None)
     if not site:

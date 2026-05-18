@@ -4,9 +4,6 @@ from plone import api
 from plone.exportimport import interfaces
 from plone.exportimport import logger
 from Products.CMFPlone.Portal import PloneSite
-from typing import Dict
-from typing import List
-from typing import Optional
 from zope.component import getAdapter
 from zope.component import hooks
 from zope.component import queryAdapter
@@ -23,7 +20,7 @@ IMPORTER_NAMES = [
     "plone.importer.final",
 ]
 
-ImporterMapping = Dict[str, BaseImporter]
+ImporterMapping = dict[str, BaseImporter]
 
 
 @implementer(interfaces.IImporter)
@@ -47,7 +44,7 @@ class Importer:
                 importers[importer_name] = importer
         return importers
 
-    def import_site(self, path: Path) -> List[str]:
+    def import_site(self, path: Path) -> list[str]:
         """Import the given site from the filesystem."""
         report = []
         with hooks.site(self.site):
@@ -59,7 +56,7 @@ class Importer:
         return report
 
 
-def get_importer(site: Optional[PloneSite] = None) -> Importer:
+def get_importer(site: PloneSite | None = None) -> Importer:
     """Get the importer."""
     if site is None:
         site = api.portal.get()

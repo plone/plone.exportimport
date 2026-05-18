@@ -4,8 +4,6 @@ from plone import api
 from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
 from Products.CMFPlone.CatalogTool import CatalogTool
-from typing import List
-from typing import Tuple
 
 import operator
 
@@ -29,7 +27,7 @@ def has_translation_support(portal_catalog: CatalogTool) -> bool:
     return has_translation_support
 
 
-def _get_all_translation_groups(portal_catalog: CatalogTool) -> Tuple[str]:
+def _get_all_translation_groups(portal_catalog: CatalogTool) -> tuple[str]:
     """Return a list of all translation groups uid in the catalog."""
     if not has_translation_support(portal_catalog):
         return ()
@@ -45,7 +43,7 @@ def _prepare_translation_group(default_language: str, translations: dict) -> dic
     return {"canonical": canonical, "translations": translations}
 
 
-def get_translations(paths_to_drop: List[str] = None) -> List[dict]:
+def get_translations(paths_to_drop: list[str] = None) -> list[dict]:
     """Get all translations."""
     paths_to_drop = paths_to_drop if paths_to_drop else []
     results = []
@@ -114,7 +112,7 @@ def link_translations(
     return True
 
 
-def set_translations(data: List[dict]) -> List[dict]:
+def set_translations(data: list[dict]) -> list[dict]:
     """Process a list of translations and add them to the Plone site."""
     results = []
     if not HAS_MULTILINGUAL:

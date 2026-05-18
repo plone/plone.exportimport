@@ -1,12 +1,10 @@
+from collections.abc import Callable
 from pathlib import Path
 from plone import api
 from plone.app.multilingual.browser.setup import SetupMultilingualSite
 from plone.exportimport.testing import FUNCTIONAL_TESTING
 from plone.exportimport.testing import INTEGRATION_TESTING
 from pytest_plone import fixtures_factory
-from typing import Callable
-from typing import List
-from typing import Union
 
 import json
 import pytest
@@ -65,7 +63,7 @@ def export_path(tmp_path) -> Path:
 
 @pytest.fixture
 def paths_as_relative():
-    def func(base_path: Path, paths: List[Path]) -> List[str]:
+    def func(base_path: Path, paths: list[Path]) -> list[str]:
         return [str(path.relative_to(base_path).as_posix()) for path in paths]
 
     return func
@@ -73,7 +71,7 @@ def paths_as_relative():
 
 @pytest.fixture
 def load_json():
-    def func(base_path: Path, path: Path) -> Union[dict, list]:
+    def func(base_path: Path, path: Path) -> dict | list:
         with open(base_path / path) as fh:
             data = json.load(fh)
         return data
@@ -133,7 +131,7 @@ def create_example_content():
 
 @pytest.fixture
 def setup_discussion():
-    def func(types: List[str]):
+    def func(types: list[str]):
         portal_setup = api.portal.get_tool("portal_setup")
         portal_setup.runAllImportStepsFromProfile(
             "profile-plone.app.discussion:default"
@@ -192,7 +190,7 @@ def portal_multilingual(portal, setup_multilingual_site):
 
 
 @pytest.fixture()
-def groups() -> List[dict]:
+def groups() -> list[dict]:
     """New groups."""
     return [
         {
@@ -213,7 +211,7 @@ def groups() -> List[dict]:
 
 
 @pytest.fixture()
-def users() -> List[dict]:
+def users() -> list[dict]:
     """New users."""
     return [
         {

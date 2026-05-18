@@ -4,7 +4,6 @@ from operator import itemgetter
 from plone import api
 from plone.dexterity.content import DexterityContent
 from Products.CMFPlone import relationhelper
-from typing import List
 from z3c.relationfield.index import RelationCatalog
 from z3c.relationfield.interfaces import IRelationChoice
 from z3c.relationfield.interfaces import IRelationList
@@ -63,9 +62,9 @@ def _relation_sort_key(rel: dict) -> tuple:
 
 def get_relations(
     debug: bool = False, include_linkintegrity: bool = True
-) -> List[dict]:
+) -> list[dict]:
     results = []
-    all_relations: List[dict] = relationhelper.get_all_relations()
+    all_relations: list[dict] = relationhelper.get_all_relations()
     for rel in all_relations:
         if not _should_export_relation(rel, include_linkintegrity):
             continue
@@ -75,7 +74,7 @@ def get_relations(
     return sorted(results, key=_relation_sort_key)
 
 
-def _prepare_relations_to_import(data: List[dict]) -> List[dict]:
+def _prepare_relations_to_import(data: list[dict]) -> list[dict]:
     """Prepare relations data to be imported into a Plone site.
 
     - Filter relations that should not be imported.
@@ -96,7 +95,7 @@ def _prepare_relations_to_import(data: List[dict]) -> List[dict]:
     return all_fixed_relations
 
 
-def set_relations(data: List[dict]) -> List[dict]:
+def set_relations(data: list[dict]) -> list[dict]:
     """Import relations listed in data into the current Plone site."""
     all_fixed_relations = _prepare_relations_to_import(data)
     relationhelper.purge_relations()

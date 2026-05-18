@@ -2,7 +2,6 @@
 
 from pathlib import Path
 from typing import BinaryIO
-from typing import Optional
 
 import tempfile
 import zipfile
@@ -10,7 +9,7 @@ import zipfile
 
 def export_to_zip(
     export_path: Path,
-    output_file: Optional[BinaryIO] = None,
+    output_file: BinaryIO | None = None,
 ) -> BinaryIO:
     """Compress an export directory into a ZIP file.
 
@@ -45,7 +44,7 @@ def export_to_zip(
 
 def import_from_zip(
     zip_file: BinaryIO,
-    import_path: Optional[Path] = None,
+    import_path: Path | None = None,
 ) -> Path:
     """Extract a ZIP file into a directory for import.
 

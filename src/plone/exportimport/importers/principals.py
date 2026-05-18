@@ -1,19 +1,18 @@
 from .base import BaseImporter
 from plone.exportimport import logger
 from plone.exportimport.utils import principals as principals_utils
-from typing import List
 
 
 class PrincipalsImporter(BaseImporter):
     name: str = "principals"
 
-    def _import_groups(self, groups=List[dict]) -> int:
+    def _import_groups(self, groups=list[dict]) -> int:
         logger.debug(f"- Principals: Read {len(groups)} groups from {self.filepath}")
         total = len(principals_utils.import_groups(groups))
         logger.debug(f"- Principals: Imported {total} groups")
         return total
 
-    def _import_members(self, members=List[dict]) -> int:
+    def _import_members(self, members=list[dict]) -> int:
         logger.debug(f"- Principals: Read {len(members)} groups from {self.filepath}")
         total = len(principals_utils.import_members(members))
         logger.debug(f"- Principals: Imported {total} members")

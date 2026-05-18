@@ -3,10 +3,9 @@ from .helpers import get_roles_for_group
 from plone import api
 from plone.restapi.serializer.converters import json_compatible
 from Products.PlonePAS.tools.groupdata import GroupData
-from typing import List
 
 
-def export_groups() -> List[dict]:
+def export_groups() -> list[dict]:
     """Return all groups."""
     data = []
     all_groups = get_all_groups()
@@ -23,7 +22,7 @@ def export_groups() -> List[dict]:
     return data
 
 
-def import_groups(data: List[dict]) -> List[GroupData]:
+def import_groups(data: list[dict]) -> list[GroupData]:
     """Import groups."""
     groups = []
     acl = api.portal.get_tool("acl_users")

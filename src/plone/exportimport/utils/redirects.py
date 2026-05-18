@@ -1,7 +1,6 @@
 from plone.app.redirector.interfaces import IRedirectionStorage
 from plone.app.redirector.storage import RedirectionStorage
 from plone.exportimport import logger
-from typing import Dict
 from zope.component import getUtility
 
 
@@ -10,7 +9,7 @@ def _get_storage() -> RedirectionStorage:
     return getUtility(IRedirectionStorage)
 
 
-def get_redirects() -> Dict[str, str]:
+def get_redirects() -> dict[str, str]:
     """Get a mapping of all redirects in a Plone site."""
     redirects = {}
     storage = _get_storage()
@@ -21,7 +20,7 @@ def get_redirects() -> Dict[str, str]:
     return redirects
 
 
-def set_redirects(redirects: Dict[str, str]) -> Dict[str, str]:
+def set_redirects(redirects: dict[str, str]) -> dict[str, str]:
     """Set a mapping of redirects in a Plone site."""
     storage = _get_storage()
     for key, value in redirects.items():

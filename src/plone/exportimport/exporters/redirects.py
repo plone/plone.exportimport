@@ -3,7 +3,6 @@ from pathlib import Path
 from plone.exportimport import interfaces
 from plone.exportimport import logger
 from plone.exportimport.utils import redirects as utils
-from typing import List
 from zope.interface import implementer
 
 
@@ -11,7 +10,7 @@ from zope.interface import implementer
 class RedirectsExporter(BaseExporter):
     name: str = "redirects"
 
-    def dump(self) -> List[Path]:
+    def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
         redirects = utils.get_redirects()
         filepath = self._dump(redirects, self.filepath)
