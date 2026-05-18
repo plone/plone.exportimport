@@ -5,7 +5,6 @@ from plone.exportimport.utils.content import export_helpers
 
 import pytest
 
-
 PORTAL_URL = "http://nohost/plone"
 
 

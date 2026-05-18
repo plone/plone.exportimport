@@ -16,7 +16,6 @@ from zope.interface import implementer
 
 import argparse
 
-
 EXPORTER_NAMES = [
     "plone.exporter.content",
     "plone.exporter.principals",

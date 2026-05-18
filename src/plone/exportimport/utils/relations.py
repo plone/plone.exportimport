@@ -11,7 +11,6 @@ from z3c.relationfield.interfaces import IRelationList
 from zc.relation.interfaces import ICatalog
 from zope.component import getUtility
 
-
 RELATIONS_TO_IGNORE = [
     "translationOf",  # old LinguaPlone
     "internal_references",  # obsolete

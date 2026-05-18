@@ -20,7 +20,6 @@ from typing import Union
 from zope.annotation.interfaces import IAnnotations
 from zope.globalrequest import getRequest
 
-
 DISCUSSION_ANNOTATION_KEY = "plone.app.discussion:conversation"
 
 

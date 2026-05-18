@@ -12,7 +12,6 @@ from zope.component import hooks
 from zope.component import queryAdapter
 from zope.interface import implementer
 
-
 IMPORTER_NAMES = [
     "plone.importer.principals",
     "plone.importer.content",

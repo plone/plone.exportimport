@@ -9,7 +9,6 @@ import argparse
 import sys
 import transaction
 
-
 CLI_SPEC = {
     "exporter": {
         "description": "Export Plone Site content",

@@ -2,7 +2,6 @@ from typing import Tuple
 
 import os
 
-
 SITE_ROOT_UID = "plone_site_root"
 
 EXPORT_CONTENT_FILEPATH = "{UID}/data.json"

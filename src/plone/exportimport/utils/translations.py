@@ -9,7 +9,6 @@ from typing import Tuple
 
 import operator
 
-
 try:
     from plone.app.multilingual.interfaces import ITranslationManager
 except ImportError:

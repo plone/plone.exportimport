@@ -6,7 +6,6 @@ from Products.PlonePAS.tools.groupdata import GroupData
 from typing import List
 from typing import Optional
 
-
 _sort_key_id = attrgetter("id")
 
 

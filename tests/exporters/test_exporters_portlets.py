@@ -3,7 +3,6 @@ from zope.component import getAdapter
 
 import pytest
 
-
 try:
     from plone.exportimport.exporters import portlets
 except ImportError:
