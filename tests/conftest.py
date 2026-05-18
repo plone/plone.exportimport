@@ -135,6 +135,10 @@ def create_example_content():
 @pytest.fixture
 def setup_discussion():
     def func(types: List[str]):
+        portal_setup = api.portal.get_tool("portal_setup")
+        portal_setup.runAllImportStepsFromProfile(
+            "profile-plone.app.discussion:default"
+        )
         types_tool = api.portal.get_tool("portal_types")
         prefix = "plone.app.discussion.interfaces.IDiscussionSettings"
         api.portal.set_registry_record(f"{prefix}.globally_enabled", True)
