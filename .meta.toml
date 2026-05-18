@@ -20,15 +20,6 @@ use_mxdev = true
 test_deps_additional = ""
 test_matrix = {"6.2" = ["*"]}
 
-[github]
-jobs = [
-    "qa",
-    "test",
-    "coverage",
-    "dependencies",
-    "release_ready",
-    ]
-
 [gitignore]
 extra_lines = """
 coverage.xml
