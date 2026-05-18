@@ -158,7 +158,7 @@ class ContentImporter(BaseImporter):
                     # Cleanse data before processing
                     data = cleanse_func(data)
                 logger.info(f"Processing {setter.name}: {len(data)} entries")
-                for index, uid in enumerate(data, start=index):
+                for index, uid in enumerate(data, start=1):
                     # Pass the path as a fallback in case the object was not found by UID
                     path = objs.get(uid) or ""
                     value = data[uid]

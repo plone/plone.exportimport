@@ -1,0 +1,1 @@
+Reset per-setter progress counter in ``ContentImporter`` so ``{setter}: Handled N items...`` reports the items handled by that setter instead of a cumulative count carried over from the previous setter. @ericof

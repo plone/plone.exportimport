@@ -1,9 +1,12 @@
 from plone import api
 from plone.exportimport import interfaces
+from plone.exportimport import settings
 from plone.exportimport.importers import content
 from zope.component import getAdapter
 
+import logging
 import pytest
+import re
 
 
 class TestImporterContent:
@@ -166,3 +169,47 @@ class TestImporterOrdering:
         """Test that each item is at the expected index within the Portal root."""
         items: list[str] = self.items
         assert items.index(uid) == idx
+
+
+class TestImporterProgressLogging:
+    """Per-setter progress counter must reset between setter phases.
+
+    Regression test for #92: ``enumerate(data, start=index)`` carried the
+    counter across setters, so ``{setter}: Handled N items...`` reported a
+    cumulative count instead of items handled by that setter.
+    """
+
+    HANDLED_RE = re.compile(r"^(?P<setter>\w+): Handled (?P<count>\d+) items")
+
+    @pytest.fixture(autouse=True)
+    def _init(self, portal, base_import_path, monkeypatch, caplog):
+        monkeypatch.setattr(settings, "IMPORTER_REPORT", 1)
+        caplog.set_level(logging.INFO, logger="plone.exportimport")
+        content.ContentImporter(portal).import_data(base_path=base_import_path)
+        self.handled = self._collect_handled(caplog.records)
+
+    def _collect_handled(self, records) -> dict[str, list[int]]:
+        seen: dict[str, list[int]] = {}
+        for record in records:
+            match = self.HANDLED_RE.match(record.getMessage())
+            if not match:
+                continue
+            seen.setdefault(match["setter"], []).append(int(match["count"]))
+        return seen
+
+    def test_setters_logged(self):
+        """At least two setters should have produced progress logs."""
+        setter_logs = {k: v for k, v in self.handled.items() if k != "ContentImporter"}
+        assert (
+            len(setter_logs) >= 2
+        ), f"Expected progress logs from ≥2 setters, got: {sorted(setter_logs)}"
+
+    def test_each_setter_counter_resets(self):
+        """First 'Handled N' line for each setter should start at 1."""
+        for setter, counts in self.handled.items():
+            if setter == "ContentImporter":
+                continue
+            assert counts[0] == 1, (
+                f"Setter '{setter}' first reported count was {counts[0]}, "
+                f"expected 1 (counter not reset between setters)."
+            )
