@@ -1,13 +1,10 @@
+from collections.abc import Callable
 from pathlib import Path
 from plone.exportimport import settings
 from plone.exportimport import types
 from plone.exportimport.utils import content as utils
 from Products.CMFPlone.Portal import PloneSite
 from typing import Any
-from typing import Callable
-from typing import List
-from typing import Optional
-from typing import Union
 from zope.globalrequest import getRequest
 
 import json
@@ -18,11 +15,11 @@ class BaseImporter:
     name: str
     base_path: Path
     site: PloneSite
-    errors: Optional[list] = None
-    request: Optional[types.HTTPRequest] = None
-    data_hooks: Optional[List[Callable]] = None
-    pre_deserialize_hooks: Optional[List[Callable]] = None
-    obj_hooks: Optional[List[Callable]] = None
+    errors: list | None = None
+    request: types.HTTPRequest | None = None
+    data_hooks: list[Callable] | None = None
+    pre_deserialize_hooks: list[Callable] | None = None
+    obj_hooks: list[Callable] | None = None
     intermediate_commits: bool = not settings.IMPORTER_COMMIT_DISABLE
     savepoint_after: int = settings.IMPORTER_SAVEPOINT_AFTER
     commit_after: int = settings.IMPORTER_COMMIT_AFTER
@@ -44,7 +41,7 @@ class BaseImporter:
         """Deserializer for object."""
         return utils.get_deserializer(obj, self.request)
 
-    def _read(self, filepath: Optional[Path] = None) -> Union[dict, list, None]:
+    def _read(self, filepath: Path | None = None) -> dict | list | None:
         """Read data from file."""
         filepath = filepath if filepath else self.filepath
         if filepath.exists() and filepath.is_file():
@@ -72,9 +69,9 @@ class BaseImporter:
     def import_data(
         self,
         base_path: Path,
-        data_hooks: Optional[List[Callable]] = None,
-        pre_deserialize_hooks: Optional[List[Callable]] = None,
-        obj_hooks: Optional[List[Callable]] = None,
+        data_hooks: list[Callable] | None = None,
+        pre_deserialize_hooks: list[Callable] | None = None,
+        obj_hooks: list[Callable] | None = None,
     ) -> str:
         """Import data into a Plone site."""
         if not base_path.exists():
@@ -99,9 +96,9 @@ class BaseDatalessImporter(BaseImporter):
     def import_data(
         self,
         base_path: Path,
-        data_hooks: Optional[List[Callable]] = None,
-        pre_deserialize_hooks: Optional[List[Callable]] = None,
-        obj_hooks: Optional[List[Callable]] = None,
+        data_hooks: list[Callable] | None = None,
+        pre_deserialize_hooks: list[Callable] | None = None,
+        obj_hooks: list[Callable] | None = None,
     ) -> str:
         """Import data into a Plone site.
 

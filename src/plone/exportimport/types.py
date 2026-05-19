@@ -1,10 +1,8 @@
+from collections.abc import Callable
 from dataclasses import asdict
 from dataclasses import dataclass
 from dataclasses import field
 from Products.CMFPlone.Portal import PloneSite
-from typing import Callable
-from typing import Dict
-from typing import List
 from typing import Protocol
 from ZPublisher.HTTPRequest import HTTPRequest
 
@@ -14,7 +12,7 @@ class PortalLanguages:
     """Languages configuration in a portal."""
 
     default: str
-    available: List[str]
+    available: list[str]
 
 
 @dataclass
@@ -28,9 +26,9 @@ class ExportImportMetadata:
     constraints: dict = field(default_factory=dict)
     relations: list = field(default_factory=list)
     __version__: str = "1.0.0"
-    _data_files_: List[str] = field(default_factory=list)
-    _blob_files_: List[str] = field(default_factory=list)
-    _all_: Dict[str, str] = field(default_factory=dict)
+    _data_files_: list[str] = field(default_factory=list)
+    _blob_files_: list[str] = field(default_factory=list)
+    _all_: dict[str, str] = field(default_factory=dict)
 
     def export(self) -> dict:
         dump = asdict(self)

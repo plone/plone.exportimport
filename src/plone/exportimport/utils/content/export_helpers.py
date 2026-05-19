@@ -5,6 +5,7 @@ from .core import is_folderish
 from .revisions import revision_history
 from Acquisition import aq_base
 from Acquisition import aq_parent
+from collections.abc import Callable
 from plone import api
 from plone.base.interfaces.constrains import ENABLED
 from plone.base.interfaces.constrains import ISelectableConstrainTypes
@@ -16,13 +17,9 @@ from plone.exportimport.utils.relations import relation_fields_for_content
 from plone.restapi.interfaces import ISerializeToJson
 from plone.restapi.serializer.converters import json_compatible
 from Products.CMFEditions.ZVCStorageTool import ShadowHistory
-from typing import Callable
-from typing import List
-from typing import Optional
 from zope.component import getMultiAdapter
 
 import json
-
 
 try:
     from plone.app.discussion.interfaces import IConversation
@@ -238,7 +235,7 @@ def add_revisions_history(obj: DexterityContent, config: types.ExporterConfig) -
 
 def default_page_info(
     obj: DexterityContent, config: types.ExporterConfig
-) -> Optional[dict]:
+) -> dict | None:
     """Default page for a given obj.
 
     We use a simplified method to only get index_html
@@ -269,14 +266,12 @@ def default_page_info(
 
 def get_position_in_parent(
     obj: DexterityContent, config: types.ExporterConfig
-) -> Optional[int]:
+) -> int | None:
     ordered = get_parent_ordered(obj)
     return ordered.getObjectPosition(obj.getId()) if ordered else None
 
 
-def get_local_roles(
-    obj: DexterityContent, config: types.ExporterConfig
-) -> Optional[dict]:
+def get_local_roles(obj: DexterityContent, config: types.ExporterConfig) -> dict | None:
     item = {}
     local_roles = None
     block = None
@@ -293,7 +288,7 @@ def get_local_roles(
     return item if item else None
 
 
-def fixers() -> List[types.ExportImportHelper]:
+def fixers() -> list[types.ExportImportHelper]:
     fixers = []
     funcs = [
         fix_relation_fields,
@@ -315,7 +310,7 @@ def fixers() -> List[types.ExportImportHelper]:
     return fixers
 
 
-def enrichers(include_revisions: bool = False) -> List[types.ExportImportHelper]:
+def enrichers(include_revisions: bool = False) -> list[types.ExportImportHelper]:
     enrichers = []
     funcs = [
         add_constraints_info,
@@ -336,7 +331,7 @@ def enrichers(include_revisions: bool = False) -> List[types.ExportImportHelper]
     return enrichers
 
 
-def cleaners() -> List[types.ExportImportHelper]:
+def cleaners() -> list[types.ExportImportHelper]:
     cleaners = []
     funcs = [
         cleanup_export_data,
@@ -352,7 +347,7 @@ def cleaners() -> List[types.ExportImportHelper]:
     return cleaners
 
 
-def metadata_helpers() -> List[types.ExportImportHelper]:
+def metadata_helpers() -> list[types.ExportImportHelper]:
     helpers = []
     funcs = [
         (default_page_info, "default_page"),

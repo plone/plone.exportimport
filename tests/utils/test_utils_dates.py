@@ -1,7 +1,6 @@
 from datetime import datetime
 from DateTime import DateTime
 from plone.exportimport.utils import dates
-from typing import Tuple
 
 import pytest
 
@@ -38,7 +37,7 @@ def test_parse_datetime_failure(value: str):
         ["2024-01-31T22:16:32+00:00", (2024, 1, 31, 22, 16, 32, "GMT+0")],
     ],
 )
-def test_parse_date_success(value: str, parts: Tuple):
+def test_parse_date_success(value: str, parts: tuple):
     func = dates.parse_date
     result = func(value)
     assert isinstance(result, DateTime)

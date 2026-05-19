@@ -13,18 +13,13 @@ from plone.exportimport import logger
 from Products.CMFCore.interfaces import IContentish
 from Products.PortalTransforms.TransformEngine import TransformTool
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
-from typing import Union
 from zope.annotation.interfaces import IAnnotations
 from zope.globalrequest import getRequest
-
 
 DISCUSSION_ANNOTATION_KEY = "plone.app.discussion:conversation"
 
 
-def _get_all_content_support_conversation() -> List[Tuple[str, Conversation]]:
+def _get_all_content_support_conversation() -> list[tuple[str, Conversation]]:
     catalog = api.portal.get_tool("portal_catalog")
     results = []
     brains = catalog.unrestrictedSearchResults(
@@ -39,7 +34,7 @@ def _get_all_content_support_conversation() -> List[Tuple[str, Conversation]]:
     return results
 
 
-def get_discussions() -> Dict[str, Any]:
+def get_discussions() -> dict[str, Any]:
     """Get all discussions."""
     request = getRequest()
     portal_url = api.portal.get().absolute_url()
@@ -57,7 +52,7 @@ def get_discussions() -> Dict[str, Any]:
 
 
 def _extract_text(
-    text: Union[dict, str], target_mime_type: str, transforms: TransformTool
+    text: dict | str, target_mime_type: str, transforms: TransformTool
 ) -> str:
     """Transform text data."""
     result = text
@@ -87,7 +82,7 @@ def _create_comment(item: dict, text: str) -> Comment:
     return comment
 
 
-def set_discussions(data: dict) -> List[dict]:
+def set_discussions(data: dict) -> list[dict]:
     """Set all discussions."""
     results = []
     transforms = api.portal.get_tool("portal_transforms")

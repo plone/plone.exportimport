@@ -1,7 +1,4 @@
-from typing import Tuple
-
 import os
-
 
 SITE_ROOT_UID = "plone_site_root"
 
@@ -17,8 +14,8 @@ SERIALIZER_CONSTRAINS_KEY = "exportimport.constrains"
 
 PLACEHOLDERS_LANGUAGE = "##DEFAULT##"
 
-AUTO_GROUPS: Tuple[str] = ("AuthenticatedUsers",)
-AUTO_ROLES: Tuple[str] = ("Authenticated",)
+AUTO_GROUPS: tuple[str] = ("AuthenticatedUsers",)
+AUTO_ROLES: tuple[str] = ("Authenticated",)
 
 # Savepoint and commit changes
 IMPORTER_COMMIT_DISABLE: bool = bool(os.environ.get("IMPORTER_COMMIT_DISABLE", 0))

@@ -10,8 +10,6 @@ from plone.exportimport import settings
 from plone.exportimport import types
 from plone.uuid.interfaces import IUUID
 from Products.CMFPlone.Portal import PloneSite
-from typing import List
-from typing import Optional
 from zope.interface.interface import InterfaceClass
 from zope.schema import getFields
 
@@ -26,7 +24,7 @@ def is_site_root(obj: DexterityContent) -> bool:
     return IPloneSiteRoot.providedBy(obj)
 
 
-def get_uid(obj: DexterityContent) -> Optional[str]:
+def get_uid(obj: DexterityContent) -> str | None:
     """Return the uid for the given object.
 
     If obj is a Plone Site Root, return a constant
@@ -44,7 +42,7 @@ def get_obj_path(obj: DexterityContent, relative_to_site_root: bool = False) -> 
     return obj_path
 
 
-def object_from_uid(uid: str) -> Optional[DexterityContent]:
+def object_from_uid(uid: str) -> DexterityContent | None:
     """Return an object for a given uid."""
     if uid == settings.SITE_ROOT_UID:
         return api.portal.get()
@@ -53,7 +51,7 @@ def object_from_uid(uid: str) -> Optional[DexterityContent]:
     return brains[0].getObject() if brains else None
 
 
-def object_from_uid_or_path(uid: str, path: str = "") -> Optional[DexterityContent]:
+def object_from_uid_or_path(uid: str, path: str = "") -> DexterityContent | None:
     """Return an object for a given uid or given path."""
     obj = None
     if path:
@@ -76,14 +74,14 @@ def get_portal_languages() -> types.PortalLanguages:
     return types.PortalLanguages(default, available)
 
 
-def get_parent_ordered(obj: DexterityContent) -> Optional[OrderSupport]:
+def get_parent_ordered(obj: DexterityContent) -> OrderSupport | None:
     """Get the OrderedContainer implementation of the parent of the given obj."""
     parent = aq_parent(obj)
     return IOrderedContainer(parent, None) if is_folderish(parent) else None
 
 
 def get_all_fields(
-    obj: DexterityContent, filter: Optional[List[type[InterfaceClass]]] = None
+    obj: DexterityContent, filter: list[type[InterfaceClass]] | None = None
 ) -> dict:
     """Return a dictionary with all fields defined for the given object."""
     fields = {}

@@ -1,4 +1,6 @@
 from .base import BaseImporter
+from collections.abc import Callable
+from collections.abc import Generator
 from pathlib import Path
 from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
@@ -7,18 +9,14 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
-from typing import Callable
-from typing import Generator
-from typing import List
-from typing import Optional
 
 import json
 
 
 class ContentImporter(BaseImporter):
     name: str = "content"
-    metadata: Optional[types.ExportImportMetadata] = None
-    languages: Optional[types.PortalLanguages] = None
+    metadata: types.ExportImportMetadata | None = None
+    languages: types.PortalLanguages | None = None
     dropped: set[str] = set()
 
     def _cleanse_ordering(self, raw_data: dict[str, int]) -> dict[str, int]:
@@ -64,7 +62,7 @@ class ContentImporter(BaseImporter):
             )
         return obj
 
-    def construct(self, item: dict) -> Optional[DexterityContent]:
+    def construct(self, item: dict) -> DexterityContent | None:
         """Serialize object."""
         item_path = item["@id"]
         config = types.ImporterConfig(
@@ -188,9 +186,9 @@ class ContentImporter(BaseImporter):
     def import_data(
         self,
         base_path: Path,
-        data_hooks: Optional[List[Callable]] = None,
-        pre_deserialize_hooks: Optional[List[Callable]] = None,
-        obj_hooks: Optional[List[Callable]] = None,
+        data_hooks: list[Callable] | None = None,
+        pre_deserialize_hooks: list[Callable] | None = None,
+        obj_hooks: list[Callable] | None = None,
     ) -> str:
         """Import content into a site."""
         base_path = base_path / self.name

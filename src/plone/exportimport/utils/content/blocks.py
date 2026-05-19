@@ -1,7 +1,4 @@
-from typing import List
-
-
-def _fix_image_paths(data: list) -> List[dict]:
+def _fix_image_paths(data: list) -> list[dict]:
     """Rewrite image urls to use the scale name.
 
     This is not ideal in terms of performance, but

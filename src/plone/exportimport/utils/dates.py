@@ -1,10 +1,9 @@
 from datetime import datetime
 from DateTime import DateTime
 from dateutil import parser
-from typing import Optional
 
 
-def parse_datetime(value: str) -> Optional[datetime]:
+def parse_datetime(value: str) -> datetime | None:
     """Parse a value and return a datetime instance."""
     if value:
         try:
@@ -14,7 +13,7 @@ def parse_datetime(value: str) -> Optional[datetime]:
         return result
 
 
-def parse_date(value: str) -> Optional[DateTime]:
+def parse_date(value: str) -> DateTime | None:
     """Parse a value and return a DateTime instance."""
     if value:
         parsed = parse_datetime(value)

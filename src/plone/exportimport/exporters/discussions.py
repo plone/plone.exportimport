@@ -2,9 +2,7 @@ from .base import BaseExporter
 from pathlib import Path
 from plone.exportimport import interfaces
 from plone.exportimport import logger
-from typing import List
 from zope.interface import implementer
-
 
 try:
     import plone.app.discussion  # noqa
@@ -18,7 +16,7 @@ else:
 class DiscussionsExporter(BaseExporter):
     name: str = "discussions"
 
-    def dump(self) -> List[Path]:
+    def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
         if not HAS_DISCUSSION:
             logger.debug("- Discussions: Skipping (plone.app.discussion not installed)")

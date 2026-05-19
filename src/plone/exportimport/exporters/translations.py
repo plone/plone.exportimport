@@ -3,7 +3,6 @@ from pathlib import Path
 from plone.exportimport import interfaces
 from plone.exportimport import logger
 from plone.exportimport.utils import translations as utils
-from typing import List
 from zope.interface import implementer
 
 
@@ -11,7 +10,7 @@ from zope.interface import implementer
 class TranslationsExporter(BaseExporter):
     name: str = "translations"
 
-    def dump(self) -> List[Path]:
+    def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
         translations = utils.get_translations()
         filepath = self._dump(translations, self.filepath)

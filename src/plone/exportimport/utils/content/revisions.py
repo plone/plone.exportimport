@@ -1,7 +1,6 @@
 from plone import api
 from plone.dexterity.content import DexterityContent
 from plone.exportimport.utils.principals.members import get_history_user_info
-from typing import List
 
 
 def _format_as_history(vdata: dict, version_id: int) -> dict:
@@ -23,7 +22,7 @@ def _format_as_history(vdata: dict, version_id: int) -> dict:
     return info
 
 
-def revision_history(obj: DexterityContent) -> List[dict]:
+def revision_history(obj: DexterityContent) -> list[dict]:
     """Return revision history for an object."""
     raw_history = []
     results = []

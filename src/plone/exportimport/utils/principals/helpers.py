@@ -3,9 +3,6 @@ from plone import api
 from plone.exportimport.settings import AUTO_GROUPS
 from plone.exportimport.settings import AUTO_ROLES
 from Products.PlonePAS.tools.groupdata import GroupData
-from typing import List
-from typing import Optional
-
 
 _sort_key_id = attrgetter("id")
 
@@ -18,7 +15,7 @@ def get_roles_for_group(group: GroupData, filter: bool = True) -> list:
     return sorted(roles)
 
 
-def get_roles_for_member(member, filter: bool = True) -> List[str]:
+def get_roles_for_member(member, filter: bool = True) -> list[str]:
     """Return a list of roles for a given member."""
     roles = [r for r in member.getRoles()]
     if filter:
@@ -27,8 +24,8 @@ def get_roles_for_member(member, filter: bool = True) -> List[str]:
 
 
 def get_all_groups(
-    username: str = "", group: Optional[GroupData] = None, filter: bool = True
-) -> List[GroupData]:
+    username: str = "", group: GroupData | None = None, filter: bool = True
+) -> list[GroupData]:
     """Get groups."""
     payload = {}
     if username:

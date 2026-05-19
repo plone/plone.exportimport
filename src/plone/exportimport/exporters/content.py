@@ -1,4 +1,6 @@
 from .base import BaseExporter
+from collections.abc import Callable
+from collections.abc import Generator
 from pathlib import Path
 from plone import api
 from plone.base.interfaces import IPloneSiteRoot
@@ -10,10 +12,6 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
-from typing import Callable
-from typing import Generator
-from typing import List
-from typing import Optional
 from zope.interface import implementer
 
 import argparse
@@ -132,7 +130,7 @@ class ContentExporter(BaseExporter):
         filepath = self.base_path / "__metadata__.json"
         return self._dump(metadata, filepath)
 
-    def dump(self) -> List[Path]:
+    def dump(self) -> list[Path]:
         """Serialize contents and dump them to disk."""
         paths = []
         with request_provides(self.request, IExportImportRequestMarker):
@@ -147,11 +145,11 @@ class ContentExporter(BaseExporter):
     def export_data(
         self,
         base_path: Path,
-        data_hooks: List[Callable] = None,
-        obj_hooks: List[Callable] = None,
-        query: Optional[dict] = None,
-        options: Optional[argparse.Namespace] = None,
-    ) -> List[Path]:
+        data_hooks: list[Callable] = None,
+        obj_hooks: list[Callable] = None,
+        query: dict | None = None,
+        options: argparse.Namespace | None = None,
+    ) -> list[Path]:
         # Content in a subpath of base_path
         base_path = base_path / self.name
         query = query if query else {}

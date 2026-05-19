@@ -6,16 +6,12 @@ from plone.exportimport import logger
 from plone.exportimport import PACKAGE_NAME
 from Products.CMFPlone.Portal import PloneSite
 from tempfile import mkdtemp
-from typing import Dict
-from typing import List
-from typing import Optional
 from zope.component import getAdapter
 from zope.component import hooks
 from zope.component import queryAdapter
 from zope.interface import implementer
 
 import argparse
-
 
 EXPORTER_NAMES = [
     "plone.exporter.content",
@@ -28,7 +24,7 @@ EXPORTER_NAMES = [
 ]
 
 
-ExporterMapping = Dict[str, BaseExporter]
+ExporterMapping = dict[str, BaseExporter]
 
 
 @implementer(interfaces.IExporter)
@@ -53,7 +49,7 @@ class Exporter:
         return exporters
 
     @staticmethod
-    def _prepare_path(path: Optional[Path] = None) -> Path:
+    def _prepare_path(path: Path | None = None) -> Path:
         """Return a valid path to use for the export.
 
         If base_path is not given, create a temporary directory to export
@@ -65,11 +61,11 @@ class Exporter:
         return path
 
     def export_site(
-        self, path: Optional[Path] = None, options: Optional[argparse.Namespace] = None
-    ) -> List[Path]:
+        self, path: Path | None = None, options: argparse.Namespace | None = None
+    ) -> list[Path]:
         """Export the given site to the filesystem."""
         path = self._prepare_path(path)
-        paths: List[Path] = [path]
+        paths: list[Path] = [path]
         with hooks.site(self.site):
             for exporter_name, exporter in self.exporters.items():
                 logger.debug(f"Exporting {self.site} with {exporter_name} to {path}")
