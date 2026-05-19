@@ -9,6 +9,19 @@
 
 <!-- towncrier release notes start -->
 
+## 2.0.1 (2026-05-19)
+
+
+### Bug fixes
+
+- Reset per-setter progress counter in ``ContentImporter`` so ``{setter}: Handled N items...`` reports the items handled by that setter instead of a cumulative count carried over from the previous setter. @ericof #92
+
+
+### Internal
+
+- Remove Python 3.8/3.9 compatibility imports for type hints.  @mauritsvanrees 
+- Update configuration files @plone 
+
 ## 2.0.0 (2026-05-16)
 
 
