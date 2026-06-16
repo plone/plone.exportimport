@@ -85,6 +85,7 @@ setup(
         "z3c.autoinclude.plugin": ["target = plone"],
         "console_scripts": [
             "plone-exporter = plone.exportimport.cli:exporter_cli",
+            "plone-partial-exporter = plone.exportimport.cli:partial_exporter_cli",
             "plone-importer = plone.exportimport.cli:importer_cli",
         ],
     },

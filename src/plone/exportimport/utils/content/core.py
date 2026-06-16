@@ -65,6 +65,17 @@ def object_from_uid_or_path(uid: str, path: str = "") -> DexterityContent | None
     return obj
 
 
+def object_from_path(path: str) -> Optional[DexterityContent]:
+    """Return an object for a given path."""
+    obj = None
+    # Try first to get the object by its path
+    portal: PloneSite = api.portal.get()
+    obj = portal.unrestrictedTraverse(path, default=None)
+    if not obj:
+        raise ValueError(f"Object not found at path: {path}")
+    return obj
+
+
 def get_portal_languages() -> types.PortalLanguages:
     """Return configured languages in a Plone Site."""
     default = api.portal.get_registry_record("plone.default_language", default="en")

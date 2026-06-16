@@ -21,6 +21,7 @@ import argparse
 class ContentExporter(BaseExporter):
     name: str = "content"
     query: dict = None
+    paths_list: list[str] = []
     filename_fmt: str = settings.EXPORT_CONTENT_FILEPATH
     metadata: types.ExportImportMetadata = None
     default_site_language: str = "en"
@@ -132,19 +133,51 @@ class ContentExporter(BaseExporter):
 
     def dump(self) -> list[Path]:
         """Serialize contents and dump them to disk."""
-        paths = []
         with request_provides(self.request, IExportImportRequestMarker):
-            for obj in self.all_objects():
-                path = self.dump_one(obj)
-                if path:
-                    paths.append(path)
-            # Add list of blobs to serialization
-            paths.insert(0, self.dump_metadata())
+            if not self.paths_list:
+                return self._dump_all()
+            return self._dump_selected()
+
+    def get_selected_objects(self) -> Generator:
+        """Return all selected objects to be serialized."""
+        logger.info(f"Exporting {len(self.paths_list)}")
+        for index, path in enumerate(self.paths_list, start=1):
+            try:
+                obj = content_utils.object_from_path(path)
+            except Exception:
+                msg = f"Error getting object at path {path}"
+                self.errors.append({"path": path, "message": msg})
+                logger.exception(msg, exc_info=True)
+            else:
+                yield obj
+
+            if not index % 100:
+                logger.info(f"Content Exporter: Handled {index} items...")
+
+    def _dump_all(self) -> List[Path]:
+        paths = []
+        for obj in self.all_objects():
+            path = self.dump_one(obj)
+            if path:
+                paths.append(path)
+        # Add list of blobs to serialization
+        paths.insert(0, self.dump_metadata())
+        return paths
+
+    def _dump_selected(self) -> List[Path]:
+        paths = []
+        for obj in self.get_selected_objects():
+            path = self.dump_one(obj)
+            if path and path not in paths:
+                paths.append(path)
+        # Add list of blobs to serialization
+        paths.insert(0, self.dump_metadata())
         return paths
 
     def export_data(
         self,
         base_path: Path,
+        paths_list: list[str] | None = [],
         data_hooks: list[Callable] = None,
         obj_hooks: list[Callable] = None,
         query: dict | None = None,
@@ -154,6 +187,7 @@ class ContentExporter(BaseExporter):
         base_path = base_path / self.name
         query = query if query else {}
         site = self.site
+        self.paths_list = paths_list
         self.query = query if query else {"path": content_utils.get_obj_path(site)}
         metadata = types.ExportImportMetadata()
         self.metadata = metadata

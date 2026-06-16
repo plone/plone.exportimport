@@ -1,3 +1,4 @@
+from pathlib import Path
 from plone import api
 from plone.exportimport import logger as package_logger
 from plone.exportimport.exporters import get_exporter
@@ -26,6 +27,16 @@ CLI_SPEC = {
             "site": "Plone site ID or path to site to import the content to",
             "path": "Path to import the content from",
             "--quiet": "Do not report items being imported",
+        },
+    },
+    "partial-exporter": {
+        "description": "Export part of a Plone Site",
+        "options": {
+            "zopeconf": "Path to zope.conf",
+            "site": "Plone site ID or path to site to export the content from",
+            "objectpaths": "Path to the list of objects to export",
+            "path": "Path to export the content",
+            "--include-revisions": "Include revision history",
         },
     },
 }
@@ -57,6 +68,34 @@ def exporter_cli(args=sys.argv):
     with api.env.adopt_roles(["Manager"]):
         results = get_exporter(site).export_site(path, options=namespace)
     logger.info(f" Using path {path} to export content from Plone site at /{site.id}")
+    for item in results[1:]:
+        logger.info(f" Wrote {item}")
+
+
+def partial_exporter_cli(args=sys.argv):
+    """Export part of a Plone site."""
+    logger = cli_helpers.get_logger("Partial exporter")
+    exporter_cli = CLI_SPEC["partial-exporter"]
+    # We get an argparse.Namespace instance.
+    namespace = _parse_args(exporter_cli["description"], exporter_cli["options"], args)
+    app = cli_helpers.get_app(namespace.zopeconf)
+    path = cli_helpers._process_path(namespace.path)
+    if not path:
+        logger.error(f"{namespace.path} does not exist, please create it first.")
+        sys.exit(1)
+    object_paths = cli_helpers._process_path(namespace.objectpaths)
+    if not object_paths:
+        logger.error(f"{namespace.objectpaths} file does not exist, create it.")
+        sys.exit(1)
+    paths_list = Path(object_paths).read_text().splitlines()
+    site = cli_helpers.get_site(app, namespace.site, logger)
+    with api.env.adopt_roles(["Manager"]):
+        results = get_exporter(site).partial_export_site(
+            path, paths_list=paths_list, options=namespace
+        )
+    logger.info(
+        f" Using path {path} to export partial content from Plone site at /{site.id}"
+    )
     for item in results[1:]:
         logger.info(f" Wrote {item}")
 

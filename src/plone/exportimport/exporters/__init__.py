@@ -73,6 +73,22 @@ class Exporter:
                 paths.extend(new_paths)
         return paths
 
+    def partial_export_site(
+        self,
+        path: Optional[Path] = None,
+        paths_list: Optional[List[str]] = [],
+        options: Optional[argparse.Namespace] = None,
+    ) -> List[Path]:
+        """Export the given site to the filesystem."""
+        path = self._prepare_path(path)
+        paths: List[Path] = [path]
+        with hooks.site(self.site):
+            for exporter_name, exporter in self.exporters.items():
+                logger.debug(f"Exporting {self.site} with {exporter_name} to {path}")
+                new_paths = exporter.export_data(path, paths_list, options=options)
+                paths.extend(new_paths)
+        return paths
+
 
 def get_exporter(site: PloneSite = None) -> Exporter:
     """Get the exporter."""

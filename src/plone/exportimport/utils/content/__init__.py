@@ -4,6 +4,7 @@ from .core import get_portal_languages  # noQA
 from .core import get_uid  # noQA
 from .core import is_folderish  # noQA
 from .core import is_site_root  # noQA
+from .core import object_from_path  # noQA
 from .core import object_from_uid  # noQA
 from .export_helpers import cleaners  # noQA
 from .export_helpers import enrichers  # noQA
