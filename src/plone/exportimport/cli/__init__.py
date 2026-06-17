@@ -87,8 +87,20 @@ def partial_exporter_cli(args=sys.argv):
     if not object_paths:
         logger.error(f"{namespace.objectpaths} file does not exist, create it.")
         sys.exit(1)
-    paths_list = Path(object_paths).read_text().splitlines()
+    raw_paths = Path(object_paths).read_text().splitlines()
     site = cli_helpers.get_site(app, namespace.site, logger)
+
+    # Add site id to the beginning of the paths if it is not already present
+    paths_list = []
+    for raw_path in raw_paths:
+        raw_path = raw_path.strip()
+        if not raw_path:
+            continue
+        raw_path = raw_path.lstrip("/")
+        if not (raw_path == site.id or raw_path.startswith(f"{site.id}/")):
+            raw_path = f"{site.id}/{raw_path}"
+        paths_list.append(f"/{raw_path}")
+
     with api.env.adopt_roles(["Manager"]):
         results = get_exporter(site).partial_export_site(
             path, paths_list=paths_list, options=namespace
