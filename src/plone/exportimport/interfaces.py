@@ -21,3 +21,7 @@ class INamedExporter(Interface):
 
 class INamedImporter(Interface):
     """Component to import content from a Plone Site."""
+
+
+class IObjectsExporter(Interface):
+    """Component to decide which objects are exported from a Plone Site."""
