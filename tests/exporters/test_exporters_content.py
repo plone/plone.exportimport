@@ -4,6 +4,7 @@ from plone.exportimport.exporters import content
 from zope.component import getAdapter
 from zope.component.hooks import setSite
 
+import inspect
 import json
 import pytest
 
@@ -98,6 +99,29 @@ class TestExporterContent:
         assert "@components" not in keys
         assert "batching" not in keys
         assert "parent" not in keys
+
+
+class TestExporterObjects:
+
+    @pytest.fixture(autouse=True)
+    def _init(self, portal):
+        self.src_portal = portal
+        self.exporter = content.ObjectsExporter(portal)
+
+    def test_adapter_is_registered(self):
+        adapter = getAdapter(self.src_portal, interfaces.IObjectsExporter)
+        assert isinstance(adapter, content.ObjectsExporter)
+
+    def test_output_is_generator(self):
+        exporter = self.exporter
+        result = exporter.get_objects({}, [])
+        assert inspect.isgenerator(result)
+
+    def test_output_objects(self):
+        exporter = self.exporter
+        result = exporter.get_objects({}, [])
+        objects = [x for x in result]
+        assert len(objects) == 9
 
 
 class TestExporterContentMetadata:
