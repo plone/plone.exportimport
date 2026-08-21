@@ -9,6 +9,13 @@
 
 <!-- towncrier release notes start -->
 
+## 2.0.2 (2026-08-21)
+
+
+### Internal
+
+- Update configuration files @plone 
+
 ## 2.0.1 (2026-05-19)
 
 
