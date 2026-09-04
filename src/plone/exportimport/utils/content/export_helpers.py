@@ -122,15 +122,19 @@ def fix_language(
     """Fix language information."""
     placeholder = settings.PLACEHOLDERS_LANGUAGE
     default_portal_language = config.site.language
-    if isinstance(item.get("language", {}), str):
-        item_language = item.get("language")
+    # Content without a language serializes to "language": null, so the key can
+    # be present and still hold nothing. Treat that like a missing key.
+    item_language = item.get("language")
+    if item_language is None:
+        item_language = {}
+    if isinstance(item_language, str):
         lang = (
             placeholder
             if item_language == default_portal_language or item_language == ""
             else item_language
         )
     else:
-        token = item.get("language", {}).get("token", placeholder)
+        token = item_language.get("token", placeholder)
         lang = placeholder if token == default_portal_language else token
     item["language"] = lang
     return item

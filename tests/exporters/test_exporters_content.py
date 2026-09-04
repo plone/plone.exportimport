@@ -1,6 +1,7 @@
 from plone import api
 from plone.exportimport import interfaces
 from plone.exportimport.exporters import content
+from plone.exportimport.settings import PLACEHOLDERS_LANGUAGE
 from zope.component import getAdapter
 from zope.component.hooks import setSite
 
@@ -52,6 +53,23 @@ class TestExporterContent:
         exporter = self.exporter
         result = exporter.export_data(base_path=export_path)
         assert isinstance(result, list)
+
+    def test_export_content_without_language(self, export_path):
+        """Content with no language at all must not break the export.
+
+        Serialization gives "language": null for such an item, which used to
+        raise an AttributeError while the language was being fixed up.
+        See https://github.com/plone/plone.exportimport/issues/95
+        """
+        uid = "3e0dd7c4b2714eafa1d6fc6a1493f953"
+        obj = api.content.get(UID=uid)
+        obj.language = None
+        obj.reindexObject()
+
+        self.exporter.export_data(base_path=export_path)
+
+        data = json.loads((export_path / "content" / uid / "data.json").read_text())
+        assert data["language"] == PLACEHOLDERS_LANGUAGE
 
     @pytest.mark.parametrize(
         "path",
