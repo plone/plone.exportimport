@@ -29,6 +29,7 @@ class TestUtilsContentExportHelpers:
         "item,expected",
         [
             [{}, PLACEHOLDERS_LANGUAGE],
+            [{"language": None}, PLACEHOLDERS_LANGUAGE],
             [{"language": ""}, PLACEHOLDERS_LANGUAGE],
             [{"language": "en"}, PLACEHOLDERS_LANGUAGE],
             [{"language": "es"}, "es"],

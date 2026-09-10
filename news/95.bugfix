@@ -1,0 +1,1 @@
+Do not fail exporting content whose ``language`` is ``None``. Such an item serializes to ``"language": null``, and ``fix_language`` raised ``AttributeError: 'NoneType' object has no attribute 'get'``. It is now treated like a missing language and gets the default-language placeholder, which the importer resolves. @kunalKumar-13
