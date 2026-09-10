@@ -16,6 +16,11 @@
       name="plone.exporter.content"
       />
   <adapter
+      factory=".content.ObjectsExporter"
+      provides="plone.exportimport.interfaces.IObjectsExporter"
+      for="plone.base.interfaces.siteroot.IPloneSiteRoot"
+      />
+  <adapter
       factory=".principals.PrincipalsExporter"
       provides="plone.exportimport.interfaces.INamedExporter"
       for="plone.base.interfaces.siteroot.IPloneSiteRoot"

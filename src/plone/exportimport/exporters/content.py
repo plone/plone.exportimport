@@ -12,9 +12,37 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
+from zope.component import getAdapter
 from zope.interface import implementer
 
 import argparse
+
+
+class ObjectsExporter:
+
+    def __init__(self, obj) -> None:
+        self.obj = obj
+
+    def get_objects(self, query, errors) -> Generator:
+        """Return all objects to be serialized."""
+        catalog = api.portal.get_tool("portal_catalog")
+        if "object_provides" not in query:
+            query["object_provides"] = "plone.dexterity.interfaces.IDexterityContent"
+        brains = catalog.unrestrictedSearchResults(**query)
+        logger.info(f"Exporting {len(brains)}")
+        for index, brain in enumerate(brains, start=1):
+            try:
+                obj = brain.getObject()
+            except Exception:
+                brain_path = brain.getPath()
+                msg = f"Error getting object {brain_path} from brain"
+                errors.append({"path": brain_path, "message": msg})
+                logger.exception(msg, exc_info=True)
+            else:
+                yield obj
+
+            if not index % 100:
+                logger.info(f"Content Exporter: Handled {index} items...")
 
 
 @implementer(interfaces.INamedExporter)
@@ -27,25 +55,8 @@ class ContentExporter(BaseExporter):
 
     def all_objects(self) -> Generator:
         """Return all objects to be serialized."""
-        query = self.query
-        catalog = api.portal.get_tool("portal_catalog")
-        if "object_provides" not in query:
-            query["object_provides"] = "plone.dexterity.interfaces.IDexterityContent"
-        brains = catalog.unrestrictedSearchResults(**query)
-        logger.info(f"Exporting {len(brains)}")
-        for index, brain in enumerate(brains, start=1):
-            try:
-                obj = brain.getObject()
-            except Exception:
-                brain_path = brain.getPath()
-                msg = f"Error getting object {brain_path} from brain"
-                self.errors.append({"path": brain_path, "message": msg})
-                logger.exception(msg, exc_info=True)
-            else:
-                yield obj
-
-            if not index % 100:
-                logger.info(f"Content Exporter: Handled {index} items...")
+        adapter = getAdapter(self.site, interfaces.IObjectsExporter)
+        yield from adapter.get_objects(self.query, self.errors)
 
     def serialize(self, obj: DexterityContent) -> dict:
         """Serialize object."""
@@ -152,7 +163,6 @@ class ContentExporter(BaseExporter):
     ) -> list[Path]:
         # Content in a subpath of base_path
         base_path = base_path / self.name
-        query = query if query else {}
         site = self.site
         self.query = query if query else {"path": content_utils.get_obj_path(site)}
         metadata = types.ExportImportMetadata()
