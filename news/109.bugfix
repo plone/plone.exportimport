@@ -1,0 +1,1 @@
+Fixed export and import of grid blocks whose images have no ``image_scales`` information. @ericof
