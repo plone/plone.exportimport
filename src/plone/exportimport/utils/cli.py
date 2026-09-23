@@ -65,4 +65,8 @@ def get_site(app, site_id: str, logger: logging.Logger) -> PloneSite | None:
     if not site:
         logger.error(f"Plone site at path '{site_id}' does not exist, aborting export.")
         sys.exit(1)
+    app.REQUEST['TraversalRequestNameStack'] = []
+    before_traverse = getattr(site, "__before_publishing_traverse__", None)
+    if before_traverse is not None:
+        before_traverse(site, app.REQUEST)
     return site
