@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rolemap>
+  <permissions>
+    <!-- -*- extra stuff goes here -*- -->
+    <!-- Mirrors the header settings permissions from sc.voltolighttheme -->
+    <permission acquire="False"
+                name="plone.exportimport.testing: View Dummy"
+    >
+      <role name="Anonymous" />
+      <role name="Authenticated" />
+    </permission>
+    <permission acquire="False"
+                name="plone.exportimport.testing: Edit Dummy"
+    >
+      <role name="Manager" />
+      <role name="Site Administrator" />
+    </permission>
+    <permission acquire="False"
+                name="plone.exportimport.testing: Add Dummy"
+    >
+      <role name="Manager" />
+    </permission>
+  </permissions>
+</rolemap>

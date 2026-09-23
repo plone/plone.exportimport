@@ -1,4 +1,3 @@
-from plone import api
 from plone.exportimport import logger as package_logger
 from plone.exportimport.exporters import get_exporter
 from plone.exportimport.importers import get_importer
@@ -54,7 +53,7 @@ def exporter_cli(args=sys.argv):
         logger.error(f"{namespace.path} does not exist, please create it first.")
         sys.exit(1)
     site = cli_helpers.get_site(app, namespace.site, logger)
-    with api.env.adopt_roles(["Manager"]):
+    with hooks.site(site):
         results = get_exporter(site).export_site(path, options=namespace)
     logger.info(f" Using path {path} to export content from Plone site at /{site.id}")
     for item in results[1:]:
@@ -75,7 +74,7 @@ def importer_cli(args=sys.argv):
     if not namespace.quiet:
         cli_helpers.setup_logger_console(package_logger)
     site = cli_helpers.get_site(app, namespace.site, logger)
-    with hooks.site(site), api.env.adopt_roles(["Manager"]):
+    with hooks.site(site):
         logger.info(f" Using path {path} to import content to Plone site at /{site.id}")
         results = get_importer(site).import_site(path)
         for item in results:

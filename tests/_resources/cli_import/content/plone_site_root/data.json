@@ -1,0 +1,28 @@
+{
+  "@id": "/Plone",
+  "@type": "Plone Site",
+  "UID": "plone_site_root",
+  "allow_discussion": null,
+  "blocks": {},
+  "blocks_layout": {
+    "items": []
+  },
+  "contributors": [],
+  "creators": [
+    "admin"
+  ],
+  "description": "",
+  "exportimport.constrains": {},
+  "exportimport.conversation": [],
+  "exportimport.versions": {},
+  "id": "Plone",
+  "is_folderish": true,
+  "language": "##DEFAULT##",
+  "parent": {},
+  "review_state": null,
+  "secure_field": "A secure site value",
+  "secure_setting": false,
+  "title": "Site",
+  "type_title": "Plone Site",
+  "workflow_history": {}
+}

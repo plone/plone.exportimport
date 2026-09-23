@@ -1,0 +1,43 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    >
+
+  <include
+      package="plone.behavior"
+      file="meta.zcml"
+      />
+
+  <genericsetup:registerProfile
+      name="testing"
+      title="Testing"
+      description="Testing profile for plone.exportimport"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      directory="profiles/testing"
+      />
+
+  <permission
+      id="plone.exportimport.testing.dummy.view"
+      title="plone.exportimport.testing: View Dummy"
+      />
+
+  <permission
+      id="plone.exportimport.testing.dummy.edit"
+      title="plone.exportimport.testing: Edit Dummy"
+      />
+  <permission
+      id="plone.exportimport.testing.dummy.add"
+      title="plone.exportimport.testing: Add Dummy"
+      />
+
+  <plone:behavior
+      name="plone.exportimport.testing.dummy_settings"
+      title="Dummy settings"
+      description="Fields protected by custom read and write permissions"
+      provides=".content.dummy.IDummySettings"
+      />
+
+  <!-- -*- extra stuff goes here -*- -->
+
+</configure>
