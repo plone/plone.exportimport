@@ -1,13 +1,11 @@
 import pytest
-import transaction
 
 
 @pytest.fixture()
 def portal_multilingual(app, setup_multilingual_site):
     """Plone portal with multilingual support."""
     portal = app["plone"]
-    with transaction.manager:
-        setup_multilingual_site(portal, "en", ["en", "de", "es"])
+    setup_multilingual_site(portal, "en", ["en", "de", "es"])
     yield portal
 
 

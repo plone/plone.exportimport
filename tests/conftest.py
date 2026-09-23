@@ -19,6 +19,18 @@ globals().update(
 )
 
 
+@pytest.fixture(autouse=True)
+def disable_intermediate_commits(monkeypatch):
+    """Keep importers from committing the transaction during tests.
+
+    The layers are kept for the whole test session, so a commit would leak
+    imported content, users and groups into the tests that follow.
+    """
+    from plone.exportimport.importers.base import BaseImporter
+
+    monkeypatch.setattr(BaseImporter, "intermediate_commits", False)
+
+
 @pytest.fixture()
 def base_import_path():
     """Base content import Path."""
