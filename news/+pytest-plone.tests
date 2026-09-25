@@ -1,0 +1,1 @@
+Fixed test isolation with pytest-plone 1.1.0 by keeping importers and fixtures from committing transactions during tests. @ericof

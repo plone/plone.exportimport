@@ -1,0 +1,1 @@
+Fixed ``plone-exporter`` silently skipping fields protected by a read permission not granted to the ``Manager`` role, such as behavior fields on the Plone Site root. Both command line tools now run with the site hook set and without overriding the roles of the system user. @ericof

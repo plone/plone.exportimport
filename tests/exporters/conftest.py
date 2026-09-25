@@ -1,7 +1,6 @@
 from plone.exportimport.importers import get_importer
 
 import pytest
-import transaction
 
 
 @pytest.fixture()
@@ -25,8 +24,7 @@ def portal_multilingual(
 ):
     """Plone portal with imported content."""
     portal = app["plone"]
-    with transaction.manager:
-        setup_multilingual_site(portal, "en", ["en", "de", "es"])
+    setup_multilingual_site(portal, "en", ["en", "de", "es"])
     importer = get_importer(portal)
     importer.import_site(path=multilingual_import_path)
     # Create new users and groups

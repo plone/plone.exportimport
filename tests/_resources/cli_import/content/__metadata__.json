@@ -1,0 +1,14 @@
+{
+  "__version__": "1.0.0",
+  "_blob_files_": [],
+  "_data_files_": [
+    "plone_site_root/data.json",
+    "0e1d9d4a2c3b4f5e8a7b6c5d4e3f2a1b/data.json"
+  ],
+  "default_page": {},
+  "local_permissions": {},
+  "local_roles": {},
+  "ordering": {
+    "0e1d9d4a2c3b4f5e8a7b6c5d4e3f2a1b": 0
+  }
+}

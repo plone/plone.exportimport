@@ -59,7 +59,7 @@ def get_app(zopeconf: Path):
     return app
 
 
-def get_site(app, site_id: str, logger: logging.Logger) -> PloneSite | None:
+def get_site(app, site_id: str, logger: logging.Logger) -> PloneSite:
     """Get Plone Site"""
     site = app.unrestrictedTraverse(site_id, None)
     if not site:

@@ -10,14 +10,17 @@ class ExportImportLayer(PloneSandboxLayer):
 
     def setUpZope(self, app, configurationContext):
         import plone.exportimport
+        import plone.exportimport.testing
         import plone.volto
 
         self.loadZCML(package=plone.volto)
         self.loadZCML(package=plone.exportimport)
+        self.loadZCML(package=plone.exportimport.testing)
 
     def setUpPloneSite(self, portal):
         st = portal.portal_setup
         st.runAllImportStepsFromProfile("plone.volto:default")
+        st.runAllImportStepsFromProfile("plone.exportimport.testing:testing")
 
         # Enable plone.constraintypes behavior,
         # which is not enabled by default in plone.volto

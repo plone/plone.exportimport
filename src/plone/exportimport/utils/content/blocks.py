@@ -6,11 +6,13 @@ def _fix_image_paths(data: list) -> list[dict]:
     """
     parsed = []
     for info in data:
-        image_scales = info["image_scales"]
+        image_scales = info.get("image_scales") or {}
         for field in image_scales:
+            if not image_scales[field]:
+                continue
             field_data = image_scales[field][0]
             field_data["download"] = f"@@images/{field}"
-            for key, scale in field_data["scales"].items():
+            for key, scale in field_data.get("scales", {}).items():
                 scale["download"] = f"@@images/{field}/{key}"
         parsed.append(info)
     return parsed
