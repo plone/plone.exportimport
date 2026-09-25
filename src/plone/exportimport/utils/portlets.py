@@ -52,8 +52,12 @@ def portlets_in_context(
     return result
 
 
-def get_portlets() -> list[dict]:
-    """Return a list of all portlet assignments on the site."""
+def get_portlets(uids: set[str] | None = None) -> list[dict]:
+    """Return a list of all portlet assignments on the site.
+
+    :param uids: If given, only portlets on content in this set are returned.
+    :returns: List of portlet registrations, one per content.
+    """
     results = []
     portal = api.portal.get()
     portal_uid = portal.UID()
@@ -63,7 +67,7 @@ def get_portlets() -> list[dict]:
             uid = api.content.get_uuid(obj)
         except TypeError:
             uid = None
-        if not uid:
+        if not uid or (uids is not None and uid not in uids):
             return
         if uid == portal_uid:
             uid = SITE_ROOT_UID
