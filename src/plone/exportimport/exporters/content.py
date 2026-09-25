@@ -12,6 +12,7 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
+from typing import Any
 from zope.component import getAdapter
 from zope.interface import implementer
 
@@ -26,9 +27,7 @@ class ObjectsExporter:
     def get_objects(self, query, errors) -> Generator:
         """Return all objects to be serialized."""
         catalog = api.portal.get_tool("portal_catalog")
-        if "object_provides" not in query:
-            query["object_provides"] = "plone.dexterity.interfaces.IDexterityContent"
-        brains = catalog.unrestrictedSearchResults(**query)
+        brains = catalog.unrestrictedSearchResults(**content_utils.content_query(query))
         logger.info(f"Exporting {len(brains)}")
         for index, brain in enumerate(brains, start=1):
             try:
@@ -153,18 +152,48 @@ class ContentExporter(BaseExporter):
             paths.insert(0, self.dump_metadata())
         return paths
 
+    def _prepare_query(
+        self, query: dict | None = None, options: argparse.Namespace | None = None
+    ) -> dict:
+        """Return the catalog query used to select the content to export.
+
+        An explicit ``query`` takes precedence over ``options.query``. When
+        neither is set, all content in the site is selected.
+
+        :param query: Explicit catalog query.
+        :param options: Export options, checked for a ``query`` attribute.
+        :returns: The catalog query to use.
+        """
+        query = query or getattr(options, "query", None)
+        return query if query else {"path": content_utils.get_obj_path(self.site)}
+
     def export_data(
         self,
         base_path: Path,
-        data_hooks: list[Callable] = None,
-        obj_hooks: list[Callable] = None,
-        query: dict | None = None,
+        data_hooks: list[Callable] | None = None,
+        obj_hooks: list[Callable] | None = None,
         options: argparse.Namespace | None = None,
+        query: dict | None = None,
+        **kwargs: Any,
     ) -> list[Path]:
+        """Export content to a ``content`` folder inside ``base_path``.
+
+        Arguments other than ``base_path`` should be passed by keyword, as
+        ``query`` comes after ``options`` in this signature.
+
+        :param base_path: Directory where the export is written.
+        :param data_hooks: Callables applied to the serialized data.
+        :param obj_hooks: Callables applied to each object before serialization.
+        :param options: Export options; ``options.query`` is used when no
+            ``query`` is passed.
+        :param query: Catalog query selecting the content to export. It takes
+            precedence over ``options.query``. Defaults to all content in the site.
+        :returns: Paths of the files written.
+        """
         # Content in a subpath of base_path
         base_path = base_path / self.name
         site = self.site
-        self.query = query if query else {"path": content_utils.get_obj_path(site)}
+        self.query = self._prepare_query(query, options)
         metadata = types.ExportImportMetadata()
         self.metadata = metadata
         self.request[settings.EXPORT_CONTENT_METADATA_KEY] = metadata

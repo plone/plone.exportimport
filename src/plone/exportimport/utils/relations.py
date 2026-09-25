@@ -61,12 +61,26 @@ def _relation_sort_key(rel: dict) -> tuple:
 
 
 def get_relations(
-    debug: bool = False, include_linkintegrity: bool = True
+    debug: bool = False,
+    include_linkintegrity: bool = True,
+    uids: set[str] | None = None,
 ) -> list[dict]:
+    """Return all relations in the site.
+
+    :param debug: Add source and target paths to each relation.
+    :param include_linkintegrity: Include link integrity relations.
+    :param uids: If given, only relations whose source and target are both
+        in this set are returned.
+    :returns: List of relations, sorted by source, attribute and target.
+    """
     results = []
     all_relations: list[dict] = relationhelper.get_all_relations()
     for rel in all_relations:
         if not _should_export_relation(rel, include_linkintegrity):
+            continue
+        if uids is not None and not (
+            rel["from_uuid"] in uids and rel["to_uuid"] in uids
+        ):
             continue
         if debug:
             rel = _relation_with_debug_information(rel)

@@ -43,8 +43,16 @@ def _prepare_translation_group(default_language: str, translations: dict) -> dic
     return {"canonical": canonical, "translations": translations}
 
 
-def get_translations(paths_to_drop: list[str] = None) -> list[dict]:
-    """Get all translations."""
+def get_translations(
+    paths_to_drop: list[str] | None = None, uids: set[str] | None = None
+) -> list[dict]:
+    """Get all translations.
+
+    :param paths_to_drop: Paths of content to leave out.
+    :param uids: If given, only content in this set is kept in each
+        translation group. Groups left with fewer than two items are dropped.
+    :returns: List of translation groups, sorted by canonical UID.
+    """
     paths_to_drop = paths_to_drop if paths_to_drop else []
     results = []
     portal_catalog: CatalogTool = api.portal.get_tool("portal_catalog")
@@ -64,6 +72,8 @@ def get_translations(paths_to_drop: list[str] = None) -> list[dict]:
         for brain in brains:
             brain_path = brain.getPath()
             brain_uid = brain.UID
+            if uids is not None and brain_uid not in uids:
+                continue
             language = brain.Language
             skip = bool([p for p in paths_to_drop if p in brain_path])
             if not skip and language in translations:
