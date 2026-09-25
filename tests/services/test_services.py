@@ -5,6 +5,12 @@ import pytest
 import zipfile
 
 
+def _zip_contents(data: io.BytesIO) -> dict[str, bytes]:
+    """Return the name and content of each file in a ZIP archive."""
+    with zipfile.ZipFile(data, "r") as zipf:
+        return {name: zipf.read(name) for name in zipf.namelist()}
+
+
 class TestExportImportServices:
     """Tests for the @export and @import endpoints."""
 
@@ -57,4 +63,7 @@ class TestExportImportServices:
         assert response.status_code == 200
         assert response.headers["Content-Type"] == "application/zip"
         data2 = io.BytesIO(response.content)
-        assert data1.getvalue() == data2.getvalue()
+        # Compare the files inside the archives, not the archives themselves:
+        # each entry stores the file modification time, which differs between
+        # two exports made a few seconds apart.
+        assert _zip_contents(data1) == _zip_contents(data2)
