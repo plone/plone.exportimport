@@ -9,6 +9,32 @@
 
 <!-- towncrier release notes start -->
 
+## 2.2.0 (2026-10-01)
+
+
+### New features
+
+- Add `--path` and `--paths` options to `plone-exporter` to export only parts of a site. Relations, translations, discussions, portlets and redirects are limited to the exported content @ericof #86
+
+
+### Bug fixes
+
+- Do not fail exporting content whose ``language`` is ``None``. Such an item serializes to ``"language": null``, and ``fix_language`` raised ``AttributeError: 'NoneType' object has no attribute 'get'``. It is now treated like a missing language and gets the default-language placeholder, which the importer resolves. @kunalKumar-13 #95
+- Fixed export and import of grid blocks whose images have no ``image_scales`` information. @ericof #109
+- Fixed ``plone-exporter`` silently skipping fields protected by a read permission not granted to the ``Manager`` role, such as behavior fields on the Plone Site root. Both command line tools now run with the site hook set and without overriding the roles of the system user. @ericof #110
+- Do not silently drop file and image fields on import when a blob's file name has another Unicode normalization form on disk. Blob files are now exported under a normalized file name (NFC, without path separators or characters invalid on Windows), the import also finds the NFC form of a recorded blob path, and items that could not be fully deserialized are listed as imported with errors, making `plone-importer` exit with status 1 @ericof #114
+
+
+### Internal
+
+- Declared ``plone.autoform``, ``plone.behavior``, ``plone.supermodel`` and ``Products.GenericSetup`` as dependencies. @ericof 
+
+
+### Tests
+
+- Fix intermittent failure of the services export/import roundtrip test, which compared ZIP archives including file timestamps @ericof 
+- Fixed test isolation with pytest-plone 1.1.0 by keeping importers and fixtures from committing transactions during tests. @ericof 
+
 ## 2.1.0 (2026-09-10)
 
 
