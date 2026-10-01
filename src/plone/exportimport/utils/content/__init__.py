@@ -1,3 +1,5 @@
+from .core import content_query  # noQA
+from .core import get_content_paths  # noQA
 from .core import get_obj_path  # noQA
 from .core import get_parent_ordered  # noQA
 from .core import get_portal_languages  # noQA

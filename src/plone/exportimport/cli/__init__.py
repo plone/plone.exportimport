@@ -12,19 +12,44 @@ CLI_SPEC = {
     "exporter": {
         "description": "Export Plone Site content",
         "options": {
-            "zopeconf": "Path to zope.conf",
-            "site": "Plone site ID or path to site to export the content from",
-            "path": "Path to export the content",
-            "--include-revisions": "Include revision history",
+            "zopeconf": {"help": "Path to zope.conf"},
+            "site": {
+                "help": "Plone site ID or path to site to export the content from"
+            },
+            "path": {"help": "Path to export the content"},
+            "--include-revisions": {
+                "action": "store_true",
+                "help": "Include revision history",
+            },
+            "--path": {
+                "action": "append",
+                "dest": "include_paths",
+                "metavar": "CONTENT_PATH",
+                "help": (
+                    "Export only this content, and everything inside it. "
+                    "Relative to the site root. Can be repeated"
+                ),
+            },
+            "--paths": {
+                "dest": "paths_file",
+                "metavar": "FILE",
+                "help": (
+                    "File with the content paths to export, one per line. "
+                    "Empty lines and lines starting with # are ignored"
+                ),
+            },
         },
     },
     "importer": {
         "description": "Import content into a Plone Site",
         "options": {
-            "zopeconf": "Path to zope.conf",
-            "site": "Plone site ID or path to site to import the content to",
-            "path": "Path to import the content from",
-            "--quiet": "Do not report items being imported",
+            "zopeconf": {"help": "Path to zope.conf"},
+            "site": {"help": "Plone site ID or path to site to import the content to"},
+            "path": {"help": "Path to import the content from"},
+            "--quiet": {
+                "action": "store_true",
+                "help": "Do not report items being imported",
+            },
         },
     },
 }
@@ -32,11 +57,8 @@ CLI_SPEC = {
 
 def _parse_args(description: str, options: dict, args: list):
     parser = argparse.ArgumentParser(description=description)
-    for key, help in options.items():
-        if key.startswith("-"):
-            parser.add_argument(key, action="store_true", help=help)
-        else:
-            parser.add_argument(key, help=help)
+    for key, kwargs in options.items():
+        parser.add_argument(key, **kwargs)
     namespace, _ = parser.parse_known_args(args[1:])
     return namespace
 
@@ -53,6 +75,9 @@ def exporter_cli(args=sys.argv):
         logger.error(f"{namespace.path} does not exist, please create it first.")
         sys.exit(1)
     site = cli_helpers.get_site(app, namespace.site, logger)
+    namespace.query = cli_helpers.get_export_query(
+        site, namespace.include_paths, namespace.paths_file, logger
+    )
     with hooks.site(site):
         results = get_exporter(site).export_site(path, options=namespace)
     logger.info(f" Using path {path} to export content from Plone site at /{site.id}")

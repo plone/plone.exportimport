@@ -14,10 +14,10 @@ import json
 class BaseExporter:
     name: str
     base_path: Path
-    errors: list = None
-    request: types.HTTPRequest = None
-    data_hooks: list[Callable] = None
-    obj_hooks: list[Callable] = None
+    errors: list
+    request: types.HTTPRequest
+    data_hooks: list[Callable] | None = None
+    obj_hooks: list[Callable] | None = None
     options: argparse.Namespace | None = None
 
     def __init__(
@@ -30,6 +30,18 @@ class BaseExporter:
 
     def get_option(self, name, default=None):
         return getattr(self.options, name, default)
+
+    def exported_content(self) -> dict[str, str] | None:
+        """Return the content selected for a partial export.
+
+        A partial export is requested by setting ``options.query``.
+        Exporters use this to keep only data related to the exported content.
+
+        :returns: Mapping of UID to physical path of the exported content, or
+            ``None`` when the whole site is exported.
+        """
+        query = self.get_option("query")
+        return utils.get_content_paths(query) if query else None
 
     @property
     def filepath(self) -> Path:
@@ -63,9 +75,10 @@ class BaseExporter:
     def export_data(
         self,
         base_path: Path,
-        data_hooks: list[Callable] = None,
-        obj_hooks: list[Callable] = None,
+        data_hooks: list[Callable] | None = None,
+        obj_hooks: list[Callable] | None = None,
         options: argparse.Namespace | None = None,
+        **kwargs: Any,
     ) -> list[Path]:
         """Write data to filesystem."""
         if not base_path.exists():

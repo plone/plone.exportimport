@@ -24,7 +24,9 @@ class DiscussionsExporter(BaseExporter):
 
         from plone.exportimport.utils import discussions as utils
 
-        discussions = utils.get_discussions()
+        content = self.exported_content()
+        uids = set(content) if content is not None else None
+        discussions = utils.get_discussions(uids=uids)
         filepath = self._dump(discussions, self.filepath)
         logger.debug(
             f"- Discussions: Wrote {len(discussions)} discussions to {filepath}"

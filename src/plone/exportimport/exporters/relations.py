@@ -12,7 +12,9 @@ class RelationsExporter(BaseExporter):
 
     def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
-        relations = utils.get_relations()
+        content = self.exported_content()
+        uids = set(content) if content is not None else None
+        relations = utils.get_relations(uids=uids)
         filepath = self._dump(relations, self.filepath)
         logger.debug(f"- Relations: Wrote {len(relations)} relations to {filepath}")
         return [filepath]

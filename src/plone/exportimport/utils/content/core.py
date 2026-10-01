@@ -42,6 +42,32 @@ def get_obj_path(obj: DexterityContent, relative_to_site_root: bool = False) -> 
     return obj_path
 
 
+def content_query(query: dict) -> dict:
+    """Return a copy of a catalog query restricted, by default, to content.
+
+    :param query: Catalog query. It is not modified.
+    :returns: A new query, with ``object_provides`` set to
+        ``IDexterityContent`` unless the query already sets it.
+    """
+    query = {**query}
+    if "object_provides" not in query:
+        query["object_provides"] = "plone.dexterity.interfaces.IDexterityContent"
+    return query
+
+
+def get_content_paths(query: dict) -> dict[str, str]:
+    """Return the UID and physical path of the content matching a query.
+
+    Only catalog brains are used, so no object is woken up.
+
+    :param query: Catalog query, processed by :func:`content_query`.
+    :returns: Mapping of UID to physical path.
+    """
+    catalog = api.portal.get_tool("portal_catalog")
+    brains = catalog.unrestrictedSearchResults(**content_query(query))
+    return {brain.UID: brain.getPath() for brain in brains}
+
+
 def object_from_uid(uid: str) -> DexterityContent | None:
     """Return an object for a given uid."""
     if uid == settings.SITE_ROOT_UID:

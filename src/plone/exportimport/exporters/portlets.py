@@ -12,7 +12,9 @@ class PortletsExporter(BaseExporter):
 
     def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
-        portlets = utils.get_portlets()
+        content = self.exported_content()
+        uids = set(content) if content is not None else None
+        portlets = utils.get_portlets(uids=uids)
         filepath = self._dump(portlets, self.filepath)
         logger.debug(f"- Portlets: Wrote {len(portlets)} portlets to {filepath}")
         return [filepath]

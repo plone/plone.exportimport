@@ -9,13 +9,20 @@ def _get_storage() -> RedirectionStorage:
     return getUtility(IRedirectionStorage)
 
 
-def get_redirects() -> dict[str, str]:
-    """Get a mapping of all redirects in a Plone site."""
+def get_redirects(paths: set[str] | None = None) -> dict[str, str]:
+    """Get a mapping of all redirects in a Plone site.
+
+    :param paths: If given, only redirects pointing to one of these physical
+        paths are returned.
+    :returns: Mapping of old path to new path.
+    """
     redirects = {}
     storage = _get_storage()
     for key, value in storage._paths.items():
         if isinstance(value, tuple) and len(value) == 3:
             value = value[0]
+        if paths is not None and value not in paths:
+            continue
         redirects[key] = value
     return redirects
 

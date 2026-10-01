@@ -12,7 +12,9 @@ class RedirectsExporter(BaseExporter):
 
     def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
-        redirects = utils.get_redirects()
+        content = self.exported_content()
+        paths = set(content.values()) if content is not None else None
+        redirects = utils.get_redirects(paths=paths)
         filepath = self._dump(redirects, self.filepath)
         logger.debug(f"- Redirects: Wrote {len(redirects)} redirects to {filepath}")
         return [filepath]

@@ -12,7 +12,9 @@ class TranslationsExporter(BaseExporter):
 
     def dump(self) -> list[Path]:
         """Serialize object and dump it to disk."""
-        translations = utils.get_translations()
+        content = self.exported_content()
+        uids = set(content) if content is not None else None
+        translations = utils.get_translations(uids=uids)
         filepath = self._dump(translations, self.filepath)
         logger.debug(
             f"- Translations: Wrote {len(translations)} translations to {filepath}"
