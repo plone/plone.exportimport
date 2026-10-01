@@ -11,16 +11,29 @@ from zope.globalrequest import getRequest
 from zope.interface import implementer
 
 import codecs
+import unicodedata
 
 
 def load_blob(path: str) -> bytes:
-    """Load blob from fs and encode it as base64."""
+    """Load blob from fs and encode it as base64.
+
+    If no file exists at ``path``, the NFC form of ``path`` is tried as well:
+    exports may record the name in NFD while the file on disk is NFC (for
+    instance, after a commit with git's ``core.precomposeunicode``), and only
+    some filesystems treat both forms as the same name.
+
+    :param path: Blob path, relative to the content import directory.
+    :returns: Contents of the blob file.
+    :raises ValueError: If the blob file does not exist.
+    """
     request = getRequest()
     content_import_path = Path(request[settings.IMPORT_PATH_KEY])
-    path = content_import_path / path
-    if not path.exists():
-        raise ValueError(f"Blob not found at {path}")
-    data = path_utils.encode_file_contents(path)
+    blob_path = content_import_path / path
+    if not blob_path.exists():
+        blob_path = content_import_path / unicodedata.normalize("NFC", path)
+    if not blob_path.exists():
+        raise ValueError(f"Blob not found at {content_import_path / path}")
+    data = path_utils.encode_file_contents(blob_path)
     return codecs.decode(data, "base64")
 
 

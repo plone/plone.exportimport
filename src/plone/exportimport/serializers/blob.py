@@ -78,6 +78,11 @@ def export_blob(
 
     Root path: settings.EXPORT_PATH_KEY
     File path: settings.EXPORT_CONTENT_BLOB_FILEPATH
+
+    The file name is normalized with
+    :func:`plone.exportimport.utils.path.normalize_filename`, so the path
+    written to disk, the returned path and the ``_blob_files_`` entry are the
+    same on every filesystem.
     """
     request = getRequest()
     # Metadata
@@ -85,7 +90,7 @@ def export_blob(
     uid = settings.SITE_ROOT_UID if content_utils.is_site_root(obj) else obj.UID()
     content_export_path = Path(request[settings.EXPORT_PATH_KEY])
     blob_path = settings.EXPORT_CONTENT_BLOB_FILEPATH.format(
-        UID=uid, fieldname=fieldname, filename=filename
+        UID=uid, fieldname=fieldname, filename=path_utils.normalize_filename(filename)
     )
     target_file = content_export_path / blob_path
     # Create target directory

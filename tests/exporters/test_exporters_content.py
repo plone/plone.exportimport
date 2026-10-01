@@ -7,7 +7,9 @@ from zope.component.hooks import setSite
 
 import inspect
 import json
+import os
 import pytest
+import unicodedata
 
 
 @pytest.fixture
@@ -117,6 +119,58 @@ class TestExporterContent:
         assert "@components" not in keys
         assert "batching" not in keys
         assert "parent" not in keys
+
+
+class TestExporterBlobs:
+    uid = "90b11c863598495ba699b22ca76b1041"
+
+    @pytest.fixture(autouse=True)
+    def _init(self, portal, export_path):
+        self.src_portal = portal
+        self.export_path = export_path
+        self.exporter = content.ContentExporter(portal)
+
+    def _export(self, filename: str) -> tuple[dict, dict]:
+        obj = api.content.get(UID=self.uid)
+        obj.image.filename = filename
+        self.exporter.export_data(base_path=self.export_path)
+        content_path = self.export_path / "content"
+        data = json.loads((content_path / self.uid / "data.json").read_text())
+        metadata = json.loads((content_path / "__metadata__.json").read_text())
+        return data, metadata
+
+    @pytest.mark.parametrize(
+        "filename,expected",
+        [
+            ["2025.png", "2025.png"],
+            ["folder/2025.png", "folder_2025.png"],
+            ["../2025.png", ".._2025.png"],
+            ["NUL.png", "_NUL.png"],
+        ],
+    )
+    def test_blob_filename(self, filename: str, expected: str):
+        data, metadata = self._export(filename)
+        blob_path = f"{self.uid}/image/{expected}"
+        assert data["image"]["blob_path"] == blob_path
+        assert data["image"]["filename"] == filename
+        assert blob_path in metadata["_blob_files_"]
+        blob_dir = self.export_path / "content" / self.uid / "image"
+        assert os.listdir(blob_dir) == [expected]
+
+    def test_blob_filename_nfc(self):
+        name = "Logotipo versão 3 (1-1.png"
+        nfc = unicodedata.normalize("NFC", name)
+        nfd = unicodedata.normalize("NFD", name)
+        assert nfc != nfd
+        data, metadata = self._export(nfd)
+        blob_path = f"{self.uid}/image/{nfc}"
+        assert data["image"]["blob_path"] == blob_path
+        # The field keeps the original name
+        assert data["image"]["filename"] == nfd
+        assert blob_path in metadata["_blob_files_"]
+        # The name on disk is NFC, byte for byte
+        blob_dir = self.export_path / "content" / self.uid / "image"
+        assert os.listdir(blob_dir) == [nfc]
 
 
 class TestExporterObjects:

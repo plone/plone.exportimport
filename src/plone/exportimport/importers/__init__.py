@@ -55,6 +55,14 @@ class Importer:
                 report.append(importer.import_data(path))
         return report
 
+    @property
+    def incomplete(self) -> dict[str, list[str]]:
+        """Items imported with errors, mapping each path to its failed fields."""
+        result: dict[str, list[str]] = {}
+        for importer in self.importers.values():
+            result.update(getattr(importer, "incomplete", {}))
+        return result
+
 
 def get_importer(site: PloneSite | None = None) -> Importer:
     """Get the importer."""

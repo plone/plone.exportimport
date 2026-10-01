@@ -1,12 +1,18 @@
+from collections.abc import Callable
+from pathlib import Path
 from plone import api
 from plone.exportimport import interfaces
 from plone.exportimport import settings
 from plone.exportimport.importers import content
 from zope.component import getAdapter
 
+import json
 import logging
+import os
 import pytest
 import re
+import shutil
+import unicodedata
 
 
 class TestImporterContent:
@@ -213,3 +219,103 @@ class TestImporterProgressLogging:
                 f"Setter '{setter}' first reported count was {counts[0]}, "
                 f"expected 1 (counter not reset between setters)."
             )
+
+
+IMAGE_UID = "90b11c863598495ba699b22ca76b1041"
+IMAGE_PATH = "/bar/2025.png"
+
+
+@pytest.fixture()
+def byte_exact_exists(monkeypatch):
+    """Make Path.exists compare file names byte for byte, as Linux does.
+
+    macOS filesystems find a file under either normalization form of its
+    name, which would hide a mismatch between the two.
+    """
+    original = Path.exists
+
+    def exists(self, *args, **kwargs) -> bool:
+        if not original(self, *args, **kwargs):
+            return False
+        if not self.name:
+            return True
+        return self.name in os.listdir(self.parent)
+
+    monkeypatch.setattr(Path, "exists", exists)
+
+
+@pytest.fixture()
+def blob_import_path(tmp_path, base_import_path) -> Path:
+    """Writable copy of the base import."""
+    path = tmp_path / "import"
+    shutil.copytree(base_import_path, path)
+    return path
+
+
+@pytest.fixture()
+def set_image_blob(blob_import_path) -> Callable:
+    """Store the image blob of IMAGE_UID under a new name."""
+
+    def func(blob_name: str, file_name: str | None) -> Path:
+        item_path = blob_import_path / "content" / IMAGE_UID
+        blob_dir = item_path / "image"
+        blob_file = blob_dir / "2025.png"
+        if file_name is None:
+            blob_file.unlink()
+        else:
+            blob_file.rename(blob_dir / file_name)
+        data_file = item_path / "data.json"
+        data = json.loads(data_file.read_text())
+        data["image"]["blob_path"] = f"{IMAGE_UID}/image/{blob_name}"
+        data["image"]["filename"] = blob_name
+        data_file.write_text(json.dumps(data))
+        return blob_dir / blob_name
+
+    return func
+
+
+class TestImporterBlobs:
+    @pytest.fixture(autouse=True)
+    def _init(self, portal, blob_import_path):
+        self.portal = portal
+        self.base_path = blob_import_path
+        self.importer = content.ContentImporter(portal)
+
+    def test_blob_path_nfd_file_nfc(self, byte_exact_exists, set_image_blob):
+        name = "Logotipo versão 3 (1-1.png"
+        nfc = unicodedata.normalize("NFC", name)
+        nfd = unicodedata.normalize("NFD", name)
+        assert nfc != nfd
+        blob_path = set_image_blob(nfd, nfc)
+        # The export records NFD, the file on disk is NFC
+        assert blob_path.exists() is False
+        self.importer.import_data(base_path=self.base_path)
+        obj = api.content.get(UID=IMAGE_UID)
+        assert obj.image is not None
+        assert obj.image.getSize() == 40383
+        assert obj.image.filename == nfd
+        assert self.importer.incomplete == {}
+
+    def test_missing_blob_is_incomplete(self, set_image_blob, caplog):
+        set_image_blob("2025.png", None)
+        self.importer.import_data(base_path=self.base_path)
+        obj = api.content.get(UID=IMAGE_UID)
+        assert obj is not None
+        assert obj.image is None
+        assert self.importer.incomplete == {IMAGE_PATH: ["image"]}
+        assert IMAGE_PATH not in self.importer.dropped
+        messages = [record.getMessage() for record in caplog.records]
+        assert "List of items imported with errors" in messages
+        assert f" - {IMAGE_PATH} (fields: image)" in messages
+
+    def test_complete_import(self):
+        self.importer.import_data(base_path=self.base_path)
+        assert self.importer.incomplete == {}
+        assert self.importer.dropped == set()
+
+    def test_reports_are_per_instance(self):
+        other = content.ContentImporter(self.portal)
+        self.importer.dropped.add("/foo")
+        self.importer.incomplete["/foo"] = []
+        assert other.dropped == set()
+        assert other.incomplete == {}

@@ -3,6 +3,7 @@ from plone.exportimport.cli import importer_cli
 from plone.exportimport.testing.content.dummy import IDummySettings
 
 import pytest
+import shutil
 
 
 class TestImporterCLI:
@@ -46,3 +47,35 @@ class TestImporterCLI:
     def test_protected_behavior_field_value(self, field: str, expected):
         settings = IDummySettings(self.portal)
         assert getattr(settings, field) == expected
+
+
+class TestImporterCLIIncomplete:
+    uid = "90b11c863598495ba699b22ca76b1041"
+
+    @pytest.fixture(autouse=True)
+    def _init(self, portal, run_cli, zopeconf, base_import_path, tmp_path):
+        self.portal = portal
+        import_path = tmp_path / "import"
+        shutil.copytree(base_import_path, import_path)
+        # Remove the blob of an image
+        (import_path / "content" / self.uid / "image" / "2025.png").unlink()
+        with pytest.raises(SystemExit) as exc:
+            run_cli(
+                importer_cli,
+                [
+                    "plone-importer",
+                    str(zopeconf),
+                    portal.getId(),
+                    str(import_path),
+                    "--quiet",
+                ],
+            )
+        self.exit_code = exc.value.code
+
+    def test_exit_code(self):
+        assert self.exit_code == 1
+
+    def test_content_imported(self):
+        content = api.content.get(UID=self.uid)
+        assert content is not None
+        assert content.image is None
