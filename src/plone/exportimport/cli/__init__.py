@@ -101,7 +101,11 @@ def importer_cli(args=sys.argv):
     site = cli_helpers.get_site(app, namespace.site, logger)
     with hooks.site(site):
         logger.info(f" Using path {path} to import content to Plone site at /{site.id}")
-        results = get_importer(site).import_site(path)
+        importer = get_importer(site)
+        results = importer.import_site(path)
         for item in results:
             logger.info(f" - {item}")
         transaction.commit()
+    if incomplete := importer.incomplete:
+        logger.error(f" {len(incomplete)} items were imported with errors")
+        sys.exit(1)

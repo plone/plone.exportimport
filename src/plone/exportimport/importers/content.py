@@ -13,11 +13,41 @@ from plone.exportimport.utils import request_provides
 import json
 
 
+def _failed_fields(exc: Exception) -> list[str]:
+    """Return the names of the fields reported in a deserialization error.
+
+    plone.restapi collects field errors and raises a single
+    :class:`zExceptions.BadRequest` whose first argument is a list of dicts,
+    each with an optional ``field`` key.
+
+    :param exc: Exception raised by the deserializer.
+    :returns: Sorted field names, or an empty list if the error does not
+        name any field.
+    """
+    errors = exc.args[0] if exc.args else None
+    if not isinstance(errors, list):
+        return []
+    fields = {
+        error["field"]
+        for error in errors
+        if isinstance(error, dict) and error.get("field")
+    }
+    return sorted(fields)
+
+
 class ContentImporter(BaseImporter):
     name: str = "content"
     metadata: types.ExportImportMetadata | None = None
     languages: types.PortalLanguages | None = None
-    dropped: set[str] = set()
+    dropped: set[str]
+    incomplete: dict[str, list[str]]
+
+    def __init__(self, site):
+        super().__init__(site)
+        # Items not created at all
+        self.dropped = set()
+        # Items created, but not fully deserialized: path -> failed fields
+        self.incomplete = {}
 
     def _cleanse_ordering(self, raw_data: dict[str, int]) -> dict[str, int]:
         """Prepare ordering data before deserialization.
@@ -60,6 +90,8 @@ class ContentImporter(BaseImporter):
             logger.error(
                 f"{config.logger_prefix} Error deserializing {obj}", exc_info=exc
             )
+            # The object exists, but some of its data was not applied
+            self.incomplete[data["@id"]] = _failed_fields(exc)
         return obj
 
     def construct(self, item: dict) -> DexterityContent | None:
@@ -210,6 +242,12 @@ class ContentImporter(BaseImporter):
             logger.warning("List of items dropped during import")
             for item_path in dropped:
                 logger.warning(f" - {item_path}")
+        # Report items that were created with missing data
+        if self.incomplete:
+            logger.error("List of items imported with errors")
+            for item_path, fields in sorted(self.incomplete.items()):
+                details = f" (fields: {', '.join(fields)})" if fields else ""
+                logger.error(f" - {item_path}{details}")
         return result
 
     def start(self):
