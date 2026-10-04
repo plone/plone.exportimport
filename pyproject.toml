@@ -4,7 +4,106 @@
 [build-system]
 requires = ["setuptools>=68.2,<83", "wheel"]
 
+# START-MARKER-MANUAL-CONFIG
+# Anything from here until END-MARKER-MANUAL-CONFIG
+# will be kept by plone.meta
 
+[project]
+name = "plone.exportimport"
+version = "2.2.1.dev0"
+description = "Plone content export / import support"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+    "Framework :: Plone",
+    "Framework :: Plone :: 6.2",
+    "Framework :: Plone :: Core",
+    "Framework :: Zope :: 5",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+license = "GPL-2.0-only"
+dynamic = ["readme"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Plone Foundation",email = "releasemanager@plone.org"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "plone-developers@lists.sourceforge.net"},
+]
+dependencies = [
+    "Products.CMFEditions",
+    "Products.CMFPlone",
+    "Products.DCWorkflow",
+    "Products.GenericSetup",
+    "Products.PlonePAS",
+    "Products.PortalTransforms",
+    "Zope",
+    "plone.api",
+    "plone.app.contenttypes",
+    "plone.app.dexterity",
+    "plone.app.redirector",
+    "plone.app.textfield",
+    "plone.app.users",
+    "plone.autoform",
+    "plone.base",
+    "plone.behavior",
+    "plone.dexterity",
+    "plone.namedfile",
+    "plone.restapi",
+    "plone.supermodel",
+    "plone.uuid",
+    "python-dateutil",
+    "z3c.relationfield",
+    "zc.relation",
+]
+keywords = [
+    "Plone",
+    "CMF",
+    "Python",
+    "Zope",
+    "CMS",
+]
+
+[project.scripts]
+plone-exporter = "plone.exportimport.cli:exporter_cli"
+plone-importer = "plone.exportimport.cli:importer_cli"
+
+[project.entry-points."plone.autoinclude.plugin"]
+target = "plone"
+
+[project.optional-dependencies]
+test = [
+    "plone.app.discussion",
+    "plone.app.iterate",
+    "plone.app.multilingual",
+    "plone.app.testing",
+    "plone.app.upgrade",
+    "plone.restapi[test]",
+    "plone.testing",
+    "plone.volto[test]",
+    "pytest",
+    "pytest-cov",
+    "pytest-plone>=0.5.0",
+    "zest.releaser[recommended]",
+    "zestreleaser.towncrier",
+]
+
+[project.urls]
+Homepage = "https://plone.org"
+Documentation = "https://6.docs.plone.org"
+Source = "https://github.com/plone/plone.exportimport"
+Issues = "https://github.com/plone/plone.exportimport/issues"
+Changelog = "https://github.com/plone/plone.exportimport/blob/main/CHANGES.md"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md", "CHANGES.md"], content-type = "text/markdown"}
+# END-MARKER-MANUAL-CONFIG
 
 [tool.towncrier]
 directory = "news/"
