@@ -125,13 +125,22 @@ class TestPartialExportRedirects:
         with api.env.adopt_roles(["Manager"]):
             content = api.content.get(path="/es/a-folderish/a-link")
             api.content.rename(obj=content, new_id="renamed-link")
+        # The storage keeps physical paths, which is what the `paths` filter
+        # compares against; the export carries portal-relative ones, as every
+        # other path in an export does.
         self.old_path = f"{site_path}/es/a-folderish/a-link"
         self.new_path = f"{site_path}/es/a-folderish/renamed-link"
+        self.old_relative = "/es/a-folderish/a-link"
+        self.new_relative = "/es/a-folderish/renamed-link"
 
     def test_redirect_to_exported_content_is_kept(self, export_partial):
         data = export_partial("/es")
-        assert data["redirects"][self.old_path] == self.new_path
+        assert data["redirects"][self.old_relative] == self.new_relative
 
     def test_redirect_to_content_not_exported_is_dropped(self, export_partial):
         data = export_partial("/en")
+        # Both spellings. Asserting only the physical one would hold even if
+        # the redirect WERE kept, since the export is relative now — a test
+        # that passes without measuring anything.
         assert self.old_path not in data["redirects"]
+        assert self.old_relative not in data["redirects"]
