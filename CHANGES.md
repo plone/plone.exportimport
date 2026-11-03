@@ -9,6 +9,18 @@
 
 <!-- towncrier release notes start -->
 
+## 2.3.0 (2026-11-03)
+
+
+### New features
+
+- Enable browser layers when importing/exporting content @gforcada #106
+
+
+### Internal
+
+- Move package metadata from `setup.py` to `pyproject.toml` @plone 
+
 ## 2.2.0 (2026-10-01)
 
 
