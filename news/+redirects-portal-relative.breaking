@@ -1,0 +1,6 @@
+`redirects.json` now holds portal-relative paths (`/old`), as every other path
+in an export does, instead of Zope-physical ones (`/Plone/old`). An export can
+therefore be imported into a site with a different id, which previously left
+every redirect unmatched. The importer accepts both forms, so an archive
+written by an older release still imports correctly; an archive written by this
+release needs this release to import it. @djay
