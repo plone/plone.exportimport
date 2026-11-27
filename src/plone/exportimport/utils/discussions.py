@@ -1,5 +1,8 @@
 from .content.core import get_uid
+from .content.core import language_codes
 from .content.core import object_from_uid
+from .content.core import strip_language_suffix
+from .content.core import unique_brains
 from .content.export_helpers import get_serializer
 from .content.export_helpers import rewrite_site_root
 from .dates import parse_datetime
@@ -27,8 +30,9 @@ def _get_all_content_support_conversation(
     brains = catalog.unrestrictedSearchResults(
         object_provides=IContentish.__identifier__, sort_on="path"
     )
-    for brain in brains:
-        if uids is not None and brain.UID not in uids:
+    codes = language_codes()
+    for brain in unique_brains(brains):
+        if uids is not None and strip_language_suffix(brain.UID, codes) not in uids:
             continue
         content = brain.getObject()
         obj = IConversation(content, None)

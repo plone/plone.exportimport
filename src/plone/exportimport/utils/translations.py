@@ -1,5 +1,8 @@
 from .content.core import get_obj_path
 from .content.core import get_portal_languages
+from .content.core import language_codes
+from .content.core import object_from_uid
+from .content.core import strip_language_suffix
 from plone import api
 from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
@@ -71,7 +74,7 @@ def get_translations(
         translations = {}
         for brain in brains:
             brain_path = brain.getPath()
-            brain_uid = brain.UID
+            brain_uid = strip_language_suffix(brain.UID, language_codes())
             if uids is not None and brain_uid not in uids:
                 continue
             language = brain.Language
@@ -91,10 +94,10 @@ def get_translations(
 
 def _parse_translation_group(translation_group: dict) -> dict:
     """Parse a translation group information."""
-    canonical = api.content.get(UID=translation_group["canonical"])
+    canonical = object_from_uid(translation_group["canonical"])
     translations = {}
     for lang, uid in translation_group["translations"].items():
-        obj = api.content.get(UID=uid)
+        obj = object_from_uid(uid)
         translations[lang] = obj
     return {"canonical": canonical, "translations": translations}
 

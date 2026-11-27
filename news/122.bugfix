@@ -1,0 +1,1 @@
+Keep the UID of content in language-independent folders on export. Such content is now exported once, under its own UID, instead of once per language with a language suffix. Importing it again gives it back the UIDs it had, so references like ``resolveuid/<uid>-en`` keep working. Exports made by earlier versions still import as before. @ericof #122
