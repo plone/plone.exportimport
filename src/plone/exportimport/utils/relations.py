@@ -1,8 +1,11 @@
 from .content.core import get_all_fields
 from .content.core import get_obj_path
+from .content.core import language_codes
+from .content.core import object_from_uid
+from .content.core import strip_language_suffix
 from operator import itemgetter
-from plone import api
 from plone.dexterity.content import DexterityContent
+from plone.uuid.interfaces import IUUID
 from Products.CMFPlone import relationhelper
 from z3c.relationfield.index import RelationCatalog
 from z3c.relationfield.interfaces import IRelationChoice
@@ -40,8 +43,8 @@ def get_relation_catalog() -> RelationCatalog:
 
 def _relation_with_debug_information(rel: dict) -> dict:
     """Process the relation data and add debug information to it."""
-    from_obj = api.content.get(UID=rel["from_uuid"])
-    to_obj = api.content.get(UID=rel["to_uuid"])
+    from_obj = object_from_uid(rel["from_uuid"])
+    to_obj = object_from_uid(rel["to_uuid"])
     rel["from_path"] = get_obj_path(from_obj, True)
     rel["to_path"] = get_obj_path(to_obj, True)
     return rel
@@ -74,10 +77,22 @@ def get_relations(
     :returns: List of relations, sorted by source, attribute and target.
     """
     results = []
+    codes = language_codes()
+    seen: set[tuple] = set()
     all_relations: list[dict] = relationhelper.get_all_relations()
     for rel in all_relations:
         if not _should_export_relation(rel, include_linkintegrity):
             continue
+        # Copies of a content in a language-independent folder report
+        # language-suffixed uids. Export the stored uid instead, once.
+        from_uuid = strip_language_suffix(rel["from_uuid"], codes)
+        to_uuid = strip_language_suffix(rel["to_uuid"], codes)
+        if (from_uuid, to_uuid) != (rel["from_uuid"], rel["to_uuid"]):
+            key = (from_uuid, rel["from_attribute"], to_uuid)
+            if key in seen:
+                continue
+            seen.add(key)
+            rel = {**rel, "from_uuid": from_uuid, "to_uuid": to_uuid}
         if uids is not None and not (
             rel["from_uuid"] in uids and rel["to_uuid"] in uids
         ):
@@ -99,8 +114,8 @@ def _prepare_relations_to_import(data: list[dict]) -> list[dict]:
     for rel in data:
         if rel["from_attribute"] in RELATIONS_TO_IGNORE:
             continue
-        from_obj = api.content.get(UID=rel["from_uuid"])
-        to_obj = api.content.get(UID=rel["to_uuid"])
+        from_obj = object_from_uid(rel["from_uuid"])
+        to_obj = object_from_uid(rel["to_uuid"])
         if from_obj and to_obj:
             relations.append(rel)
     all_fixed_relations = sorted(
@@ -114,5 +129,15 @@ def set_relations(data: list[dict]) -> list[dict]:
     all_fixed_relations = _prepare_relations_to_import(data)
     relationhelper.purge_relations()
     relationhelper.cleanup_intids()
-    relationhelper.restore_relations(all_relations=all_fixed_relations)
+    # restore_relations looks objects up by the uid they index. For a content
+    # in a language-independent folder that is the language-suffixed one.
+    restorable = [
+        {
+            **rel,
+            "from_uuid": IUUID(object_from_uid(rel["from_uuid"]), None),
+            "to_uuid": IUUID(object_from_uid(rel["to_uuid"]), None),
+        }
+        for rel in all_fixed_relations
+    ]
+    relationhelper.restore_relations(all_relations=restorable)
     return all_fixed_relations

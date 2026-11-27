@@ -4,6 +4,8 @@ from plone.app.textfield.value import RichTextValue
 from plone.dexterity.content import DexterityContent
 from plone.exportimport import logger
 from plone.exportimport.settings import SITE_ROOT_UID
+from plone.exportimport.utils.content import get_uid
+from plone.exportimport.utils.content import object_from_uid
 from plone.portlets.constants import CONTENT_TYPE_CATEGORY
 from plone.portlets.constants import CONTEXT_CATEGORY
 from plone.portlets.constants import GROUP_CATEGORY
@@ -32,7 +34,7 @@ def portlets_in_context(
 ) -> dict | None:
     """Collect portlet registrations in a context."""
     result = {}
-    uid = uid if uid else api.content.get_uuid(context, None)
+    uid = uid if uid else get_uid(context)
     if not uid:
         return
 
@@ -61,14 +63,14 @@ def get_portlets(uids: set[str] | None = None) -> list[dict]:
     results = []
     portal = api.portal.get()
     portal_uid = portal.UID()
+    seen: set[str] = set()
 
     def collect_portlets(obj, path):
-        try:
-            uid = api.content.get_uuid(obj)
-        except TypeError:
-            uid = None
-        if not uid or (uids is not None and uid not in uids):
+        uid = get_uid(obj)
+        # Copies of a content in a language-independent folder share the uid
+        if not uid or (uids is not None and uid not in uids) or uid in seen:
             return
+        seen.add(uid)
         if uid == portal_uid:
             uid = SITE_ROOT_UID
         result = portlets_in_context(obj, uid)
@@ -111,7 +113,7 @@ def export_local_portlets(obj: DexterityContent) -> dict:
             for name in schema.names(all=True):
                 value = getattr(assignment, name, None)
                 if RelationValue is not None and isinstance(value, RelationValue):
-                    value = value.to_object.UID()
+                    value = get_uid(value.to_object)
                 elif isinstance(value, RichTextValue):
                     value = {
                         "data": json_compatible(value.raw),
@@ -205,7 +207,7 @@ def set_portlets(data: list) -> int:
     results = 0
     for item in data:
         item_uid = item["UID"]
-        obj = api.content.get(UID=item_uid)
+        obj = object_from_uid(item_uid)
         if not obj:
             if item_uid == SITE_ROOT_UID:
                 obj = api.portal.get()

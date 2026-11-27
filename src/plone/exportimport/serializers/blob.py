@@ -87,7 +87,7 @@ def export_blob(
     request = getRequest()
     # Metadata
     metadata: types.ExportImportMetadata = request[settings.EXPORT_CONTENT_METADATA_KEY]
-    uid = settings.SITE_ROOT_UID if content_utils.is_site_root(obj) else obj.UID()
+    uid = content_utils.get_uid(obj)
     content_export_path = Path(request[settings.EXPORT_PATH_KEY])
     blob_path = settings.EXPORT_CONTENT_BLOB_FILEPATH.format(
         UID=uid, fieldname=fieldname, filename=path_utils.normalize_filename(filename)

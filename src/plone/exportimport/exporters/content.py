@@ -12,6 +12,7 @@ from plone.exportimport import types
 from plone.exportimport.interfaces import IExportImportRequestMarker
 from plone.exportimport.utils import content as content_utils
 from plone.exportimport.utils import request_provides
+from plone.exportimport.utils.content.core import unique_brains
 from typing import Any
 from zope.component import getAdapter
 from zope.interface import implementer
@@ -28,6 +29,8 @@ class ObjectsExporter:
         """Return all objects to be serialized."""
         catalog = api.portal.get_tool("portal_catalog")
         brains = catalog.unrestrictedSearchResults(**content_utils.content_query(query))
+        # A content in a language-independent folder has one copy per language
+        brains = unique_brains(brains)
         logger.info(f"Exporting {len(brains)}")
         for index, brain in enumerate(brains, start=1):
             try:

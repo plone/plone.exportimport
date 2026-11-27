@@ -89,6 +89,16 @@ def fix_id(item: dict, obj: DexterityContent, config: types.ExporterConfig) -> d
     return item
 
 
+def fix_uid(item: dict, obj: DexterityContent, config: types.ExporterConfig) -> dict:
+    """Write the stored UID of the object.
+
+    The serializer reports the UID of the object, which for a content inside a
+    language-independent folder carries the language root id.
+    """
+    item["UID"] = get_uid(obj)
+    return item
+
+
 def fix_parent_uid(
     item: dict, obj: DexterityContent, config: types.ExporterConfig
 ) -> dict:
@@ -297,6 +307,7 @@ def fixers() -> list[types.ExportImportHelper]:
     funcs = [
         fix_relation_fields,
         fix_id,
+        fix_uid,
         fix_parent_uid,
         fix_blocks,
         fix_language,
