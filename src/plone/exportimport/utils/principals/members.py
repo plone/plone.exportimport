@@ -36,7 +36,7 @@ def _run_as_manager(context: RegistrationTool):
 def _get_user_schema_fields() -> list[str]:
     """List of fields/properties used in User Schema."""
     schema = getUserDataSchema()
-    fields = [name for name in getFieldNames(schema)]
+    fields = [*getFieldNames(schema)]
     return fields
 
 

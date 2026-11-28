@@ -192,7 +192,7 @@ class TestExporterObjects:
     def test_output_objects(self):
         exporter = self.exporter
         result = exporter.get_objects({}, [])
-        objects = [x for x in result]
+        objects = [*result]
         assert len(objects) == 9
 
 
